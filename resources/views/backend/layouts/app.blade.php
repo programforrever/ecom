@@ -31,6 +31,8 @@
         <link rel="stylesheet" href="{{ static_asset('assets/css/bootstrap-rtl.min.css') }}">
     @endif
     <link rel="stylesheet" href="{{ static_asset('assets/css/aiz-core.css?v=') }}{{ rand(1000,9999) }}">
+    <!-- Custom Admin Sidebar Orange Theme -->
+    <link rel="stylesheet" href="{{ static_asset('assets/css/admin-sidebar-orange.css?v=') }}{{ rand(1000,9999) }}">
 
     <style>
         :root {
