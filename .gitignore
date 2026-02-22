@@ -1,6 +1,6 @@
 #/bootstrap/compiled.php
-#.env.*.php
-#.env.php
+.env.*.php
+.env.php
 #/app/Exceptions
 #/node_modules
 #/public/hot
@@ -24,7 +24,7 @@
 #composer.lock
 #*.lock
 #resources/lang/en.json
-#.env
+.env
 updates.zip
 ecommerce.zip
 install.zip
