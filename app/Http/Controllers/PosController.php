@@ -42,16 +42,47 @@ class PosController extends Controller
         $stockId    = $request->stock_id;
         $userID     = Session::get('pos.user_id');
         $temUserId  = Session::get('pos.temp_user_id');
+        
+        \Log::info('PosController::addToCart START', [
+            'stock_id' => $stockId,
+            'user_id' => $userID,
+            'temp_user_id' => $temUserId,
+            'session_keys' => Session::all()
+        ]);
+        
         if (!$temUserId && !$userID) {
             $temUserId = bin2hex(random_bytes(10));
             Session::put('pos.temp_user_id', $temUserId);
+            \Log::info('Created new temp_user_id: ' . $temUserId);
         }
+        
         $response = PosUtility::addToCart($stockId, $userID, $temUserId);
+        
+        \Log::info('addToCart response', [
+            'success' => $response['success'],
+            'message' => $response['message']
+        ]);
+        
+        // Ensure session is available for view rendering
+        Session::put('pos.user_id', $userID);
+        Session::put('pos.temp_user_id', $temUserId);
+        Session::save();
+        
+        \Log::info('Session before render', [
+            'pos.user_id' => Session::get('pos.user_id'),
+            'pos.temp_user_id' => Session::get('pos.temp_user_id')
+        ]);
+        
+        $cartView = view('backend.pos.cart')->render();
+        
+        \Log::info('Cart view rendered', [
+            'view_length' => strlen($cartView)
+        ]);
         
         return array(
             'success' => $response['success'],
             'message' => $response['message'],
-            'view' => view('backend.pos.cart')->render()
+            'view' => $cartView
         );
     }
 
@@ -115,7 +146,30 @@ class PosController extends Controller
     //order summary
     public function get_order_summary(Request $request)
     {
-        return view('backend.pos.order_summary');
+        try {
+            \Log::info('get_order_summary called');
+            $carts = get_pos_user_cart();
+            \Log::info('get_order_summary - carts found: ' . count($carts));
+            
+            foreach ($carts as $cart) {
+                \Log::info('Cart item:', [
+                    'id' => $cart->id,
+                    'product_id' => $cart->product_id,
+                    'product_exists' => $cart->product ? true : false
+                ]);
+            }
+            
+            return view('backend.pos.order_summary');
+        } catch (\Exception $e) {
+            \Log::error('get_order_summary error: ' . $e->getMessage(), [
+                'exception' => $e,
+                'trace' => $e->getTraceAsString()
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     //order place

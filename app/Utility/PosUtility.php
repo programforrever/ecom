@@ -25,15 +25,16 @@ class PosUtility
         if (auth()->user()->user_type == 'seller') {
             $product_query->where('products.user_id', auth()->user()->id);
         } else {
+            // For admin/super admin users, show all admin products
             $product_query->where('products.added_by', 'admin');
         }
+        
         $products = $product_query->where('products.auction_product', 0)
             ->where('products.wholesale_product', 0)
             ->where('products.published', 1)
             ->where('products.approved', 1)
             ->select('products.*', 'product_stocks.id as stock_id', 'product_stocks.variant', 'product_stocks.price as stock_price', 'product_stocks.qty as stock_qty', 'product_stocks.image as stock_image')
             ->orderBy('products.created_at', 'desc');
-
 
         if ($request_data['category'] != null) {
             $arr = explode('-', $request_data['category']);
@@ -49,7 +50,9 @@ class PosUtility
         }
 
         if ($request_data['keyword'] != null) {
-            $products = $products->where('products.name', 'like', '%' . $request_data['keyword'] . '%')->orWhere('products.barcode', $request_data['keyword']);
+            $products = $products->where('products.name', 'like', '%' . $request_data['keyword'] . '%')
+                ->orWhere('product_stocks.sku', 'like', '%' . $request_data['keyword'] . '%')
+                ->orWhere('products.barcode', $request_data['keyword']);
         }
 
         return $products->paginate(16);
@@ -84,43 +87,84 @@ class PosUtility
     public static function addToCart($stockId, $userID, $temUserId)
     {
         $productStock   = ProductStock::find($stockId);
-        $product        = $productStock->product;
-        $quantity       = $product->min_qty;
-
-        if ($productStock->qty < $product->min_qty && $product->digital == 0) {
+        if (!$productStock) {
             return array(
                 'success' => 0,
-                'message' => translate("This product doesn't have enough stock for minimum purchase quantity ") . $product->min_qty
+                'message' => translate("Product stock not found")
+            );
+        }
+        
+        $product        = $productStock->product;
+
+        // Check stock availability
+        if ($productStock->qty <= 0) {
+            return array(
+                'success' => 0,
+                'message' => translate("This product is out of stock")
             );
         }
 
-        $cart = Cart::firstOrNew([
+        // Calculate correct owner_id based on logged-in user
+        $authUser = auth()->user();
+        $ownerId = $authUser->user_type == 'admin' ? \App\Models\User::where('user_type', 'admin')->first()->id : $authUser->id;
+
+        // Use updateOrCreate to ensure unique cart per product-variation-user-temp combination
+        $cartAttributes = [
+            'product_id' => $product->id,
             'variation' => $productStock->variant,
             'user_id' => $userID,
             'temp_user_id' => $temUserId,
-            'product_id' => $product->id
-        ]);
+            'owner_id' => $ownerId,
+        ];
 
-        if ($cart->exists) {
-            if ($product->digital == 1) {
-                return array(
-                    'success' => 0,
-                    'message' => translate("This product is alreday in the cart")
-                );
-            } else {
-                $quantity = $cart->quantity + 1;
-                if ($productStock->qty < $quantity) {
-                    return array(
-                        'success' => 0,
-                        'message' => translate("This product doesn't have more stock.")
-                    );
-                }
-            }
+        $cart = Cart::where([
+            'product_id' => $product->id,
+            'variation' => $productStock->variant,
+            'user_id' => $userID,
+            'temp_user_id' => $temUserId,
+            'owner_id' => $ownerId,
+        ])->first();
+        
+        // If cart doesn't exist, handle digital product case
+        if (!$cart && $product->digital == 1) {
+            // For digital products, don't allow duplicates
+            return array(
+                'success' => 0,
+                'message' => translate("This product is already in the cart")
+            );
         }
 
-        $price = CartUtility::get_price($product, $productStock, $quantity);
-        $tax = CartUtility::tax_calculation($product, $price);
-        CartUtility::save_cart_data($cart, $product, $price, $tax, $quantity);
+        if ($cart) {
+            // Cart exists - try to add 1 more unit
+            $newQuantity = $cart->quantity + 1;
+            if ($productStock->qty < $newQuantity) {
+                return array(
+                    'success' => 0,
+                    'message' => translate("This product doesn't have more stock. Available: ") . $productStock->qty . translate(", Requested: ") . $newQuantity
+                );
+            }
+            // Update quantity
+            $cart->quantity = $newQuantity;
+            $cart->save();
+        } else {
+            // New cart - add 1 unit
+            $quantity = 1;
+            
+            // Validate min_qty only if it exceeds available stock
+            if ($product->min_qty > $productStock->qty && $product->digital == 0) {
+                return array(
+                    'success' => 0,
+                    'message' => translate("This product doesn't have enough stock. Available: ") . $productStock->qty . translate(", Minimum required for purchase: ") . $product->min_qty
+                );
+            }
+
+            $price = CartUtility::get_price($product, $productStock, $quantity);
+            $tax = CartUtility::tax_calculation($product, $price);
+            
+            $cart = new Cart($cartAttributes);
+            CartUtility::save_cart_data($cart, $product, $price, $tax, $quantity, $ownerId);
+        }
+
         return array('success' => 1, 'message' => 'Added to cart successfully');
     }
 

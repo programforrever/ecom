@@ -407,14 +407,30 @@
             $('body').addClass('side-menu-closed');
             $('#product-list').on('click','.add-plus:not(.c-not-allowed)',function(){
                 var stock_id = $(this).data('stock-id');
+                console.log('Clicked add-plus button. Stock ID:', stock_id);
+                
+                if (!stock_id) {
+                    console.error('Stock ID is missing!');
+                    AIZ.plugins.notify('danger', 'Error: Stock ID not found');
+                    return;
+                }
+                
                 var userId = $('select[name=user_id]').val();
                 $.post('{{ route('pos.addToCart') }}',{_token:AIZ.data.csrf, stock_id:stock_id}, function(data){
+                    console.log('addToCart response:', data);
+                    console.log('Response type:', typeof data);
+                    console.log('Response view length:', data.view ? data.view.length : 'no view');
+                    
                     if(data.success == 1){
+                        console.log('Success! Updating cart with view...');
                         updateCart(data.view);
+                        AIZ.plugins.notify('success', 'Product added to cart');
                     }else{
                         AIZ.plugins.notify('danger', data.message);
                     }
-                    
+                }).fail(function(error) {
+                    console.error('addToCart failed:', error);
+                    AIZ.plugins.notify('danger', 'Failed to add product to cart');
                 });
             });
             filterProducts();
@@ -440,8 +456,20 @@
         });
 
         function updateCart(data){
+            console.log('updateCart called with data length:', data.length);
+            console.log('Target element #cart-details exists:', $('#cart-details').length > 0);
+            
+            if (!data || data.length === 0) {
+                console.error('Error: Cart view data is empty!');
+                AIZ.plugins.notify('danger', 'Error: Empty cart view returned');
+                return;
+            }
+            
             $('#cart-details').html(data);
+            console.log('Cart HTML updated. Current HTML length:', $('#cart-details').html().length);
+            
             AIZ.extra.plusMinus();
+            console.log('plusMinus initialized');
         }
 
         function filterProducts(){

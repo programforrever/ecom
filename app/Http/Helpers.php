@@ -2279,7 +2279,7 @@ if (!function_exists('get_pos_user_cart')) {
     {
         $cart               = [];
         $authUser           = auth()->user();
-        $owner_id           = $authUser->type == 'admin' ? User::where('user_type', 'admin')->first()->id : $authUser->id;
+        $owner_id           = $authUser->user_type == 'admin' ? User::where('user_type', 'admin')->first()->id : $authUser->id;
 
         if($sessionUserID == null ) {
             $sessionUserID = Session::has('pos.user_id') ? Session::get('pos.user_id') : null;
@@ -2288,7 +2288,22 @@ if (!function_exists('get_pos_user_cart')) {
             $sessionTemUserId = Session::has('pos.temp_user_id') ? Session::get('pos.temp_user_id') : null;
         }
         
-        $cart = Cart::where('owner_id', $owner_id)->where('user_id', $sessionUserID)->where('temp_user_id', $sessionTemUserId)->get();
+        // Build query with proper NULL handling
+        $query = Cart::where('owner_id', $owner_id);
+        
+        if ($sessionUserID === null) {
+            $query->whereNull('user_id');
+        } else {
+            $query->where('user_id', $sessionUserID);
+        }
+        
+        if ($sessionTemUserId === null) {
+            $query->whereNull('temp_user_id');
+        } else {
+            $query->where('temp_user_id', $sessionTemUserId);
+        }
+        
+        $cart = $query->get();
         return $cart;
 
     }

@@ -27,6 +27,7 @@ use App\Services\ProductStockService;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
@@ -311,53 +312,80 @@ class ProductController extends Controller
      */
     public function update(ProductRequest $request, Product $product)
     {
-        //Product
-        $product = $this->productService->update($request->except([
-            '_token', 'sku', 'choice', 'tax_id', 'tax', 'tax_type', 'flash_deal_id', 'flash_discount', 'flash_discount_type'
-        ]), $product);
+        try {
+            //Product
+            $product = $this->productService->update($request->except([
+                '_token', 'sku', 'choice', 'tax_id', 'tax', 'tax_type', 'flash_deal_id', 'flash_discount', 'flash_discount_type'
+            ]), $product);
 
-        $request->merge(['product_id' => $product->id]);
+            $request->merge(['product_id' => $product->id]);
 
-        //Product categories
-        $product->categories()->sync($request->category_ids);
+            //Product categories
+            if ($request->has('category_ids')) {
+                $product->categories()->sync($request->category_ids);
+            }
 
-        //Product Stock
-        $product->stocks()->delete();
-        $this->productStockService->store($request->only([
-            'colors_active', 'colors', 'choice_no', 'unit_price', 'sku', 'current_stock', 'product_id'
-        ]), $product);
+            //Product Stock
+            $product->stocks()->delete();
+            
+            // Get all stock-related fields from the request
+            $stockData = $request->only([
+                'colors_active', 'colors', 'choice_no', 'unit_price', 'sku', 'current_stock', 'product_id'
+            ]);
+            
+            // Add all variant-specific fields (qty_*, price_*, sku_*, img_*)
+            foreach ($request->all() as $key => $value) {
+                if (strpos($key, 'qty_') === 0 || strpos($key, 'price_') === 0 || 
+                    strpos($key, 'sku_') === 0 || strpos($key, 'img_') === 0) {
+                    $stockData[$key] = $value;
+                }
+            }
+            
+            // Ensure unit_price is set
+            if (empty($stockData['unit_price'])) {
+                $stockData['unit_price'] = $product->unit_price;
+            }
+            $this->productStockService->store($stockData, $product);
 
-        //Flash Deal
-        $this->productFlashDealService->store($request->only([
-            'flash_deal_id', 'flash_discount', 'flash_discount_type'
-        ]), $product);
+            //Flash Deal
+            if ($request->has('flash_deal_id')) {
+                $this->productFlashDealService->store($request->only([
+                    'flash_deal_id', 'flash_discount', 'flash_discount_type'
+                ]), $product);
+            }
 
-        //VAT & Tax
-        if ($request->tax_id) {
-            $product->taxes()->delete();
-            $this->productTaxService->store($request->only([
-                'tax_id', 'tax', 'tax_type', 'product_id'
-            ]));
+            //VAT & Tax
+            if ($request->tax_id) {
+                $product->taxes()->delete();
+                $this->productTaxService->store($request->only([
+                    'tax_id', 'tax', 'tax_type', 'product_id'
+                ]));
+            }
+
+            // Product Translations
+            ProductTranslation::updateOrCreate(
+                $request->only([
+                    'lang', 'product_id'
+                ]),
+                $request->only([
+                    'name', 'unit', 'description'
+                ])
+            );
+
+            flash(translate('Product has been updated successfully'))->success();
+
+            Artisan::call('view:clear');
+            Artisan::call('cache:clear');
+            if($request->has('tab') && $request->tab != null){
+                return Redirect::to(URL::previous() . "#" . $request->tab);
+            }
+            return back();
+        } catch (\Exception $e) {
+            Log::error('Product Update Error: ' . $e->getMessage());
+            Log::error($e->getTraceAsString());
+            flash(translate('An error occurred while updating the product: ') . $e->getMessage())->danger();
+            return back()->withInput();
         }
-
-        // Product Translations
-        ProductTranslation::updateOrCreate(
-            $request->only([
-                'lang', 'product_id'
-            ]),
-            $request->only([
-                'name', 'unit', 'description'
-            ])
-        );
-
-        flash(translate('Product has been updated successfully'))->success();
-
-        Artisan::call('view:clear');
-        Artisan::call('cache:clear');
-        if($request->has('tab') && $request->tab != null){
-            return Redirect::to(URL::previous() . "#" . $request->tab);
-        }
-        return back();
     }
 
     /**

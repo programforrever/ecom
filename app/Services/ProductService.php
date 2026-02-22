@@ -19,13 +19,16 @@ class ProductService
         $collection = collect($data);
 
         $approved = 1;
+        $added_by = 'admin';
         if (auth()->user()->user_type == 'seller') {
             $user_id = auth()->user()->id;
+            $added_by = 'seller';
             if (get_setting('product_approve_by_admin') == 1) {
                 $approved = 0;
             }
         } else {
             $user_id = User::where('user_type', 'admin')->first()->id;
+            $added_by = 'admin';
         }
         $tags = array();
         if ($collection['tags'][0] != null) {
@@ -98,7 +101,7 @@ class ProductService
         unset($collection['colors_active']);
 
         $choice_options = array();
-        if (isset($collection['choice_no']) && $collection['choice_no']) {
+        if (isset($collection['choice_no']) && $collection['choice_no'] && is_array($collection['choice_no'])) {
             $str = '';
             $item = array();
             foreach ($collection['choice_no'] as $key => $no) {
@@ -106,9 +109,11 @@ class ProductService
                 $item['attribute_id'] = $no;
                 $attribute_data = array();
                 // foreach (json_decode($request[$str][0]) as $key => $eachValue) {
-                foreach ($collection[$str] as $key => $eachValue) {
-                    // array_push($data, $eachValue->value);
-                    array_push($attribute_data, $eachValue);
+                if (isset($collection[$str]) && is_array($collection[$str])) {
+                    foreach ($collection[$str] as $key => $eachValue) {
+                        // array_push($data, $eachValue->value);
+                        array_push($attribute_data, $eachValue);
+                    }
                 }
                 unset($collection[$str]);
 
@@ -119,7 +124,7 @@ class ProductService
 
         $choice_options = json_encode($choice_options, JSON_UNESCAPED_UNICODE);
 
-        if (isset($collection['choice_no']) && $collection['choice_no']) {
+        if (isset($collection['choice_no']) && $collection['choice_no'] && is_array($collection['choice_no'])) {
             $attributes = json_encode($collection['choice_no']);
             unset($collection['choice_no']);
         } else {
@@ -134,6 +139,7 @@ class ProductService
 
         $data = $collection->merge(compact(
             'user_id',
+            'added_by',
             'approved',
             'discount_start_date',
             'discount_end_date',
@@ -249,7 +255,7 @@ class ProductService
         unset($collection['colors_active']);
 
         $choice_options = array();
-        if (isset($collection['choice_no']) && $collection['choice_no']) {
+        if (isset($collection['choice_no']) && $collection['choice_no'] && is_array($collection['choice_no'])) {
             $str = '';
             $item = array();
             foreach ($collection['choice_no'] as $key => $no) {
@@ -257,9 +263,11 @@ class ProductService
                 $item['attribute_id'] = $no;
                 $attribute_data = array();
                 // foreach (json_decode($request[$str][0]) as $key => $eachValue) {
-                foreach ($collection[$str] as $key => $eachValue) {
-                    // array_push($data, $eachValue->value);
-                    array_push($attribute_data, $eachValue);
+                if (isset($collection[$str]) && is_array($collection[$str])) {
+                    foreach ($collection[$str] as $key => $eachValue) {
+                        // array_push($data, $eachValue->value);
+                        array_push($attribute_data, $eachValue);
+                    }
                 }
                 unset($collection[$str]);
 
@@ -270,7 +278,7 @@ class ProductService
 
         $choice_options = json_encode($choice_options, JSON_UNESCAPED_UNICODE);
 
-        if (isset($collection['choice_no']) && $collection['choice_no']) {
+        if (isset($collection['choice_no']) && $collection['choice_no'] && is_array($collection['choice_no'])) {
             $attributes = json_encode($collection['choice_no']);
             unset($collection['choice_no']);
         } else {

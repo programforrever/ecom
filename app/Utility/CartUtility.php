@@ -84,11 +84,11 @@ class CartUtility
         return $tax;
     }
 
-    public static function save_cart_data($cart, $product, $price, $tax, $quantity)
+    public static function save_cart_data($cart, $product, $price, $tax, $quantity, $owner_id = null)
     {
         $cart->quantity = $quantity;
         $cart->product_id = $product->id;
-        $cart->owner_id = $product->user_id;
+        $cart->owner_id = $owner_id ?? $product->user_id;  // Use passed owner_id or default to product owner
         $cart->price = $price;
         $cart->tax = $tax;
         $cart->product_referral_code = null;
