@@ -289,7 +289,7 @@
                     @endcanany
                 @endif
 
-                <!-- Wholesale Product -->
+                <!-- Wholesale Product 
                 @if(addon_is_activated('wholesale'))
                     @canany(['add_wholesale_product','view_all_wholesale_products','view_inhouse_wholesale_products','view_sellers_wholesale_products'])
                         <li class="aiz-side-nav-item">
@@ -341,7 +341,7 @@
                             </ul>
                         </li>
                     @endcanany
-                @endif
+                @endif-->
 
                 <!-- Sale -->
                 @canany(['view_all_orders', 'view_inhouse_orders','view_seller_orders','view_pickup_point_orders'])
@@ -554,7 +554,7 @@
                     </li>
                 @endcanany
 
-                <!-- Sellers -->
+                <!-- Sellers 
                 @if (get_setting('vendor_system_activation') == 1)
                     @canany(['view_all_seller','seller_payment_history','view_seller_payout_requests','seller_commission_configuration','view_all_seller_packages','seller_verification_form_configuration'])
                         <li class="aiz-side-nav-item">
@@ -624,7 +624,8 @@
                             </ul>
                         </li>
                     @endcanany
-                @endif
+                @endif 
+                -->
 
                 {{-- Uploads Files --}}
                 <li class="aiz-side-nav-item">
@@ -861,7 +862,7 @@
                     </li>
                 @endcanany
 
-                <!-- Affiliate Addon -->
+                <!-- Affiliate Addon 
                 @if (addon_is_activated('affiliate_system'))
                     @canany(['affiliate_registration_form_config','affiliate_configurations','view_affiliate_users','view_all_referral_users','view_affiliate_withdraw_requests','view_affiliate_logs'])
                         <li class="aiz-side-nav-item">
@@ -931,7 +932,7 @@
                             </ul>
                         </li>
                     @endcanany
-                @endif
+                @endif -->
 
                 <!-- Offline Payment Addon-->
                 @if (addon_is_activated('offline_payment'))

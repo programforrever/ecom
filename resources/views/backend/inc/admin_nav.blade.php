@@ -67,7 +67,7 @@
                     </div>
                 </div>
             </div>
-            {{-- <div class="aiz-topbar-item mr-3">
+             <div class="aiz-topbar-item mr-3">
                 <div class="d-flex align-items-center">
                     <a class="btn btn-topbar has-transition btn-icon btn-circle btn-light p-0 hov-bg-primary d-flex align-items-center justify-content-center" 
                         href="{{ route('cache.clear') }}" target="_blank" data-toggle="tooltip" data-title="{{ translate('Clear Cache') }}">
@@ -101,7 +101,7 @@
                         </a>
                     </div>
                 </div>
-            </div> --}}
+            </div> 
         </div>
         <div class="d-flex justify-content-around align-items-center align-items-stretch">
             <!-- Notifications -->
