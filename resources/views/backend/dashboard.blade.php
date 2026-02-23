@@ -226,53 +226,206 @@ body.dark-mode .col-lg-6 .row.gutters-10 .card:hover,
 
 <!-- dona -->
 
+
+
+
+
+
+
+
+
+
+
 <!-- BARRAS-->
- <style>
-    .neumorphic-card {
-        background: #f8fafc;
-        border-radius: 20px;
-        border: none;
-        box-shadow: 
-            10px 10px 20px #d1d9e6,
-            -10px -10px 20px #ffffff;
-        transition: all 0.4s ease;
-        overflow: hidden;
+<style>
+    /* ── Fondo general neumórfico ── */
+    .neuro-card {
+        background    : #e8edf2 !important;
+        border-radius : 24px !important;
+        border        : none !important;
+        box-shadow    :
+            8px 8px 18px rgba(163,177,198,0.65),
+           -6px -6px 14px rgba(255,255,255,0.90) !important;
+        overflow      : hidden;
     }
 
-    .neumorphic-card:hover {
-        transform: translateY(-8px) scale(1.02);
-        box-shadow: 
-            6px 6px 16px #c4d0e0,
-            -6px -6px 16px #ffffff;
+    /* ── Header neumórfico azul ── */
+    .neuro-header-blue {
+        background : linear-gradient(145deg, #dde8f5 0%, #e8edf2 100%);
+        border-bottom: 1px solid rgba(163,177,198,0.2);
     }
 
-    .card-body canvas {
-        border-radius: 20px;
-        filter: drop-shadow(0 12px 24px rgba(0,0,0,0.15));
+    /* ── Header neumórfico rosa ── */
+    .neuro-header-pink {
+        background : linear-gradient(145deg, #f5dded 0%, #e8edf2 100%);
+        border-bottom: 1px solid rgba(163,177,198,0.2);
+    }
+
+    /* ── Body del card ── */
+    .neuro-body {
+        background : #e8edf2 !important;
+    }
+
+    /* ── Icono azul neumórfico ── */
+    .neuro-icon-blue {
+        width       : 44px;
+        height      : 44px;
+        border-radius: 14px;
+        background  : linear-gradient(145deg, #b8cef5, #7ea8e8);
+        box-shadow  :
+            4px 4px 10px rgba(100,130,200,0.45),
+           -3px -3px  8px rgba(255,255,255,0.80);
+        display     : flex;
+        align-items : center;
+        justify-content: center;
+    }
+
+    /* ── Icono rosa neumórfico ── */
+    .neuro-icon-pink {
+        width       : 44px;
+        height      : 44px;
+        border-radius: 14px;
+        background  : linear-gradient(145deg, #f0a8cc, #e060a0);
+        box-shadow  :
+            4px 4px 10px rgba(200,80,140,0.45),
+           -3px -3px  8px rgba(255,255,255,0.80);
+        display     : flex;
+        align-items : center;
+        justify-content: center;
+    }
+
+    /* ── Badge neumórfico azul ── */
+    .neuro-badge-blue {
+        background   : #e8edf2;
+        color        : #4a6fa5;
+        border-radius: 10px;
+        padding      : 5px 14px;
+        font-size    : 11px;
+        font-family  : 'Poppins', sans-serif;
+        box-shadow   :
+            3px 3px 7px rgba(163,177,198,0.55),
+           -2px -2px 6px rgba(255,255,255,0.85);
+    }
+
+    /* ── Badge neumórfico rosa ── */
+    .neuro-badge-pink {
+        background   : #e8edf2;
+        color        : #a0456e;
+        border-radius: 10px;
+        padding      : 5px 14px;
+        font-size    : 11px;
+        font-family  : 'Poppins', sans-serif;
+        box-shadow   :
+            3px 3px 7px rgba(163,177,198,0.55),
+           -2px -2px 6px rgba(255,255,255,0.85);
+    }
+
+    /* ── Canvas con sombra interna sutil ── */
+    .neuro-canvas-wrap {
+        background   : #e8edf2;
+        border-radius: 16px;
+        padding      : 12px;
+        box-shadow   :
+            inset 4px 4px 10px rgba(163,177,198,0.45),
+            inset -3px -3px  8px rgba(255,255,255,0.80);
+    }
+
+    /* ── Título azul ── */
+    .neuro-title-blue {
+        font-size  : 15px;
+        font-weight: 700;
+        color      : #2c4a7c;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    /* ── Título rosa ── */
+    .neuro-title-pink {
+        font-size  : 15px;
+        font-weight: 700;
+        color      : #7c2c50;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .neuro-subtitle {
+        color      : #8a9bb5;
+        font-size  : 12px;
+        font-family: 'Poppins', sans-serif;
     }
 </style>
 
+
 <div class="row gutters-10">
-    <div class="col-md-6">
-        <div class="card neumorphic-card">
-            <div class="card-header">
-                <h6 class="mb-0 fs-14">{{ translate('Category wise product sale') }}</h6>
+
+    <!-- ── Gráfico 1: Ventas por categoría ── -->
+    <div class="col-md-6 mb-4">
+        <div class="card neuro-card">
+
+            <div class="card-header neuro-header-blue border-0 pb-0 pt-4 px-4">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <div class="neuro-icon-blue">
+                        <i class="las la-chart-bar" style="color:#fff; font-size:20px;"></i>
+                    </div>
+                    <div>
+                        <p class="mb-0 neuro-title-blue">
+                            {{ translate('Category wise product sale') }}
+                        </p>
+                        <small class="neuro-subtitle">
+                            {{ translate('Rendimiento por categoría') }}
+                        </small>
+                    </div>
+                </div>
+                <div class="d-flex gap-3 pb-3">
+                    <span class="neuro-badge-blue">
+                        <i class="las la-arrow-up"></i>
+                        {{ translate('Ventas activas') }}
+                    </span>
+                </div>
             </div>
-            <div class="card-body">
-                <canvas id="graph-1" class="w-100" height="500"></canvas>
+
+            <div class="card-body neuro-body px-4 pb-4 pt-3">
+                <div class="neuro-canvas-wrap">
+                    <canvas id="graph-1" class="w-100" height="360"></canvas>
+                </div>
             </div>
+
         </div>
     </div>
-    <div class="col-md-6">
-        <div class="card neumorphic-card">
-            <div class="card-header">
-                <h6 class="mb-0 fs-14">{{ translate('Category wise product stock') }}</h6>
+
+    <!-- ── Gráfico 2: Stock por categoría ── -->
+    <div class="col-md-6 mb-4">
+        <div class="card neuro-card">
+
+            <div class="card-header neuro-header-pink border-0 pb-0 pt-4 px-4">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <div class="neuro-icon-pink">
+                        <i class="las la-boxes" style="color:#fff; font-size:20px;"></i>
+                    </div>
+                    <div>
+                        <p class="mb-0 neuro-title-pink">
+                            {{ translate('Category wise product stock') }}
+                        </p>
+                        <small class="neuro-subtitle">
+                            {{ translate('Inventario por categoría') }}
+                        </small>
+                    </div>
+                </div>
+                <div class="d-flex gap-3 pb-3">
+                    <span class="neuro-badge-pink">
+                        <i class="las la-warehouse"></i>
+                        {{ translate('Stock disponible') }}
+                    </span>
+                </div>
             </div>
-            <div class="card-body">
-                <canvas id="graph-2" class="w-100" height="500"></canvas>
+
+            <div class="card-body neuro-body px-4 pb-4 pt-3">
+                <div class="neuro-canvas-wrap">
+                    <canvas id="graph-2" class="w-100" height="360"></canvas>
+                </div>
             </div>
+
         </div>
     </div>
+
 </div>
 <!-- BARRAS-->
 
@@ -456,8 +609,105 @@ AIZ.plugins.chart('#pie-1', {
    
      // BARRAS
 
-   // Gráfico 1: Ventas por categoría - forma cilíndrica azul
-AIZ.plugins.chart('#graph-1', {
+   // ============================================================
+// ANIMACIÓN: offset global para rayas en movimiento
+// ============================================================
+var stripeOffset = 0;
+var activeCharts = [];
+
+(function animateStripes() {
+    stripeOffset = (stripeOffset + 0.4) % 14;
+    // Re-renderiza todos los charts registrados
+    for (var i = 0; i < activeCharts.length; i++) {
+        try {
+            activeCharts[i].update(0); // 0 = sin animación de transición
+        } catch(e) {}
+    }
+    requestAnimationFrame(animateStripes);
+})();
+
+
+// ============================================================
+// PLUGIN GLOBAL: Barras píldora neumórficas + rayas animadas
+// ============================================================
+Chart.helpers.extend(Chart.elements.Rectangle.prototype, {
+    draw: function() {
+        var ctx       = this._chart.ctx;
+        var vm        = this._view;
+        var x         = vm.x;
+        var width     = vm.width;
+        var left      = x - width / 2;
+        var right     = x + width / 2;
+        var top       = vm.y;
+        var bottom    = vm.base;
+        var barHeight = Math.abs(bottom - top);
+        var radius    = Math.min(width / 2, barHeight / 2);
+
+        function pillarPath() {
+            ctx.moveTo(left + radius, bottom);
+            ctx.lineTo(right - radius, bottom);
+            ctx.quadraticCurveTo(right, bottom, right, bottom - radius);
+            ctx.lineTo(right, top + radius);
+            ctx.quadraticCurveTo(right, top, right - radius, top);
+            ctx.lineTo(left + radius, top);
+            ctx.quadraticCurveTo(left, top, left, top + radius);
+            ctx.lineTo(left, bottom - radius);
+            ctx.quadraticCurveTo(left, bottom, left + radius, bottom);
+            ctx.closePath();
+        }
+
+        // --- 1. Sombra neumórfica + relleno base ---
+        ctx.save();
+        ctx.shadowColor   = 'rgba(163,177,198,0.6)';
+        ctx.shadowBlur    = 8;
+        ctx.shadowOffsetX = 3;
+        ctx.shadowOffsetY = 3;
+        ctx.beginPath();
+        pillarPath();
+        ctx.fillStyle = vm.backgroundColor;
+        ctx.fill();
+        ctx.restore();
+
+        // --- 2. Rayas diagonales ANIMADAS (sin render interno) ---
+        ctx.save();
+        ctx.beginPath();
+        pillarPath();
+        ctx.clip();
+
+        ctx.strokeStyle = 'rgba(255,255,255,0.20)';
+        ctx.lineWidth   = 5;
+        var step = 14;
+        for (var i = left - barHeight + stripeOffset; i < right + barHeight; i += step) {
+            ctx.beginPath();
+            ctx.moveTo(i,             bottom + 10);
+            ctx.lineTo(i + barHeight, top    - 10);
+            ctx.stroke();
+        }
+        ctx.restore();
+
+        // --- 3. Brillo lateral izquierdo ---
+        ctx.save();
+        ctx.beginPath();
+        pillarPath();
+        ctx.clip();
+        var hlGrad = ctx.createLinearGradient(left, 0, right, 0);
+        hlGrad.addColorStop(0,    'rgba(255,255,255,0.40)');
+        hlGrad.addColorStop(0.35, 'rgba(255,255,255,0.12)');
+        hlGrad.addColorStop(1,    'rgba(255,255,255,0)');
+        ctx.fillStyle = hlGrad;
+        ctx.beginPath();
+        pillarPath();
+        ctx.fill();
+        ctx.restore();
+        // ← SIN this._chart.render() aquí adentro
+    }
+});
+
+
+// ============================================================
+// Gráfico 1: Ventas por categoría — Azul neumórfico
+// ============================================================
+var chart1Instance = AIZ.plugins.chart('#graph-1', {
     type: 'bar',
     data: {
         labels: [
@@ -467,111 +717,111 @@ AIZ.plugins.chart('#graph-1', {
         ],
         datasets: [{
             label: '{{ translate('Ventas por categoría') }}',
-            data: [
-                {{ $cached_graph_data['num_of_sale_data'] }}
-            ],
-            // Degradado vertical para efecto cilindro 3D
+            data: [{{ $cached_graph_data['num_of_sale_data'] }}],
             backgroundColor: function(context) {
-                var chart = context.chart;
-                var ctx = chart.ctx;
-                var gradient = ctx.createLinearGradient(0, chart.chartArea.bottom, 0, chart.chartArea.top);
-                gradient.addColorStop(0, 'rgba(59, 130, 246, 0.95)');   // azul oscuro abajo
-                gradient.addColorStop(0.45, 'rgba(59, 130, 246, 0.85)');
-                gradient.addColorStop(1, 'rgba(147, 197, 253, 0.95)');  // azul claro arriba
-                return gradient;
+                var chart     = context.chart;
+                var ctx       = chart.ctx;
+                var chartArea = chart.chartArea;
+                if (!chartArea) return 'rgba(99,120,220,0.85)';
+                var g = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+                g.addColorStop(0,   'rgba(79, 98,210, 1)');
+                g.addColorStop(0.5, 'rgba(118,140,230, 0.95)');
+                g.addColorStop(1,   'rgba(165,185,255, 1)');
+                return g;
             },
-            borderColor: 'rgba(147, 197, 253, 0.6)',
-            borderWidth: 1,
-            borderRadius: 999,               // muy alto → forma casi cilíndrica/píldora
-            borderSkipped: false,
+            borderWidth:        0,
+            barPercentage:      0.5,
+            categoryPercentage: 0.75,
             hoverBackgroundColor: function(context) {
-                var chart = context.chart;
-                var ctx = chart.ctx;
-                var gradient = ctx.createLinearGradient(0, chart.chartArea.bottom, 0, chart.chartArea.top);
-                gradient.addColorStop(0, 'rgba(59, 130, 246, 1)');
-                gradient.addColorStop(0.45, 'rgba(59, 130, 246, 0.95)');
-                gradient.addColorStop(1, 'rgba(147, 197, 253, 1)');
-                return gradient;
-            },
-            hoverBorderColor: '#ffffff',
-            hoverBorderWidth: 3
+                var chart     = context.chart;
+                var ctx       = chart.ctx;
+                var chartArea = chart.chartArea;
+                if (!chartArea) return 'rgba(79,98,210,1)';
+                var g = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+                g.addColorStop(0, 'rgba(55, 75,200,1)');
+                g.addColorStop(1, 'rgba(140,160,255,1)');
+                return g;
+            }
         }]
     },
     options: {
-        responsive: true,
+        responsive:          true,
         maintainAspectRatio: false,
-
-        animation: {
-            duration: 1800,
-            easing: 'easeOutBounce'
-        },
-
+        animation: { duration: 1800, easing: 'easeOutElastic' },
         scales: {
             yAxes: [{
                 gridLines: {
-                    color: '#e5e7eb',
-                    zeroLineColor: '#e5e7eb',
-                    drawBorder: false,
-                    drawTicks: false
+                    color:         'rgba(163,177,198,0.25)',
+                    zeroLineColor: 'rgba(163,177,198,0.25)',
+                    drawBorder:    false,
+                    drawTicks:     false,
+                    borderDash:    [4, 6]
                 },
                 ticks: {
-                    fontColor: "#4b5563",
-                    fontFamily: 'Poppins',
-                    fontSize: 12,
-                    beginAtZero: true,
-                    padding: 20
+                    fontColor:     '#8a9bb5',
+                    fontFamily:    'Poppins',
+                    fontSize:       11,
+                    beginAtZero:   true,
+                    padding:        16,
+                    maxTicksLimit:  6
                 }
             }],
             xAxes: [{
-                gridLines: {
-                    display: false
-                },
+                gridLines: { display: false },
                 ticks: {
-                    fontColor: "#4b5563",
-                    fontFamily: 'Poppins',
-                    fontSize: 12,
-                    padding: 15,
-                    maxRotation: 45,
-                    minRotation: 45
+                    fontColor:     '#8a9bb5',
+                    fontFamily:    'Poppins',
+                    fontSize:       10,
+                    padding:        10,
+                    maxRotation:    35,
+                    minRotation:    35,
+                    autoSkip:       false
                 }
             }]
         },
-
-        plugins: {
-            legend: {
-                display: true,
-                position: 'top',
-                labels: {
-                    fontFamily: 'Poppins',
-                    boxWidth: 14,
-                    usePointStyle: true,
-                    padding: 20,
-                    fontColor: '#1f2937'
-                },
-                onClick: function () { return ''; }
-            }
+        legend: {
+            display:  true,
+            position: 'top',
+            align:    'end',
+            labels: {
+                fontFamily:    'Poppins',
+                fontSize:       12,
+                fontColor:     '#5a6a85',
+                boxWidth:       8,
+                usePointStyle: true,
+                padding:        20
+            },
+            onClick: function() { return ''; }
         },
-
+        tooltips: {
+            backgroundColor: 'rgba(232,237,242,0.98)',
+            titleFontFamily: 'Poppins',
+            titleFontSize:    13,
+            titleFontColor:  '#3d4f6e',
+            bodyFontFamily:  'Poppins',
+            bodyFontSize:     12,
+            bodyFontColor:   '#5a6a85',
+            borderColor:     'rgba(163,177,198,0.4)',
+            borderWidth:      1,
+            cornerRadius:     12,
+            xPadding:         14,
+            yPadding:         10,
+            displayColors:    false
+        },
         layout: {
-            padding: {
-                top: 40,
-                bottom: 40,
-                left: 15,
-                right: 15
-            }
-        },
-
-        elements: {
-            bar: {
-                borderRadius: 999,
-                borderSkipped: false
-            }
+            padding: { top: 15, bottom: 10, left: 10, right: 10 }
         }
     }
 });
 
-// Gráfico 2: Stock por categoría - forma cilíndrica rosa
-AIZ.plugins.chart('#graph-2', {
+// Registrar instancia para el loop de animación
+if (chart1Instance) activeCharts.push(chart1Instance);
+
+
+// ============================================================
+// Gráfico 2: Stock por categoría — Rosa neumórfico
+// ============================================================
+var chart2Instance = AIZ.plugins.chart('#graph-2', {
     type: 'bar',
     data: {
         labels: [
@@ -581,109 +831,105 @@ AIZ.plugins.chart('#graph-2', {
         ],
         datasets: [{
             label: '{{ translate('Stock por categoría') }}',
-            data: [
-                {{ $cached_graph_data['qty_data'] }}
-            ],
-            // Degradado vertical rosa
+            data: [{{ $cached_graph_data['qty_data'] }}],
             backgroundColor: function(context) {
-                var chart = context.chart;
-                var ctx = chart.ctx;
-                var gradient = ctx.createLinearGradient(0, chart.chartArea.bottom, 0, chart.chartArea.top);
-                gradient.addColorStop(0, 'rgba(236, 72, 153, 0.95)');   // rosa fuerte abajo
-                gradient.addColorStop(0.45, 'rgba(244, 114, 182, 0.85)');
-                gradient.addColorStop(1, 'rgba(249, 168, 212, 0.95)');  // rosa claro arriba
-                return gradient;
+                var chart     = context.chart;
+                var ctx       = chart.ctx;
+                var chartArea = chart.chartArea;
+                if (!chartArea) return 'rgba(236,72,153,0.85)';
+                var g = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+                g.addColorStop(0,   'rgba(219, 39,119, 1)');
+                g.addColorStop(0.5, 'rgba(236, 72,153, 0.95)');
+                g.addColorStop(1,   'rgba(249,168,212, 1)');
+                return g;
             },
-            borderColor: 'rgba(249, 168, 212, 0.6)',
-            borderWidth: 1,
-            borderRadius: 999,
-            borderSkipped: false,
+            borderWidth:        0,
+            barPercentage:      0.5,
+            categoryPercentage: 0.75,
             hoverBackgroundColor: function(context) {
-                var chart = context.chart;
-                var ctx = chart.ctx;
-                var gradient = ctx.createLinearGradient(0, chart.chartArea.bottom, 0, chart.chartArea.top);
-                gradient.addColorStop(0, 'rgba(236, 72, 153, 1)');
-                gradient.addColorStop(0.45, 'rgba(244, 114, 182, 0.95)');
-                gradient.addColorStop(1, 'rgba(249, 168, 212, 1)');
-                return gradient;
-            },
-            hoverBorderColor: '#ffffff',
-            hoverBorderWidth: 3
+                var chart     = context.chart;
+                var ctx       = chart.ctx;
+                var chartArea = chart.chartArea;
+                if (!chartArea) return 'rgba(219,39,119,1)';
+                var g = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+                g.addColorStop(0, 'rgba(190, 24, 93,1)');
+                g.addColorStop(1, 'rgba(244,114,182,1)');
+                return g;
+            }
         }]
     },
     options: {
-        responsive: true,
+        responsive:          true,
         maintainAspectRatio: false,
-
-        animation: {
-            duration: 1800,
-            easing: 'easeOutBounce'
-        },
-
+        animation: { duration: 1800, easing: 'easeOutElastic' },
         scales: {
             yAxes: [{
                 gridLines: {
-                    color: '#e5e7eb',
-                    zeroLineColor: '#e5e7eb',
-                    drawBorder: false,
-                    drawTicks: false
+                    color:         'rgba(163,177,198,0.25)',
+                    zeroLineColor: 'rgba(163,177,198,0.25)',
+                    drawBorder:    false,
+                    drawTicks:     false,
+                    borderDash:    [4, 6]
                 },
                 ticks: {
-                    fontColor: "#4b5563",
-                    fontFamily: 'Poppins',
-                    fontSize: 12,
-                    beginAtZero: true,
-                    padding: 20
+                    fontColor:     '#8a9bb5',
+                    fontFamily:    'Poppins',
+                    fontSize:       11,
+                    beginAtZero:   true,
+                    padding:        16,
+                    maxTicksLimit:  6
                 }
             }],
             xAxes: [{
-                gridLines: {
-                    display: false
-                },
+                gridLines: { display: false },
                 ticks: {
-                    fontColor: "#4b5563",
-                    fontFamily: 'Poppins',
-                    fontSize: 12,
-                    padding: 15,
-                    maxRotation: 45,
-                    minRotation: 45
+                    fontColor:     '#8a9bb5',
+                    fontFamily:    'Poppins',
+                    fontSize:       10,
+                    padding:        10,
+                    maxRotation:    35,
+                    minRotation:    35,
+                    autoSkip:       false
                 }
             }]
         },
-
-        plugins: {
-            legend: {
-                display: true,
-                position: 'top',
-                labels: {
-                    fontFamily: 'Poppins',
-                    boxWidth: 14,
-                    usePointStyle: true,
-                    padding: 20,
-                    fontColor: '#1f2937'
-                },
-                onClick: function () { return ''; }
-            }
+        legend: {
+            display:  true,
+            position: 'top',
+            align:    'end',
+            labels: {
+                fontFamily:    'Poppins',
+                fontSize:       12,
+                fontColor:     '#5a6a85',
+                boxWidth:       8,
+                usePointStyle: true,
+                padding:        20
+            },
+            onClick: function() { return ''; }
         },
-
+        tooltips: {
+            backgroundColor: 'rgba(232,237,242,0.98)',
+            titleFontFamily: 'Poppins',
+            titleFontSize:    13,
+            titleFontColor:  '#3d4f6e',
+            bodyFontFamily:  'Poppins',
+            bodyFontSize:     12,
+            bodyFontColor:   '#5a6a85',
+            borderColor:     'rgba(163,177,198,0.4)',
+            borderWidth:      1,
+            cornerRadius:     12,
+            xPadding:         14,
+            yPadding:         10,
+            displayColors:    false
+        },
         layout: {
-            padding: {
-                top: 40,
-                bottom: 40,
-                left: 15,
-                right: 15
-            }
-        },
-
-        elements: {
-            bar: {
-                borderRadius: 999,
-                borderSkipped: false
-            }
+            padding: { top: 15, bottom: 10, left: 10, right: 10 }
         }
     }
 });
-    
+
+// Registrar instancia para el loop de animación
+if (chart2Instance) activeCharts.push(chart2Instance);
      // BARRAS
 </script>
 @endsection
