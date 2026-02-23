@@ -1,0 +1,483 @@
+/* ========================================
+   ADMIN SIDEBAR - BLANCO MODERNO + NARANJA
+   ======================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+    --sidebar-bg: #FFFFFF;
+    --sidebar-bg-hover: #FFF7F0;
+    --sidebar-bg-active: #FFF3E8;
+
+    --sidebar-orange: #FF6B00;
+    --sidebar-orange-light: #FF8C38;
+    --sidebar-orange-glow: rgba(255, 107, 0, 0.15);
+    --sidebar-orange-soft: rgba(255, 107, 0, 0.08);
+
+    --sidebar-text: #1A1A2E;
+    --sidebar-text-muted: #94A3B8;
+
+    --sidebar-border: #F1F5F9;
+    --sidebar-divider: #F0F4F8;
+
+    --sidebar-shadow: 4px 0 24px rgba(0, 0, 0, 0.06);
+    --sidebar-radius: 12px;
+    --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ========================================
+   SIDEBAR BASE
+   ======================================== */
+
+.aiz-sidebar.left {
+    background: var(--sidebar-bg);
+    box-shadow: var(--sidebar-shadow);
+    border-right: 1px solid var(--sidebar-divider);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ========================================
+   LOGO AREA
+   ======================================== */
+
+.aiz-side-nav-logo-wrap {
+    padding: 22px 24px;
+    border-bottom: 1px solid var(--sidebar-divider);
+    position: relative;
+    background: #FFFFFF;
+    transition: var(--transition);
+}
+
+.aiz-side-nav-logo-wrap::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 24px;
+    right: 24px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--sidebar-orange), transparent);
+    border-radius: 2px;
+}
+
+.aiz-side-nav-logo-wrap img {
+    transition: var(--transition);
+}
+
+.aiz-side-nav-logo-wrap:hover img {
+    opacity: 0.85;
+    transform: scale(1.02);
+}
+
+/* ========================================
+   SEARCH
+   ======================================== */
+
+.aiz-side-nav-wrap #menu-search {
+    width: 100%;
+    background: #F8FAFC;
+    border: 1.5px solid var(--sidebar-border);
+    color: var(--sidebar-text);
+    border-radius: 10px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px;
+    padding: 10px 16px 10px 40px;
+    transition: var(--transition);
+    outline: none;
+}
+
+.aiz-side-nav-wrap #menu-search:focus {
+    background: #fff;
+    border-color: var(--sidebar-orange);
+    box-shadow: 0 0 0 4px var(--sidebar-orange-glow);
+}
+
+.aiz-side-nav-wrap #menu-search::placeholder {
+    color: var(--sidebar-text-muted);
+}
+
+/* ========================================
+   SECTION LABELS
+   ======================================== */
+
+.aiz-side-nav-list .nav-small-cap {
+    color: var(--sidebar-text-muted);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 16px 20px 6px;
+}
+
+/* ========================================
+   MENU ITEMS - NIVEL 1
+   ======================================== */
+
+.aiz-side-nav-list .aiz-side-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--sidebar-text);
+    padding: 10px 16px;
+    margin: 2px 12px;
+    border-radius: var(--sidebar-radius);
+    border: 1px solid transparent;
+    font-size: 13.5px;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+    background: transparent;
+    width: calc(100% - 24px);
+}
+
+/* Shimmer hover effect */
+.aiz-side-nav-list .aiz-side-nav-link::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--sidebar-orange-soft) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: inherit;
+    pointer-events: none;
+}
+
+.aiz-side-nav-list .aiz-side-nav-link:hover::before {
+    opacity: 1;
+}
+
+/* Hover */
+.aiz-side-nav-list .aiz-side-nav-link:hover {
+    background: var(--sidebar-bg-hover);
+    border-color: rgba(255, 107, 0, 0.12);
+    color: var(--sidebar-orange);
+    transform: translateX(3px);
+}
+
+/* Active / expanded */
+.aiz-side-nav-list .aiz-side-nav-link.active,
+.aiz-side-nav-list .aiz-side-nav-link[aria-expanded="true"] {
+    background: var(--sidebar-bg-active);
+    border-color: rgba(255, 107, 0, 0.2);
+    color: var(--sidebar-orange);
+    font-weight: 600;
+}
+
+/* Active left bar */
+.aiz-side-nav-list .aiz-side-nav-link.active::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 20%;
+    height: 60%;
+    width: 3px;
+    background: linear-gradient(180deg, var(--sidebar-orange-light), var(--sidebar-orange));
+    border-radius: 0 4px 4px 0;
+    box-shadow: 0 0 8px rgba(255, 107, 0, 0.4);
+    animation: pulse-glow 2.5s ease-in-out infinite;
+}
+
+/* ========================================
+   ICONOS
+   ======================================== */
+
+.aiz-side-nav-list .aiz-side-nav-icon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--sidebar-text-muted);
+    flex-shrink: 0;
+    transition: var(--transition);
+}
+
+.aiz-side-nav-list .aiz-side-nav-icon > svg * {
+    fill: var(--sidebar-text-muted);
+    transition: var(--transition);
+}
+
+.aiz-side-nav-list .aiz-side-nav-link:hover .aiz-side-nav-icon,
+.aiz-side-nav-list .aiz-side-nav-link.active .aiz-side-nav-icon,
+.aiz-side-nav-list .aiz-side-nav-link[aria-expanded="true"] .aiz-side-nav-icon {
+    color: var(--sidebar-orange);
+}
+
+.aiz-side-nav-list .aiz-side-nav-link:hover .aiz-side-nav-icon > svg *,
+.aiz-side-nav-list .aiz-side-nav-link.active .aiz-side-nav-icon > svg *,
+.aiz-side-nav-list .aiz-side-nav-link[aria-expanded="true"] .aiz-side-nav-icon > svg * {
+    fill: var(--sidebar-orange);
+}
+
+/* ========================================
+   TEXTO
+   ======================================== */
+
+.aiz-side-nav-list .aiz-side-nav-text {
+    flex: 1;
+    font-size: 13.5px;
+    font-weight: 500;
+    transition: var(--transition);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ========================================
+   FLECHAS
+   ======================================== */
+
+.aiz-side-nav-list .aiz-side-nav-arrow::after {
+    content: "\f106";
+    font-family: "Line Awesome Free";
+    font-weight: 900;
+    font-size: 12px;
+    color: var(--sidebar-text-muted);
+    transition: var(--transition);
+    opacity: 0.7;
+}
+
+.aiz-side-nav-list .aiz-side-nav-link:hover .aiz-side-nav-arrow::after {
+    color: var(--sidebar-orange);
+    opacity: 1;
+}
+
+.aiz-side-nav-list [aria-expanded="true"] .aiz-side-nav-arrow::after {
+    transform: rotate(180deg);
+    color: var(--sidebar-orange);
+    opacity: 1;
+}
+
+/* ========================================
+   BADGES
+   ======================================== */
+
+.aiz-side-nav-list .badge {
+    background: var(--sidebar-orange);
+    color: #fff;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 20px;
+    line-height: 1.6;
+    letter-spacing: 0.3px;
+    box-shadow: 0 2px 8px rgba(255, 107, 0, 0.35);
+}
+
+/* ========================================
+   SUBMENUS - LEVEL 2 Y 3
+   ======================================== */
+
+.aiz-side-nav-list .level-2,
+.aiz-side-nav-list .level-3 {
+    list-style: none;
+    margin: 0 12px 4px 22px;
+    padding: 2px 0;
+    position: relative;
+    background: transparent;
+    border-left: none;
+}
+
+/* Línea vertical decorativa */
+.aiz-side-nav-list .level-2::before {
+    content: '';
+    position: absolute;
+    left: 12px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(180deg, var(--sidebar-orange-glow), transparent);
+}
+
+.aiz-side-nav-list .level-2 .aiz-side-nav-link,
+.aiz-side-nav-list .level-3 .aiz-side-nav-link {
+    padding: 8px 12px 8px 28px;
+    font-size: 12.5px;
+    font-weight: 400;
+    color: #64748B;
+    margin: 1px 0;
+    border-radius: 8px;
+    width: 100%;
+    transform: none !important;
+}
+
+.aiz-side-nav-list .level-3 .aiz-side-nav-link {
+    padding-left: 44px;
+    font-size: 12px;
+}
+
+/* Ocultar barra activa en submenús */
+.aiz-side-nav-list .level-2 .aiz-side-nav-link::after,
+.aiz-side-nav-list .level-3 .aiz-side-nav-link::after {
+    display: none !important;
+}
+
+/* Puntito indicador — resetea completamente el shimmer heredado */
+.aiz-side-nav-list .level-2 .aiz-side-nav-link::before,
+.aiz-side-nav-list .level-3 .aiz-side-nav-link::before {
+    inset: auto !important;
+    left: 14px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: 5px !important;
+    height: 5px !important;
+    background: var(--sidebar-text-muted) !important;
+    border-radius: 50% !important;
+    opacity: 0.5 !important;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.aiz-side-nav-list .level-2 .aiz-side-nav-link:hover::before,
+.aiz-side-nav-list .level-2 .aiz-side-nav-link.active::before,
+.aiz-side-nav-list .level-3 .aiz-side-nav-link:hover::before,
+.aiz-side-nav-list .level-3 .aiz-side-nav-link.active::before {
+    background: var(--sidebar-orange) !important;
+    opacity: 1 !important;
+    box-shadow: 0 0 6px rgba(255, 107, 0, 0.5) !important;
+    transform: translateY(-50%) scale(1.3) !important;
+}
+
+/* Hover en submenús */
+.aiz-side-nav-list .level-2 .aiz-side-nav-link:hover,
+.aiz-side-nav-list .level-3 .aiz-side-nav-link:hover {
+    background: var(--sidebar-orange-soft);
+    color: var(--sidebar-orange);
+    border-color: transparent;
+    padding-left: 32px;
+    transform: none !important;
+}
+
+.aiz-side-nav-list .level-3 .aiz-side-nav-link:hover {
+    padding-left: 48px;
+}
+
+/* Active en submenús */
+.aiz-side-nav-list .level-2 .aiz-side-nav-link.active,
+.aiz-side-nav-list .level-3 .aiz-side-nav-link.active {
+    background: var(--sidebar-orange-soft);
+    color: var(--sidebar-orange);
+    font-weight: 600;
+    border-color: transparent;
+}
+
+/* ========================================
+   DIVIDER
+   ======================================== */
+
+.aiz-side-nav-list .dropdown-divider {
+    border-color: var(--sidebar-divider);
+    margin: 8px 16px;
+}
+
+/* ========================================
+   SCROLLBAR
+   ======================================== */
+
+.aiz-sidebar.left::-webkit-scrollbar {
+    width: 4px;
+}
+
+.aiz-sidebar.left::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.aiz-sidebar.left::-webkit-scrollbar-thumb {
+    background: #E2E8F0;
+    border-radius: 10px;
+}
+
+.aiz-sidebar.left::-webkit-scrollbar-thumb:hover {
+    background: var(--sidebar-orange-light);
+}
+
+/* ========================================
+   FOCUS / ACCESIBILIDAD
+   ======================================== */
+
+.aiz-side-nav-list .aiz-side-nav-link:focus-visible {
+    outline: 2px solid var(--sidebar-orange);
+    outline-offset: 2px;
+}
+
+/* ========================================
+   DISABLED
+   ======================================== */
+
+.aiz-side-nav-list .aiz-side-nav-link:disabled,
+.aiz-side-nav-list .aiz-side-nav-link.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* ========================================
+   ANIMACIONES
+   ======================================== */
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 4px rgba(255, 107, 0, 0.4); }
+    50%       { box-shadow: 0 0 12px rgba(255, 107, 0, 0.7); }
+}
+
+@keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateX(-8px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+.aiz-side-nav-list .aiz-side-nav-item {
+    animation: fadeSlideIn 0.3s ease forwards;
+    opacity: 0;
+}
+.aiz-side-nav-list .aiz-side-nav-item:nth-child(1) { animation-delay: 0.04s; }
+.aiz-side-nav-list .aiz-side-nav-item:nth-child(2) { animation-delay: 0.08s; }
+.aiz-side-nav-list .aiz-side-nav-item:nth-child(3) { animation-delay: 0.12s; }
+.aiz-side-nav-list .aiz-side-nav-item:nth-child(4) { animation-delay: 0.16s; }
+.aiz-side-nav-list .aiz-side-nav-item:nth-child(5) { animation-delay: 0.20s; }
+.aiz-side-nav-list .aiz-side-nav-item:nth-child(6) { animation-delay: 0.24s; }
+.aiz-side-nav-list .aiz-side-nav-item:nth-child(7) { animation-delay: 0.28s; }
+.aiz-side-nav-list .aiz-side-nav-item:nth-child(8) { animation-delay: 0.32s; }
+.aiz-side-nav-list .aiz-side-nav-item:nth-child(9) { animation-delay: 0.36s; }
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 768px) {
+    .aiz-sidebar.left {
+        width: 260px;
+        left: -260px;
+        box-shadow: 8px 0 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .aiz-side-nav-list .aiz-side-nav-link {
+        padding: 9px 14px;
+        margin: 2px 8px;
+    }
+
+    .aiz-side-nav-wrap #menu-search {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 576px) {
+    .aiz-side-nav-list .aiz-side-nav-text {
+        font-size: 13px;
+    }
+
+    .aiz-side-nav-list .level-2 .aiz-side-nav-link {
+        padding-left: 24px;
+    }
+}

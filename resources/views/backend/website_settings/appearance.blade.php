@@ -114,43 +114,183 @@
     			<div class="card-body">
     				<form action="{{ route('business_settings.update') }}" method="POST">
     					@csrf
+
+                        {{-- =====================================================
+                             ESTILOS PARA EL COLOR PICKER VISUAL
+                        ====================================================== --}}
+                        <style>
+                            .color-picker-wrapper {
+                                display: flex;
+                                align-items: center;
+                                gap: 12px;
+                            }
+                            .color-picker-swatch {
+                                width: 48px;
+                                height: 38px;
+                                border-radius: 6px;
+                                border: 2px solid #dee2e6;
+                                cursor: pointer;
+                                flex-shrink: 0;
+                                transition: border-color 0.2s, transform 0.1s;
+                                box-shadow: 0 2px 4px rgba(0,0,0,0.12);
+                            }
+                            .color-picker-swatch:hover {
+                                border-color: #adb5bd;
+                                transform: scale(1.05);
+                            }
+                            /* Ocultamos el input nativo pero lo mantenemos funcional */
+                            .color-picker-native {
+                                opacity: 0;
+                                width: 0;
+                                height: 0;
+                                position: absolute;
+                                pointer-events: none;
+                            }
+                            .color-hex-display {
+                                font-family: monospace;
+                                font-size: 13px;
+                                color: #6c757d;
+                                background: #f8f9fa;
+                                border: 1px solid #dee2e6;
+                                border-radius: 4px;
+                                padding: 4px 8px;
+                                min-width: 80px;
+                                text-align: center;
+                            }
+                            .color-picker-label-hint {
+                                font-size: 12px;
+                                color: #adb5bd;
+                            }
+                        </style>
+
 						<!-- Website Base Color -->
     	                <div class="form-group row">
     	                    <label class="col-md-3 col-from-label">{{translate('Website Base Color')}}</label>
                             <div class="col-md-8">
                                 <input type="hidden" name="types[]" value="base_color">
-        	                    <input type="text" name="base_color" class="form-control" placeholder="#377dff" value="{{ get_setting('base_color') }}">
-        						<small class="text-muted">{{ translate('Hex Color Code') }}</small>
+                                <div class="color-picker-wrapper">
+                                    {{-- Muestra visual del color (al hacer clic abre el picker nativo) --}}
+                                    <div class="color-picker-swatch"
+                                         id="swatch_base_color"
+                                         style="background-color: {{ get_setting('base_color') ?: '#377dff' }};"
+                                         onclick="document.getElementById('native_base_color').click()"
+                                         title="{{ translate('Click to choose color') }}">
+                                    </div>
+                                    {{-- Input color nativo (oculto visualmente pero activo) --}}
+                                    <input type="color"
+                                           id="native_base_color"
+                                           class="color-picker-native"
+                                           value="{{ get_setting('base_color') ?: '#377dff' }}"
+                                           oninput="syncColor(this, 'swatch_base_color', 'hex_base_color', 'field_base_color')">
+                                    {{-- Campo hidden que se envía al servidor --}}
+                                    <input type="hidden"
+                                           name="base_color"
+                                           id="field_base_color"
+                                           value="{{ get_setting('base_color') ?: '#377dff' }}">
+                                    {{-- Muestra el código hex actual --}}
+                                    <span class="color-hex-display" id="hex_base_color">{{ get_setting('base_color') ?: '#377dff' }}</span>
+                                    <span class="color-picker-label-hint">{{ translate('Click the color to change it') }}</span>
+                                </div>
                             </div>
     	                </div>
+
 						<!-- Website Base Hover Color -->
     	                <div class="form-group row">
     	                    <label class="col-md-3 col-from-label">{{translate('Website Base Hover Color')}}</label>
                             <div class="col-md-8">
                                 <input type="hidden" name="types[]" value="base_hov_color">
-        	                    <input type="text" name="base_hov_color" class="form-control" placeholder="#377dff" value="{{  get_setting('base_hov_color') }}">
-        						<small class="text-muted">{{ translate('Hex Color Code') }}</small>
+                                <div class="color-picker-wrapper">
+                                    <div class="color-picker-swatch"
+                                         id="swatch_base_hov_color"
+                                         style="background-color: {{ get_setting('base_hov_color') ?: '#377dff' }};"
+                                         onclick="document.getElementById('native_base_hov_color').click()"
+                                         title="{{ translate('Click to choose color') }}">
+                                    </div>
+                                    <input type="color"
+                                           id="native_base_hov_color"
+                                           class="color-picker-native"
+                                           value="{{ get_setting('base_hov_color') ?: '#377dff' }}"
+                                           oninput="syncColor(this, 'swatch_base_hov_color', 'hex_base_hov_color', 'field_base_hov_color')">
+                                    <input type="hidden"
+                                           name="base_hov_color"
+                                           id="field_base_hov_color"
+                                           value="{{ get_setting('base_hov_color') ?: '#377dff' }}">
+                                    <span class="color-hex-display" id="hex_base_hov_color">{{ get_setting('base_hov_color') ?: '#377dff' }}</span>
+                                    <span class="color-picker-label-hint">{{ translate('Click the color to change it') }}</span>
+                                </div>
                             </div>
     	                </div>
+
 						<!-- Website Secondary Base Color -->
     	                <div class="form-group row">
     	                    <label class="col-md-3 col-from-label">{{translate('Website Secondary Base Color')}}</label>
                             <div class="col-md-8">
                                 <input type="hidden" name="types[]" value="secondary_base_color">
-        	                    <input type="text" name="secondary_base_color" class="form-control" placeholder="#ffc519" value="{{ get_setting('secondary_base_color') }}">
-        						<small class="text-muted">{{ translate('Hex Color Code') }}</small>
+                                <div class="color-picker-wrapper">
+                                    <div class="color-picker-swatch"
+                                         id="swatch_secondary_base_color"
+                                         style="background-color: {{ get_setting('secondary_base_color') ?: '#ffc519' }};"
+                                         onclick="document.getElementById('native_secondary_base_color').click()"
+                                         title="{{ translate('Click to choose color') }}">
+                                    </div>
+                                    <input type="color"
+                                           id="native_secondary_base_color"
+                                           class="color-picker-native"
+                                           value="{{ get_setting('secondary_base_color') ?: '#ffc519' }}"
+                                           oninput="syncColor(this, 'swatch_secondary_base_color', 'hex_secondary_base_color', 'field_secondary_base_color')">
+                                    <input type="hidden"
+                                           name="secondary_base_color"
+                                           id="field_secondary_base_color"
+                                           value="{{ get_setting('secondary_base_color') ?: '#ffc519' }}">
+                                    <span class="color-hex-display" id="hex_secondary_base_color">{{ get_setting('secondary_base_color') ?: '#ffc519' }}</span>
+                                    <span class="color-picker-label-hint">{{ translate('Click the color to change it') }}</span>
+                                </div>
                             </div>
     	                </div>
+
 						<!-- Website Secondary Base Hover Color -->
     	                <div class="form-group row">
     	                    <label class="col-md-3 col-from-label">{{translate('Website Secondary Base Hover Color')}}</label>
                             <div class="col-md-8">
                                 <input type="hidden" name="types[]" value="secondary_base_hov_color">
-        	                    <input type="text" name="secondary_base_hov_color" class="form-control" placeholder="#dbaa17" value="{{  get_setting('secondary_base_hov_color') }}">
-        						<small class="text-muted">{{ translate('Hex Color Code') }}</small>
+                                <div class="color-picker-wrapper">
+                                    <div class="color-picker-swatch"
+                                         id="swatch_secondary_base_hov_color"
+                                         style="background-color: {{ get_setting('secondary_base_hov_color') ?: '#dbaa17' }};"
+                                         onclick="document.getElementById('native_secondary_base_hov_color').click()"
+                                         title="{{ translate('Click to choose color') }}">
+                                    </div>
+                                    <input type="color"
+                                           id="native_secondary_base_hov_color"
+                                           class="color-picker-native"
+                                           value="{{ get_setting('secondary_base_hov_color') ?: '#dbaa17' }}"
+                                           oninput="syncColor(this, 'swatch_secondary_base_hov_color', 'hex_secondary_base_hov_color', 'field_secondary_base_hov_color')">
+                                    <input type="hidden"
+                                           name="secondary_base_hov_color"
+                                           id="field_secondary_base_hov_color"
+                                           value="{{ get_setting('secondary_base_hov_color') ?: '#dbaa17' }}">
+                                    <span class="color-hex-display" id="hex_secondary_base_hov_color">{{ get_setting('secondary_base_hov_color') ?: '#dbaa17' }}</span>
+                                    <span class="color-picker-label-hint">{{ translate('Click the color to change it') }}</span>
+                                </div>
                             </div>
     	                </div>
-						
+
+                        {{-- =====================================================
+                             SCRIPT DE SINCRONIZACIÓN
+                             syncColor(inputNativo, idSwatch, idHex, idHidden)
+                             - Actualiza el cuadro visual con el color elegido
+                             - Actualiza el texto del código hex
+                             - Actualiza el input hidden que se envía al servidor
+                        ====================================================== --}}
+                        <script>
+                            function syncColor(nativeInput, swatchId, hexId, fieldId) {
+                                var color = nativeInput.value;
+                                document.getElementById(swatchId).style.backgroundColor = color;
+                                document.getElementById(hexId).textContent = color;
+                                document.getElementById(fieldId).value = color;
+                            }
+                        </script>
+
 						<!-- Flash Deal Page Banner - Large -->
     					<div class="form-group row">
     						<label class="col-md-3 col-from-label">{{ translate('Flash Deal Page Banner - Large') }}</label>
