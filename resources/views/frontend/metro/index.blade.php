@@ -2,6 +2,7 @@
 
 @section('content')
     <style>
+        
         #section_featured .slick-slider .slick-list{
             background: #fff;
         }
