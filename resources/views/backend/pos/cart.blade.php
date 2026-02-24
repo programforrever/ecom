@@ -79,4 +79,4 @@
         <span>{{ translate('Total') }}</span>
         <span>{{ single_price($subtotal+$tax+Session::get('pos.shipping', 0) - Session::get('pos.discount', 0)) }}</span>
     </div>
-</div>
+</div> 

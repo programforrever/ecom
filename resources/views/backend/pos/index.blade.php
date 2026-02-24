@@ -58,7 +58,7 @@
                             {{ translate('Loading..') }}
                         </div>
                     </div>
-   
+
                 </div>
             </div>
 
@@ -85,6 +85,7 @@
                             </button>
                         </div>
 
+   <!-- SUBTOTAL -->
                         <div class="" id="cart-details">
                             <div class="aiz-pos-cart-list mb-4 mt-3 c-scrollbar-light">
                                 @php
@@ -218,6 +219,111 @@
 </section>
 
 <style>
+    /* ══ MODAL SHIPPING ADDRESS ══ */
+#new-customer .modal-content {
+    background    : var(--nb) !important;
+    border-radius : 20px !important;
+    border        : none !important;
+    box-shadow    : 12px 12px 30px rgba(163,177,198,.6),
+                    -8px -8px 24px rgba(255,255,255,.95) !important;
+    overflow      : hidden !important;
+}
+
+#new-customer .modal-header {
+    background    : var(--nb) !important;
+    border-bottom : 1px solid rgba(163,177,198,.3) !important;
+    padding       : 18px 24px !important;
+}
+
+#new-customer .modal-title {
+    font-family   : 'Poppins', sans-serif !important;
+    font-weight   : 700 !important;
+    font-size     : 15px !important;
+    color         : var(--text) !important;
+}
+
+#new-customer .modal-body {
+    background    : var(--nb) !important;
+    padding       : 20px 24px !important;
+}
+
+#new-customer .modal-footer {
+    background    : var(--nb) !important;
+    border-top    : 1px solid rgba(163,177,198,.3) !important;
+    padding       : 14px 24px !important;
+    gap           : 10px !important;
+}
+
+/* Labels */
+#new-customer label {
+    font-family   : 'Poppins', sans-serif !important;
+    font-size     : 13px !important;
+    font-weight   : 600 !important;
+    color         : var(--text) !important;
+}
+
+/* Inputs y selects */
+#new-customer .form-control {
+    background    : var(--nb) !important;
+    box-shadow    : var(--ni) !important;
+    border        : none !important;
+    border-radius : var(--rs) !important;
+    color         : var(--text) !important;
+    font-family   : 'Poppins', sans-serif !important;
+    font-size     : 13px !important;
+    padding       : 10px 14px !important;
+    transition    : box-shadow .25s !important;
+}
+#new-customer .form-control:focus {
+    box-shadow    : inset 5px 5px 12px rgba(163,177,198,0.6),
+                    inset -5px -5px 12px rgba(255,255,255,0.9),
+                    0 0 0 2px rgba(99,102,241,.2) !important;
+    outline       : none !important;
+}
+#new-customer .form-control::placeholder {
+    color         : var(--text-soft) !important;
+}
+
+/* Botón Cerrar */
+#new-customer .btn-base-3 {
+    padding       : 9px 18px !important;
+    border-radius : var(--rs) !important;
+    background    : var(--nb) !important;
+    box-shadow    : var(--ns) !important;
+    border        : none !important;
+    color         : var(--text) !important;
+    font-family   : 'Poppins', sans-serif !important;
+    font-size     : 13px !important;
+    font-weight   : 600 !important;
+    transition    : all .25s !important;
+}
+#new-customer .btn-base-3:hover {
+    box-shadow    : 8px 8px 20px rgba(163,177,198,.5),
+                    -4px -4px 14px rgba(255,255,255,1) !important;
+    transform     : translateY(-2px) !important;
+}
+
+/* Botón Confirmar */
+#new-customer .btn-base-1 {
+    padding       : 9px 18px !important;
+    border-radius : var(--rs) !important;
+    background    : linear-gradient(135deg, #f97316, #fb923c) !important;
+    box-shadow    : 4px 4px 12px rgba(249,115,22,.35) !important;
+    border        : none !important;
+    color         : #fff !important;
+    font-family   : 'Poppins', sans-serif !important;
+    font-size     : 13px !important;
+    font-weight   : 600 !important;
+    transition    : all .25s !important;
+}
+#new-customer .btn-base-1:hover {
+    box-shadow    : 6px 6px 16px rgba(249,115,22,.5) !important;
+    transform     : translateY(-2px) !important;
+}
+#new-customer .btn-base-1:active {
+    box-shadow    : inset 3px 3px 8px rgba(0,0,0,.15) !important;
+    transform     : scale(0.98) !important;
+}
 :root {
     --nb        : #e8edf2;
     --ns        : 6px 6px 18px rgba(163,177,198,0.5), -6px -6px 18px rgba(255,255,255,0.9);
@@ -324,14 +430,9 @@
 /* ══ GRID PRODUCTOS ══ */
 #product-list {
     display               : grid !important;
-    grid-template-columns : repeat(4, 155px) !important;
+    grid-template-columns : repeat(4, 1fr) !important;
     gap                   : 16px;
     justify-content       : flex-start;
-}
-#product-list > * {
-    width     : 155px !important;
-    max-width : 155px !important;
-    margin    : 0 !important;
 }
 
 /* ══ CARGAR MÁS ══ */
@@ -542,7 +643,7 @@ body.dark-mode, .dark {
 /* Imagen */
 #product-list img {
     width         : 100% !important;
-    height        : 130px !important;
+    height        : 180px !important;
     object-fit    : cover !important;
     transition    : transform .4s ease !important;
     display       : block !important;
@@ -749,6 +850,231 @@ body.dark-mode, .dark {
         </div>
     </div>
 
+
+
+
+
+
+
+<style>
+
+/* RECUADRO */
+        /* ══ MODAL ORDER SUMMARY ══ */
+#order-confirm .modal-content {
+    background    : var(--nb);
+    border-radius : 20px;
+    border        : none;
+  
+    overflow      : hidden;
+}
+
+#order-confirm .modal-header {
+    background    : var(--nb);
+    border-bottom : 1px solid rgba(163,177,198,.3);
+    padding       : 18px 24px;
+}
+
+#order-confirm .modal-title {
+    font-family   : 'Poppins', sans-serif;
+    font-weight   : 700;
+    font-size     : 15px;
+    color         : var(--text);
+}
+
+#order-confirm .modal-body {
+    background    : var(--nb);
+    padding       : 20px 24px;
+}
+
+#order-confirm .modal-footer {
+    background    : var(--nb);
+    border-top    : 1px solid rgba(163,177,198,.3);
+    padding       : 14px 24px;
+    gap           : 10px;
+}
+
+/* Botón Cerrar */
+#order-confirm .btn-secondary {
+    padding       : 9px 18px;
+    border-radius : var(--rs);
+    background    : var(--nb) !important;
+    box-shadow    : var(--ns) !important;
+    border        : none !important;
+    color         : var(--text) !important;
+    font-family   : 'Poppins', sans-serif;
+    font-size     : 13px;
+    font-weight   : 600;
+    transition    : all .25s;
+}
+#order-confirm .btn-secondary:hover {
+    box-shadow    : 8px 8px 20px rgba(163,177,198,.5),
+                    -4px -4px 14px rgba(255,255,255,1) !important;
+    transform     : translateY(-2px);
+}
+#order-confirm .btn-secondary:active {
+    box-shadow    : var(--ni) !important;
+    transform     : scale(0.98);
+}
+
+/* Botón Offline Payment */
+#order-confirm .btn-warning {
+    padding       : 9px 18px;
+    border-radius : var(--rs);
+    background    : linear-gradient(135deg, #f59e0b, #fbbf24) !important;
+    box-shadow    : 4px 4px 12px rgba(245,158,11,.35) !important;
+    border        : none !important;
+    color         : #fff !important;
+    font-family   : 'Poppins', sans-serif;
+    font-size     : 13px;
+    font-weight   : 600;
+    transition    : all .25s;
+}
+#order-confirm .btn-warning:hover {
+    box-shadow    : 6px 6px 16px rgba(245,158,11,.5) !important;
+    transform     : translateY(-2px);
+}
+
+/* Botón COD */
+#order-confirm .btn-info {
+    padding       : 9px 18px;
+    border-radius : var(--rs);
+    background    : linear-gradient(135deg, #6366f1, #818cf8) !important;
+    box-shadow    : 4px 4px 12px rgba(99,102,241,.35) !important;
+    border        : none !important;
+    color         : #fff !important;
+    font-family   : 'Poppins', sans-serif;
+    font-size     : 13px;
+    font-weight   : 600;
+    transition    : all .25s;
+}
+#order-confirm .btn-info:hover {
+    box-shadow    : 6px 6px 16px rgba(99,102,241,.5) !important;
+    transform     : translateY(-2px);
+}
+
+/* Botón Cash */
+#order-confirm .btn-success {
+    padding       : 9px 18px;
+    border-radius : var(--rs);
+    background    : linear-gradient(135deg, #22c55e, #4ade80) !important;
+    box-shadow    : 4px 4px 12px rgba(34,197,94,.35) !important;
+    border        : none !important;
+    color         : #fff !important;
+    font-family   : 'Poppins', sans-serif;
+    font-size     : 13px;
+    font-weight   : 600;
+    transition    : all .25s;
+}
+#order-confirm .btn-success:hover {
+    box-shadow    : 6px 6px 16px rgba(34,197,94,.5) !important;
+    transform     : translateY(-2px);
+}
+
+/* Spinner cargando */
+#order-confirm .la-spinner {
+    color         : var(--accent2);
+}
+#order-confirm .modal-body table,
+#order-confirm .modal-body .order-summary-left,
+#order-confirm #order-confirmation > div > div:first-child {
+    width         : 100% !important;
+    padding-right : 20px !important;
+}
+
+/* recuadro */
+#order-confirm .modal-dialog {
+    max-width     : 980px !important;
+}
+
+#order-confirm .list-group-item {
+    padding       : 8px 12px !important;
+    margin-bottom : 6px !important;
+}
+
+#order-confirm img.size-60px {
+    width         : 45px !important;
+    height        : 45px !important;
+    min-width     : 45px !important;
+}
+
+#order-confirm .text-truncate-2 {
+    font-size     : 12px !important;
+}
+
+#order-confirm .fs-14 {
+    font-size     : 12px !important;
+}
+#order-confirm .list-group-item {
+    border-radius : 16px !important;
+    background    : #fff !important;
+    box-shadow    : var(--ns) !important;
+    border        : none !important;
+    margin-bottom : 10px !important;
+    padding       : 12px 16px !important;
+}
+
+#order-confirm .card {
+    border-radius : 16px !important;
+    background    : #fff !important;
+    box-shadow    : var(--ns) !important;
+    border        : none !important;
+}
+
+#order-confirm .card-header {
+    border-radius : 16px 16px 0 0 !important;
+    background    : transparent !important;
+    border-bottom : 1px solid rgba(163,177,198,.3) !important;
+}
+
+#offlin_payment .modal-content {
+    background    : var(--nb) !important;
+    border-radius : 20px !important;
+    border        : none !important;
+    box-shadow    : 12px 12px 30px rgba(163,177,198,.6),
+                    -8px -8px 24px rgba(255,255,255,.95) !important;
+}
+
+#offlin_payment .modal-body {
+    background    : var(--nb) !important;
+}
+
+#offlin_payment .modal-header {
+    background    : var(--nb) !important;
+    border-bottom : 1px solid rgba(163,177,198,.3) !important;
+}
+
+#offlin_payment .modal-footer {
+    background    : var(--nb) !important;
+    border-top    : 1px solid rgba(163,177,198,.3) !important;
+}
+
+#offlin_payment .form-control {
+    background    : var(--nb) !important;
+    box-shadow    : var(--ni) !important;
+    border        : none !important;
+    border-radius : var(--rs) !important;
+}
+/* deslizante realizar pedido */
+#order-confirm .list-group {
+    max-height    : 500px;
+    overflow-y    : auto;
+    scrollbar-width : thin;
+    scrollbar-color : rgba(163,177,198,.5) transparent;
+}
+
+#order-confirm .list-group::-webkit-scrollbar {
+    width         : 5px;
+}
+#order-confirm .list-group::-webkit-scrollbar-track {
+    background    : transparent;
+}
+#order-confirm .list-group::-webkit-scrollbar-thumb {
+    background    : rgba(163,177,198,.5);
+    border-radius : 10px;
+}
+</style>
+
+
     <div id="order-confirm" class="modal fade">
         <div class="modal-dialog modal-dialog-centered modal-dialog-zoom modal-xl">
             <div class="modal-content" id="variants">
@@ -770,6 +1096,29 @@ body.dark-mode, .dark {
             </div>
         </div>
     </div>
+
+<!-- RECUADRO -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     {{-- Offline Payment Modal --}}
     <div id="offlin_payment" class="modal fade" role="dialog">
