@@ -1024,7 +1024,7 @@ Chart.pluginService.register({
         ctx.fillStyle   = grad;
         ctx.fill();
         ctx.shadowColor = 'transparent';
-        ctx.strokeStyle = 'rgba(255,255,255,0.95)';
+        ctx.strokeStyle = 'rgba(162, 0, 255, 0.95)';
         ctx.lineWidth   = 2.5;
         ctx.stroke();
         ctx.restore();
@@ -1037,45 +1037,32 @@ AIZ.plugins.chart('#pie-1', {
     type: 'doughnut',
     data: {
         labels: [
-            '{{ translate('Total published products') }}',
-            '{{ translate('Total sellers products') }}',
-            '{{ translate('Total admin products') }}'
+            '{{ translate('Ventas Online') }}',
+            '{{ translate('Ventas Local') }}'
         ],
         datasets: [
+            // ── Aro exterior: Ventas Online ──
             {
                 data: [
-                    {{ \App\Models\Product::where('published', 1)->count() }},
                     {{ \App\Models\Product::where('published', 1)->where('added_by', 'seller')->count() }},
                     {{ \App\Models\Product::where('published', 1)->where('added_by', 'admin')->count() }}
                 ],
-                backgroundColor: ['#eb0000', '#48ec8c', '#f97316'], //CAMBIO EL COLOR DE DONA (CURSOR)
+                backgroundColor: ['#6366f1', '#f91616'],
                 borderWidth: 3,
                 borderColor: '#e8edf2',
-                weight:      50,
+                weight:      55,
                 hoverOffset: 0
             },
+            // ── Aro interior: Ventas Local ──
             {
                 data: [
-                    {{ \App\Models\Product::where('published', 1)->count() }},
                     {{ \App\Models\Product::where('published', 1)->where('added_by', 'seller')->count() }},
                     {{ \App\Models\Product::where('published', 1)->where('added_by', 'admin')->count() }}
                 ],
-                backgroundColor: ['#c2281d', '#f472b6', '#fb923c'], //CAMBIO EL COLOR DE DONA (CURSOR)
+                backgroundColor: ['#81f887', '#ffe81c'],
                 borderWidth: 3,
-                borderColor: '#e8edf2',
-                weight:      35,
-                hoverOffset: 0
-            },
-            {
-                data: [
-                    {{ \App\Models\Product::where('published', 1)->count() }},
-                    {{ \App\Models\Product::where('published', 1)->where('added_by', 'seller')->count() }},
-                    {{ \App\Models\Product::where('published', 1)->where('added_by', 'admin')->count() }}
-                ],
-                backgroundColor: ['#df5151', '#fbcfe8', '#fed7aa'], //CAMBIO EL COLOR DE DONA (CURSOR)
-                borderWidth: 3,
-                borderColor: '#e8edf2',
-                weight:      22,
+                borderColor: '#000000',
+                weight:      28,
                 hoverOffset: 0
             }
         ]
@@ -1111,28 +1098,32 @@ AIZ.plugins.chart('#pie-1', {
             animationDuration: 0,
             mode:             'dataset'
         },
-        legend:   { display: false },
+        legend: { display: false },
         tooltips: {
-            backgroundColor: 'rgba(232,237,242,0.98)',
+            backgroundColor: 'rgba(2, 126, 250, 0.98)',
             titleFontFamily: 'Poppins',
             titleFontSize:    12,
-            titleFontColor:  '#3d4f6e',
+            titleFontColor:  '#9dff00',
             bodyFontFamily:  'Poppins',
-            bodyFontSize:     11,
-            bodyFontColor:   '#5a6a85',
-            borderColor:     'rgba(163,177,198,0.4)',
+            bodyFontSize:     13,
+            borderColor:     'rgb(247, 0, 255)',
             borderWidth:      1,
             cornerRadius:     10,
             xPadding:         12,
             yPadding:          8,
             displayColors:    false,
             callbacks: {
+                title: function(tooltipItems, data) {
+                    // Muestra si es aro exterior (Online) o interior (Local)
+                    var datasetIndex = tooltipItems[0].datasetIndex;
+                    return datasetIndex === 0 ? '🌐 Ventas Online' : '🏪 Ventas Local';
+                },
                 label: function(tooltipItem, data) {
                     var index = tooltipItem.index;
                     var value = data.datasets[0].data[index];
                     var total = data.datasets[0].data.reduce(function(a, b) { return a + b; }, 0);
                     var pct   = total > 0 ? Math.round((value / total) * 100) : 0;
-                    return data.labels[index] + ': ' + value + ' (' + pct + '%)';
+                    return ' ' + data.labels[index] + ': ' + value + ' productos (' + pct + '%)';
                 }
             }
         },
@@ -1142,73 +1133,29 @@ AIZ.plugins.chart('#pie-1', {
     }
 });
 
-
-
-(function setupHover() {
-    var canvas = document.getElementById('pie-1');
-    if (!canvas) return;
-
-    canvas.style.opacity         = '0';
-    canvas.style.transform       = 'scale(0.3)';
-    canvas.style.transformOrigin = 'center center';
-
-    setTimeout(function() {
-        var chartInstance = null;
-        Object.keys(Chart.instances).forEach(function(k) {
-            if (Chart.instances[k].canvas.id === 'pie-1') {
-                chartInstance = Chart.instances[k];
-            }
-        });
-        if (!chartInstance) return;
-
-        canvas.addEventListener('mousemove', function(e) {
-            var elements = chartInstance.getElementsAtEventForMode(
-                e, 'dataset', { intersect: true }
-            );
-            if (elements.length) {
-                hoveredDatasetIndex = elements[0]._datasetIndex;
-                hoveredIndex        = elements[0]._index;
-            } else {
-                hoveredDatasetIndex = -1;
-                hoveredIndex        = -1;
-            }
-            chartInstance.update(0);
-        });
-
-        canvas.addEventListener('mouseleave', function() {
-            hoveredDatasetIndex = -1;
-            hoveredIndex        = -1;
-            chartInstance.update(0);
-        });
-
-    }, 500);
-})();
-
-
 // ── Leyenda manual estática ──
 (function buildLegend() {
     var canvas = document.getElementById('pie-1');
     var labels = [
-        { color: '#6366f1', text: '{{ translate('Total published products') }}' },
-        { color: '#ec4899', text: '{{ translate('Total sellers products') }}' },
-        { color: '#f97316', text: '{{ translate('Total admin products') }}' }
+        { color: '#6366f1', text: '{{ translate('Ventas Online') }}' },
+        { color: '#f97316', text: '{{ translate('Ventas Local') }}'  }
     ];
 
     var wrap = document.createElement('div');
     wrap.style.cssText = [
         'display:flex', 'flex-wrap:wrap', 'justify-content:center',
-        'gap:12px', 'margin-top:10px',
-        'font-family:Poppins,sans-serif', 'font-size:11px'
+        'gap:16px', 'margin-top:12px',
+        'font-family:Poppins,sans-serif', 'font-size:12px'
     ].join(';');
 
     labels.forEach(function(l) {
         var item = document.createElement('div');
-        item.style.cssText = 'display:flex;align-items:center;gap:6px;color:#5a6a85;';
+        item.style.cssText = 'display:flex;align-items:center;gap:7px;color:#5a6a85;font-weight:500;';
         var dot = document.createElement('span');
         dot.style.cssText = [
-            'width:10px', 'height:10px', 'border-radius:50%',
+            'width:11px', 'height:11px', 'border-radius:50%',
             'background:' + l.color, 'flex-shrink:0',
-            'box-shadow:2px 2px 5px rgba(0,0,0,0.15)'
+            'box-shadow:2px 2px 5px rgba(0, 255, 55, 0.18)'
         ].join(';');
         item.appendChild(dot);
         item.appendChild(document.createTextNode(l.text));
@@ -1241,26 +1188,29 @@ AIZ.plugins.chart('#pie-1', {
 
 
 
-
    
      // BARRAS
+   
 
 
-var stripeOffset = 0;
+
+
+var stripeOffset    = 0;
+var isHoveringChart = false;
 
 (function animateStripes() {
     stripeOffset = (stripeOffset + 0.4) % 14;
-
-    // Accede directamente al registro interno de Chart.js v2
-    Object.keys(Chart.instances).forEach(function(key) {
-        try {
-            Chart.instances[key].update(0);
-        } catch(e) {}
-    });
-
+    if (!isHoveringChart) {
+        Object.keys(Chart.instances).forEach(function(key) {
+            try {
+                if (Chart.instances[key].config.type === 'bar') {
+                    Chart.instances[key].update(0);
+                }
+            } catch(e) {}
+        });
+    }
     requestAnimationFrame(animateStripes);
 })();
-
 
 
 Chart.helpers.extend(Chart.elements.Rectangle.prototype, {
@@ -1289,7 +1239,6 @@ Chart.helpers.extend(Chart.elements.Rectangle.prototype, {
             ctx.closePath();
         }
 
-        // --- 1. Sombra neumórfica + relleno base ---
         ctx.save();
         ctx.shadowColor   = 'rgba(163,177,198,0.6)';
         ctx.shadowBlur    = 8;
@@ -1301,12 +1250,10 @@ Chart.helpers.extend(Chart.elements.Rectangle.prototype, {
         ctx.fill();
         ctx.restore();
 
-        // --- 2. Rayas diagonales ANIMADAS ---
         ctx.save();
         ctx.beginPath();
         pillarPath();
         ctx.clip();
-
         ctx.strokeStyle = 'rgba(255,255,255,0.20)';
         ctx.lineWidth   = 5;
         var step = 14;
@@ -1318,7 +1265,6 @@ Chart.helpers.extend(Chart.elements.Rectangle.prototype, {
         }
         ctx.restore();
 
-        // --- 3. Brillo lateral izquierdo ---
         ctx.save();
         ctx.beginPath();
         pillarPath();
@@ -1336,7 +1282,28 @@ Chart.helpers.extend(Chart.elements.Rectangle.prototype, {
 });
 
 
+// ============================================================
+// Plugin gradiente azul — graph-1
+// ============================================================
+Chart.pluginService.register({
+    beforeRender: function(chart) {
+        if (chart.canvas.id !== 'graph-1') return;
+        var ctx       = chart.ctx;
+        var chartArea = chart.chartArea;
+        if (!chartArea) return;
+        var g = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+        g.addColorStop(0,   'rgba(79,  98, 210, 1)');
+        g.addColorStop(0.5, 'rgba(118,140, 230, 0.95)');
+        g.addColorStop(1,   'rgba(165,185, 255, 1)');
+        chart.data.datasets[0].backgroundColor     = g;
+        chart.data.datasets[0].hoverBackgroundColor = g;
+    }
+});
 
+
+// ============================================================
+// Gráfico 1: Ventas por categoría
+// ============================================================
 AIZ.plugins.chart('#graph-1', {
     type: 'bar',
     data: {
@@ -1348,30 +1315,11 @@ AIZ.plugins.chart('#graph-1', {
         datasets: [{
             label: '{{ translate('Ventas por categoría') }}',
             data: [{{ $cached_graph_data['num_of_sale_data'] }}],
-            backgroundColor: function(context) {
-                var chart     = context.chart;
-                var ctx       = chart.ctx;
-                var chartArea = chart.chartArea;
-                if (!chartArea) return 'rgba(99,120,220,0.85)';
-                var g = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
-                g.addColorStop(0,   'rgba(79, 98,210, 1)');
-                g.addColorStop(0.5, 'rgba(118,140,230, 0.95)');
-                g.addColorStop(1,   'rgba(165,185,255, 1)');
-                return g;
-            },
+            backgroundColor:      'rgba(79,98,210,0.85)',
+            hoverBackgroundColor: 'rgba(55,75,200,1)',
             borderWidth:        0,
             barPercentage:      0.5,
-            categoryPercentage: 0.75,
-            hoverBackgroundColor: function(context) {
-                var chart     = context.chart;
-                var ctx       = chart.ctx;
-                var chartArea = chart.chartArea;
-                if (!chartArea) return 'rgba(79,98,210,1)';
-                var g = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
-                g.addColorStop(0, 'rgba(55, 75,200,1)');
-                g.addColorStop(1, 'rgba(140,160,255,1)');
-                return g;
-            }
+            categoryPercentage: 0.75
         }]
     },
     options: {
@@ -1388,24 +1336,24 @@ AIZ.plugins.chart('#graph-1', {
                     borderDash:    [4, 6]
                 },
                 ticks: {
-                    fontColor:     '#8a9bb5',
-                    fontFamily:    'Poppins',
-                    fontSize:       11,
-                    beginAtZero:   true,
-                    padding:        16,
-                    maxTicksLimit:  6
+                    fontColor:    '#8a9bb5',
+                    fontFamily:   'Poppins',
+                    fontSize:      11,
+                    beginAtZero:  true,
+                    padding:       16,
+                    maxTicksLimit: 6
                 }
             }],
             xAxes: [{
                 gridLines: { display: false },
                 ticks: {
-                    fontColor:     '#8a9bb5',
-                    fontFamily:    'Poppins',
-                    fontSize:       10,
-                    padding:        10,
-                    maxRotation:    35,
-                    minRotation:    35,
-                    autoSkip:       false
+                    fontColor:   '#8a9bb5',
+                    fontFamily:  'Poppins',
+                    fontSize:     10,
+                    padding:      10,
+                    maxRotation:  35,
+                    minRotation:  35,
+                    autoSkip:     false
                 }
             }]
         },
@@ -1424,29 +1372,62 @@ AIZ.plugins.chart('#graph-1', {
             onClick: function() { return ''; }
         },
         tooltips: {
+            enabled:         true,
+            mode:            'index',
+            intersect:       true,
             backgroundColor: 'rgba(232,237,242,0.98)',
             titleFontFamily: 'Poppins',
             titleFontSize:    13,
             titleFontColor:  '#3d4f6e',
             bodyFontFamily:  'Poppins',
-            bodyFontSize:     12,
-            bodyFontColor:   '#5a6a85',
-            borderColor:     'rgba(163,177,198,0.4)',
-            borderWidth:      1,
+            bodyFontSize:     14,
+            bodyFontColor:   '#4f62d2',
+            borderColor:     'rgba(79,98,210,0.5)',
+            borderWidth:      2,
             cornerRadius:     12,
-            xPadding:         14,
-            yPadding:         10,
-            displayColors:    false
+            xPadding:         16,
+            yPadding:         12,
+            displayColors:    false,
+            callbacks: {
+                title: function(tooltipItems) {
+                    return '📦 ' + tooltipItems[0].xLabel;
+                },
+                label: function(tooltipItem) {
+                    return ' Ventas: ' + tooltipItem.yLabel + ' unidades';
+                }
+            }
         },
         layout: {
-            padding: { top: 15, bottom: 10, left: 10, right: 10 }
+            padding: { top:15, bottom:10, left:10, right:10 }
         }
+    }
+});
+
+document.getElementById('graph-1').addEventListener('mouseenter', function() { isHoveringChart = true;  });
+document.getElementById('graph-1').addEventListener('mouseleave', function() { isHoveringChart = false; });
+
+
+// ============================================================
+// Plugin gradiente naranja — graph-2
+// ============================================================
+Chart.pluginService.register({
+    beforeRender: function(chart) {
+        if (chart.canvas.id !== 'graph-2') return;
+        var ctx       = chart.ctx;
+        var chartArea = chart.chartArea;
+        if (!chartArea) return;
+        var g = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+        g.addColorStop(0,   'rgba(255,  0,   0,   1)');
+        g.addColorStop(0.5, 'rgba(235, 107,  22,  0.95)');
+        g.addColorStop(1,   'rgba(247, 213, 174,  1)');
+        chart.data.datasets[0].backgroundColor     = g;
+        chart.data.datasets[0].hoverBackgroundColor = g;
     }
 });
 
 
 // ============================================================
-// Gráfico 2: Stock por categoría — Rosa neumórfico
+// Gráfico 2: Stock por categoría
 // ============================================================
 AIZ.plugins.chart('#graph-2', {
     type: 'bar',
@@ -1459,30 +1440,11 @@ AIZ.plugins.chart('#graph-2', {
         datasets: [{
             label: '{{ translate('Stock por categoría') }}',
             data: [{{ $cached_graph_data['qty_data'] }}],
-            backgroundColor: function(context) {
-                var chart     = context.chart;
-                var ctx       = chart.ctx;
-                var chartArea = chart.chartArea;
-                if (!chartArea) return 'rgba(236,72,153,0.85)';
-                var g = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
-                g.addColorStop(0,   'rgb(255, 0, 0)');
-                g.addColorStop(0.5, 'rgba(235, 107, 22, 0.95)');
-                g.addColorStop(1,   'rgb(247, 213, 174)');
-                return g;
-            },
+            backgroundColor:      'rgba(235,107,22,0.85)',
+            hoverBackgroundColor: 'rgba(190,24,93,1)',
             borderWidth:        0,
             barPercentage:      0.5,
-            categoryPercentage: 0.75,
-            hoverBackgroundColor: function(context) {
-                var chart     = context.chart;
-                var ctx       = chart.ctx;
-                var chartArea = chart.chartArea;
-                if (!chartArea) return 'rgba(219,39,119,1)';
-                var g = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
-                g.addColorStop(0, 'rgba(190, 24, 93,1)');
-                g.addColorStop(1, 'rgba(244,114,182,1)');
-                return g;
-            }
+            categoryPercentage: 0.75
         }]
     },
     options: {
@@ -1499,24 +1461,24 @@ AIZ.plugins.chart('#graph-2', {
                     borderDash:    [4, 6]
                 },
                 ticks: {
-                    fontColor:     '#8a9bb5',
-                    fontFamily:    'Poppins',
-                    fontSize:       11,
-                    beginAtZero:   true,
-                    padding:        16,
-                    maxTicksLimit:  6
+                    fontColor:    '#8a9bb5',
+                    fontFamily:   'Poppins',
+                    fontSize:      11,
+                    beginAtZero:  true,
+                    padding:       16,
+                    maxTicksLimit: 6
                 }
             }],
             xAxes: [{
                 gridLines: { display: false },
                 ticks: {
-                    fontColor:     '#8a9bb5',
-                    fontFamily:    'Poppins',
-                    fontSize:       10,
-                    padding:        10,
-                    maxRotation:    35,
-                    minRotation:    35,
-                    autoSkip:       false
+                    fontColor:   '#8a9bb5',
+                    fontFamily:  'Poppins',
+                    fontSize:     10,
+                    padding:      10,
+                    maxRotation:  35,
+                    minRotation:  35,
+                    autoSkip:     false
                 }
             }]
         },
@@ -1535,25 +1497,39 @@ AIZ.plugins.chart('#graph-2', {
             onClick: function() { return ''; }
         },
         tooltips: {
+            enabled:         true,
+            mode:            'index',
+            intersect:       true,
             backgroundColor: 'rgba(232,237,242,0.98)',
             titleFontFamily: 'Poppins',
             titleFontSize:    13,
             titleFontColor:  '#3d4f6e',
             bodyFontFamily:  'Poppins',
-            bodyFontSize:     12,
-            bodyFontColor:   '#5a6a85',
-            borderColor:     'rgba(163,177,198,0.4)',
-            borderWidth:      1,
+            bodyFontSize:     14,
+            bodyFontColor:   '#ea580c',
+            borderColor:     'rgba(235,107,22,0.5)',
+            borderWidth:      2,
             cornerRadius:     12,
-            xPadding:         14,
-            yPadding:         10,
-            displayColors:    false
+            xPadding:         16,
+            yPadding:         12,
+            displayColors:    false,
+            callbacks: {
+                title: function(tooltipItems) {
+                    return '📦 ' + tooltipItems[0].xLabel;
+                },
+                label: function(tooltipItem) {
+                    return ' Stock: ' + tooltipItem.yLabel + ' unidades';
+                }
+            }
         },
         layout: {
-            padding: { top: 15, bottom: 10, left: 10, right: 10 }
+            padding: { top:15, bottom:10, left:10, right:10 }
         }
     }
 });
-     // BARRAS
+
+document.getElementById('graph-2').addEventListener('mouseenter', function() { isHoveringChart = true;  });
+document.getElementById('graph-2').addEventListener('mouseleave', function() { isHoveringChart = false; });
+     // BA
 </script>
 @endsection
