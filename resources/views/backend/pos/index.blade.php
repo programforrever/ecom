@@ -1,66 +1,90 @@
 @extends('backend.layouts.app')
 
 @section('content')
-
 <section class="">
     <form class="" action="" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="row gutters-5">
             <div class="col-md">
-                <div class="row gutters-5 mb-3">
-                    <div class="col-md-6 mb-2 mb-md-0">
-                        <div class="form-group mb-0">
-                            <input class="form-control form-control-lg" type="text" name="keyword" placeholder="{{ translate('Search by Product Name/Barcode') }}" onkeyup="filterProducts()">
+
+                {{-- BARRA SUPERIOR --}}
+                <div class="pos-topbar mb-3">
+                    <div class="pos-topbar-inner">
+
+                        <div class="pos-field-wrap">
+                            <span class="pos-field-icon">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                            </span>
+                            <input class="pos-field-input" type="text" name="keyword" placeholder="{{ translate('Buscar por nombre/código') }}" onkeyup="filterProducts()">
                         </div>
-                    </div>
-                    <div class="col-md-3 col-6">
-                        <select name="poscategory" class="form-control form-control-lg aiz-selectpicker" data-live-search="true" onchange="filterProducts()">
-                            <option value="">{{ translate('All Categories') }}</option>
-                            @foreach (\App\Models\Category::all() as $key => $category)
-                                <option value="category-{{ $category->id }}">{{ $category->getTranslation('name') }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-3 col-6">
-                        <select name="brand"  class="form-control form-control-lg aiz-selectpicker" data-live-search="true" onchange="filterProducts()">
-                            <option value="">{{ translate('All Brands') }}</option>
-                            @foreach (\App\Models\Brand::all() as $key => $brand)
-                                <option value="{{ $brand->id }}">{{ $brand->getTranslation('name') }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-                <div class="aiz-pos-product-list c-scrollbar-light">
-                    <div class="d-flex flex-wrap justify-content-center" id="product-list">
+
+                        <div class="pos-field-wrap">
+                            <span class="pos-field-icon">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 6h16M4 12h10M4 18h6"/></svg>
+                            </span>
+                            <select name="poscategory" class="pos-field-select aiz-selectpicker" data-live-search="true" onchange="filterProducts()">
+                                <option value="">{{ translate('Categorías') }}</option>
+                                @foreach (\App\Models\Category::all() as $key => $category)
+                                    <option value="category-{{ $category->id }}">{{ $category->getTranslation('name') }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="pos-field-wrap">
+                            <span class="pos-field-icon">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="1.5" fill="currentColor"/></svg>
+                            </span>
+                            <select name="brand" class="pos-field-select aiz-selectpicker" data-live-search="true" onchange="filterProducts()">
+                                <option value="">{{ translate('Marcas') }}</option>
+                                @foreach (\App\Models\Brand::all() as $key => $brand)
+                                    <option value="{{ $brand->id }}">{{ $brand->getTranslation('name') }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <a href="#" class="pos-btn-ventas">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 17H5a2 2 0 0 0-2 2v0a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v0a2 2 0 0 0-2-2h-4"/><rect x="9" y="3" width="6" height="14" rx="1"/></svg>
+                            {{ translate('Listado ventas') }}
+                        </a>
 
                     </div>
-                    <div id="load-more" class="text-center">
-                        <div class="fs-14 d-inline-block fw-600 btn btn-soft-primary c-pointer" onclick="loadMoreProduct()">{{ translate('Loading..') }}</div>
+                </div>
+
+                {{-- LISTA PRODUCTOS --}}
+                <div class="aiz-pos-product-list c-scrollbar-light">
+                    <div class="d-flex flex-wrap" id="product-list"></div>
+                   <div id="load-more" class="text-center mt-3">
+                        <div class="neu-load-more btn fs-14 d-inline-block fw-600 c-pointer" onclick="loadMoreProduct()">
+                            {{ translate('Loading..') }}
+                        </div>
                     </div>
+   
                 </div>
             </div>
+
+            {{-- PANEL DERECHO --}}
             <div class="col-md-auto w-md-350px w-lg-400px w-xl-500px">
-                <div class="card mb-3">
-                    <div class="card-body">
+                <div class="neu-card mb-3">
+                    <div class="neu-card-body">
                         <div class="d-flex border-bottom pb-3">
                             <div class="flex-grow-1">
-                                @php 
-                                    $userID = Session::has('pos.user_id') ? Session::get('pos.user_id') : null; 
+                                @php
+                                    $userID = Session::has('pos.user_id') ? Session::get('pos.user_id') : null;
                                 @endphp
-                                <select name="user_id" class="form-control aiz-selectpicker pos-customer" data-live-search="true" onchange="getShippingAddressUpdateCartData()" data-selected="{{ $userID }}">
-                                    <option value="">{{translate('Walk In Customer')}}</option>
+                                <select name="user_id" class="neu-select aiz-selectpicker pos-customer" data-live-search="true" onchange="getShippingAddressUpdateCartData()" data-selected="{{ $userID }}">
+                                    <option value="">{{ translate('Walk In Customer') }}</option>
                                     @foreach ($customers as $key => $customer)
-										<option value="{{ $customer->id }}" data-contact="{{ $customer->email }}">
-											{{ $customer->name }}
-										</option>
-									@endforeach
+                                        <option value="{{ $customer->id }}" data-contact="{{ $customer->email }}">
+                                            {{ $customer->name }}
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
-                            <button type="button" class="btn btn-icon btn-soft-dark ml-3 mr-0" data-target="#new-customer" data-toggle="modal">
-								<i class="las la-truck"></i>
-							</button>
+                            <button type="button" class="neu-icon-btn ml-3 mr-0" data-target="#new-customer" data-toggle="modal">
+                                <i class="las la-truck"></i>
+                            </button>
                         </div>
-                    
+
                         <div class="" id="cart-details">
                             <div class="aiz-pos-cart-list mb-4 mt-3 c-scrollbar-light">
                                 @php
@@ -78,29 +102,29 @@
                                             $tax += cart_product_tax($cartItem, $product, false) * $cartItem['quantity'];
                                             $cartID = $cartItem['id'];
                                         @endphp
-                                        <li class="list-group-item py-0 pl-2">
+                                        <li class="list-group-item py-0 pl-2 neu-cart-item">
                                             <div class="row gutters-5 align-items-center">
                                                 <div class="col-auto w-60px">
                                                     <div class="row no-gutters align-items-center flex-column aiz-plus-minus">
-                                                        <button class="btn col-auto btn-icon btn-sm fs-15" type="button" data-type="plus" data-field="qty-{{ $cartID }}" @if($product->digital == 1) disabled @endif>
+                                                        <button class="btn col-auto btn-icon btn-sm fs-15 neu-qty-btn" type="button" data-type="plus" data-field="qty-{{ $cartID }}" @if($product->digital == 1) disabled @endif>
                                                             <i class="las la-plus"></i>
                                                         </button>
-                                                        <input type="text" name="qty-{{ $cartID }}" id="qty-{{ $cartID }}" class="col border-0 text-center flex-grow-1 fs-16 input-number" placeholder="1" value="{{ $cartItem['quantity'] }}" min="{{ $product->min_qty }}" max="{{ $stock->qty }}" onchange="updateQuantity({{ $cartID }})">
-                                                        <button class="btn col-auto btn-icon btn-sm fs-15" type="button" data-type="minus" data-field="qty-{{ $cartID }}" @if($product->digital == 1) disabled @endif>
+                                                        <input type="text" name="qty-{{ $cartID }}" id="qty-{{ $cartID }}" class="col border-0 text-center flex-grow-1 fs-16 input-number neu-qty-input" placeholder="1" value="{{ $cartItem['quantity'] }}" min="{{ $product->min_qty }}" max="{{ $stock->qty }}" onchange="updateQuantity({{ $cartID }})">
+                                                        <button class="btn col-auto btn-icon btn-sm fs-15 neu-qty-btn" type="button" data-type="minus" data-field="qty-{{ $cartID }}" @if($product->digital == 1) disabled @endif>
                                                             <i class="las la-minus"></i>
                                                         </button>
                                                     </div>
                                                 </div>
                                                 <div class="col">
-                                                    <div class="text-truncate-2">{{ $product->name }}</div>
-                                                    <span class="span badge badge-inline fs-12 badge-soft-secondary">{{ $cartItem['variant'] }}</span>
+                                                    <div class="text-truncate-2 neu-product-name">{{ $product->name }}</div>
+                                                    <span class="badge badge-inline fs-12 neu-variant-badge">{{ $cartItem['variant'] }}</span>
                                                 </div>
                                                 <div class="col-auto">
                                                     <div class="fs-12 opacity-60">{{ single_price($cartItem['price']) }} x {{ $cartItem['quantity'] }}</div>
-                                                    <div class="fs-15 fw-600">{{ single_price($cartItem['price']*$cartItem['quantity']) }}</div>
+                                                    <div class="fs-15 fw-600 neu-price">{{ single_price($cartItem['price']*$cartItem['quantity']) }}</div>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <button type="button" class="btn btn-circle btn-icon btn-sm btn-soft-danger ml-2 mr-0" onclick="removeFromCart({{ $cartItem->id }})">
+                                                    <button type="button" class="neu-delete-btn ml-2 mr-0" onclick="removeFromCart({{ $cartItem->id }})">
                                                         <i class="las la-trash-alt"></i>
                                                     </button>
                                                 </div>
@@ -108,51 +132,55 @@
                                         </li>
                                     @empty
                                         <li class="list-group-item">
-                                            <div class="text-center">
-                                                <i class="las la-frown la-3x opacity-50"></i>
-                                                <p>{{ translate('No Product Added') }}</p>
+                                            <div class="text-center py-3">
+                                                <i class="las la-frown la-3x neu-empty-icon"></i>
+                                                <p class="neu-empty-text mt-2">{{ translate('No Product Added') }}</p>
                                             </div>
                                         </li>
                                     @endforelse
                                     </ul>
                                 @else
-                                    <div class="text-center">
-                                        <i class="las la-frown la-3x opacity-50"></i>
-                                        <p>{{ translate('No Product Added') }}</p>
+                                    <div class="text-center py-3">
+                                        <i class="las la-frown la-3x neu-empty-icon"></i>
+                                        <p class="neu-empty-text mt-2">{{ translate('No Product Added') }}</p>
                                     </div>
                                 @endif
                             </div>
-                            <div>
-                                <div class="d-flex justify-content-between fw-600 mb-2 opacity-70">
-                                    <span>{{translate('Sub Total')}}</span>
+
+                            {{-- TOTALES --}}
+                            <div class="neu-totals">
+                                <div class="d-flex justify-content-between neu-total-row">
+                                    <span>{{ translate('Sub Total') }}</span>
                                     <span>{{ single_price($subtotal) }}</span>
                                 </div>
-                                <div class="d-flex justify-content-between fw-600 mb-2 opacity-70">
-                                    <span>{{translate('Tax')}}</span>
+                                <div class="d-flex justify-content-between neu-total-row">
+                                    <span>{{ translate('Tax') }}</span>
                                     <span>{{ single_price($tax) }}</span>
                                 </div>
-                                <div class="d-flex justify-content-between fw-600 mb-2 opacity-70">
-                                    <span>{{translate('Shipping')}}</span>
+                                <div class="d-flex justify-content-between neu-total-row">
+                                    <span>{{ translate('Shipping') }}</span>
                                     <span>{{ single_price(Session::get('pos.shipping', 0)) }}</span>
                                 </div>
-                                <div class="d-flex justify-content-between fw-600 mb-2 opacity-70">
-                                    <span>{{translate('Discount')}}</span>
+                                <div class="d-flex justify-content-between neu-total-row">
+                                    <span>{{ translate('Discount') }}</span>
                                     <span>{{ single_price(Session::get('pos.discount', 0)) }}</span>
                                 </div>
-                                <div class="d-flex justify-content-between fw-600 fs-18 border-top pt-2">
-                                    <span>{{translate('Total')}}</span>
-                                    <span>{{ single_price($subtotal+$tax+Session::get('pos.shipping', 0) - Session::get('pos.discount', 0)) }}</span>
+                                <div class="d-flex justify-content-between neu-total-final">
+                                    <span>{{ translate('Total') }}</span>
+                                    <span>{{ single_price($subtotal + $tax + Session::get('pos.shipping', 0) - Session::get('pos.discount', 0)) }}</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                {{-- FOOTER --}}
                 <div class="pos-footer mar-btm">
                     <div class="d-flex flex-column flex-md-row justify-content-between">
                         <div class="d-flex">
                             <div class="dropdown mr-3 ml-0 dropup">
-                                <button class="btn btn-outline-dark btn-styled dropdown-toggle" type="button" data-toggle="dropdown">
-                                    {{translate('Shipping')}}
+                                <button class="neu-footer-btn dropdown-toggle" type="button" data-toggle="dropdown">
+                                    {{ translate('Shipping') }}
                                 </button>
                                 <div class="dropdown-menu p-3 dropdown-menu-lg">
                                     <div class="input-group">
@@ -164,8 +192,8 @@
                                 </div>
                             </div>
                             <div class="dropdown dropup">
-                                <button class="btn btn-outline-dark btn-styled dropdown-toggle" type="button" data-toggle="dropdown">
-                                    {{translate('Discount')}}
+                                <button class="neu-footer-btn dropdown-toggle" type="button" data-toggle="dropdown">
+                                    {{ translate('Discount') }}
                                 </button>
                                 <div class="dropdown-menu p-3 dropdown-menu-lg">
                                     <div class="input-group">
@@ -178,7 +206,9 @@
                             </div>
                         </div>
                         <div class="my-2 my-md-0">
-                            <button type="button" class="btn btn-primary btn-block" onclick="orderConfirmation()">{{ translate('Place Order') }}</button>
+                            <button type="button" class="neu-place-order-btn btn-block" onclick="orderConfirmation()">
+                                {{ translate('Place Order') }}
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -186,6 +216,409 @@
         </div>
     </form>
 </section>
+
+<style>
+:root {
+    --nb        : #e8edf2;
+    --ns        : 6px 6px 18px rgba(163,177,198,0.5), -6px -6px 18px rgba(255,255,255,0.9);
+    --ni        : inset 4px 4px 10px rgba(163,177,198,0.45), inset -4px -4px 10px rgba(255,255,255,0.85);
+    --accent    : #f97316;
+    --accent2   : #6366f1;
+    --text      : #4a5568;
+    --text-soft : #8a9bb0;
+    --r         : 14px;
+    --rs        : 10px;
+}
+
+/* ══ TOPBAR ══ */
+.pos-topbar {
+    background    : var(--nb);
+    border-radius : 16px;
+    box-shadow    : var(--ns);
+    padding       : 10px 14px;
+    display       : inline-block;  /* solo ocupa lo necesario */
+    width         : 100%;
+}
+.pos-topbar-inner {
+    display       : flex;
+    align-items   : center;
+    gap           : 8px;
+    flex-wrap     : nowrap;
+}
+
+/* Cada campo solo ocupa su contenido */
+.pos-field-wrap {
+    position      : relative;
+    flex          : 0 0 auto;  /* NO se estira */
+}
+.pos-field-icon {
+    position      : absolute;
+    left          : 9px;
+    top           : 50%;
+    transform     : translateY(-50%);
+    color         : var(--text-soft);
+    pointer-events: none;
+    display       : flex;
+    z-index       : 1;
+}
+.pos-field-input {
+    width         : 260px;  /* ancho fijo razonable para el buscador */
+    padding       : 8px 8px 8px 26px;
+    border        : 1.5px solid rgba(163,177,198,0.45);
+    border-radius : var(--rs);
+    background    : #fff;
+    color         : var(--text);
+    font-size     : 12px;
+    font-family   : 'Poppins', sans-serif;
+    outline       : none;
+    transition    : border-color .2s;
+}
+.pos-field-input:focus { border-color: rgba(99,102,241,.5); }
+.pos-field-input::placeholder { color: var(--text-soft); font-size: 11.5px; }
+
+.pos-field-select {
+    width         : 120px;  /* ancho fijo para categorías y marcas */
+    padding       : 8px 8px 8px 26px;
+    border        : 1.5px solid rgba(163,177,198,0.45);
+    border-radius : var(--rs);
+    background    : #fff;
+    color         : var(--text);
+    font-size     : 12px;
+    font-family   : 'Poppins', sans-serif;
+    outline       : none;
+    appearance    : none;
+    cursor        : pointer;
+    transition    : border-color .2s;
+}
+.pos-field-select:focus { border-color: rgba(99,102,241,.5); }
+
+/* Botón ver ventas */
+.pos-btn-ventas {
+    flex             : 0 0 auto;
+    display          : inline-flex;
+    align-items      : center;
+    gap              : 5px;
+    padding          : 8px 12px;
+    border-radius    : var(--rs);
+    background       : linear-gradient(135deg, #f97316, #fb923c);
+    box-shadow       : 4px 4px 12px rgba(249,115,22,.35);
+    color            : #fff !important;
+    font-size        : 11.5px;
+    font-weight      : 600;
+    font-family      : 'Poppins', sans-serif;
+    white-space      : nowrap;
+    text-decoration  : none;
+    transition       : all .25s;
+}
+.pos-btn-ventas:hover {
+    box-shadow       : 6px 6px 16px rgba(249,115,22,.45);
+    transform        : translateY(-2px);
+    text-decoration  : none;
+    color            : #fff !important;
+}
+.pos-btn-ventas:active {
+    box-shadow       : inset 3px 3px 8px rgba(0,0,0,.15);
+    transform        : scale(0.98);
+}
+
+/* ══ GRID PRODUCTOS ══ */
+#product-list {
+    display               : grid !important;
+    grid-template-columns : repeat(4, 155px) !important;
+    gap                   : 16px;
+    justify-content       : flex-start;
+}
+#product-list > * {
+    width     : 155px !important;
+    max-width : 155px !important;
+    margin    : 0 !important;
+}
+
+/* ══ CARGAR MÁS ══ */
+.neu-load-more {
+    padding       : 10px 28px;
+    border-radius : var(--rs);
+    background    : var(--nb);
+    box-shadow    : var(--ns);
+    color         : var(--accent2);
+    font-family   : 'Poppins', sans-serif;
+    font-size     : 13px;
+    transition    : all .25s;
+    display       : inline-block;
+}
+.neu-load-more:hover {
+    box-shadow    : 8px 8px 22px rgba(163,177,198,.55), -6px -6px 18px rgba(255,255,255,1);
+    transform     : translateY(-2px);
+}
+
+/* ══ PANEL DERECHO ══ */
+.neu-card {
+    background    : var(--nb);
+    border-radius : var(--r);
+    box-shadow    : var(--ns);
+    border        : none;
+}
+.neu-card-body { padding: 1.25rem; }
+
+.neu-select {
+    width         : 100%;
+    padding       : 10px 10px 10px 12px;
+    border        : 1.5px solid rgba(163,177,198,0.4);
+    border-radius : var(--rs);
+    background    : #fff;
+    color         : var(--text);
+    font-size     : 13px;
+    font-family   : 'Poppins', sans-serif;
+    outline       : none;
+    appearance    : none;
+    cursor        : pointer;
+    transition    : border-color .2s;
+}
+.neu-select:focus { border-color: rgba(99,102,241,.5); }
+
+.neu-icon-btn {
+    width            : 40px;
+    height           : 40px;
+    border-radius    : var(--rs);
+    background       : var(--nb);
+    box-shadow       : var(--ns);
+    border           : none;
+    display          : inline-flex;
+    align-items      : center;
+    justify-content  : center;
+    color            : var(--text);
+    font-size        : 17px;
+    cursor           : pointer;
+    transition       : all .25s;
+    flex-shrink      : 0;
+}
+.neu-icon-btn:hover { box-shadow: 8px 8px 20px rgba(163,177,198,.5), -4px -4px 14px rgba(255,255,255,1); transform: translateY(-2px); }
+.neu-icon-btn:active { box-shadow: var(--ni); }
+
+/* ══ CARRITO ══ */
+.neu-cart-item {
+    background    : var(--nb) !important;
+    border-radius : var(--rs) !important;
+    box-shadow    : var(--ns) !important;
+    margin-bottom : 10px !important;
+    border        : none !important;
+    padding       : 10px 12px !important;
+}
+.neu-qty-btn {
+    background    : var(--nb) !important;
+    box-shadow    : var(--ns) !important;
+    border-radius : 8px !important;
+    border        : none !important;
+    color         : var(--text) !important;
+    width         : 26px !important;
+    height        : 26px !important;
+    padding       : 0 !important;
+    transition    : all .2s !important;
+}
+.neu-qty-btn:hover { box-shadow: 4px 4px 10px rgba(163,177,198,.5), -2px -2px 8px rgba(255,255,255,1) !important; }
+.neu-qty-btn:active { box-shadow: var(--ni) !important; }
+.neu-qty-input { background: transparent !important; color: var(--text) !important; font-weight: 600 !important; }
+.neu-product-name { font-size: 13px; color: var(--text); font-family: 'Poppins', sans-serif; font-weight: 500; }
+.neu-variant-badge {
+    background    : var(--nb) !important;
+    box-shadow    : var(--ni) !important;
+    color         : var(--text-soft) !important;
+    border        : none !important;
+    font-size     : 10px !important;
+    border-radius : 6px !important;
+    padding       : 2px 8px !important;
+}
+.neu-price { color: var(--accent) !important; font-family: 'Poppins', sans-serif; }
+.neu-delete-btn {
+    width            : 30px;
+    height           : 30px;
+    border-radius    : 50%;
+    background       : var(--nb);
+    box-shadow       : var(--ns);
+    border           : none;
+    display          : inline-flex;
+    align-items      : center;
+    justify-content  : center;
+    color            : #f43f5e;
+    font-size        : 14px;
+    cursor           : pointer;
+    transition       : all .25s;
+}
+.neu-delete-btn:hover { box-shadow: 4px 4px 12px rgba(244,63,94,.25), -2px -2px 8px rgba(255,255,255,1); transform: scale(1.1); }
+.neu-delete-btn:active { box-shadow: var(--ni); }
+.neu-empty-icon { color: var(--text-soft); }
+.neu-empty-text { color: var(--text-soft); font-family: 'Poppins', sans-serif; font-size: 13px; }
+
+/* ══ TOTALES ══ */
+.neu-totals {
+    background    : var(--nb);
+    border-radius : var(--r);
+    box-shadow    : var(--ni);
+    padding       : 14px 16px;
+}
+.neu-total-row { font-size: 13px; font-family: 'Poppins', sans-serif; color: var(--text-soft); font-weight: 600; margin-bottom: 8px; }
+.neu-total-final {
+    font-size     : 17px;
+    font-family   : 'Poppins', sans-serif;
+    font-weight   : 700;
+    color         : var(--text);
+    border-top    : 1px solid rgba(163,177,198,0.3);
+    padding-top   : 10px;
+    margin-top    : 4px;
+}
+.neu-total-final span:last-child { color: var(--accent); }
+
+/* ══ FOOTER ══ */
+.neu-footer-btn {
+    padding       : 10px 16px;
+    border-radius : var(--rs);
+    background    : var(--nb);
+    box-shadow    : var(--ns);
+    border        : none;
+    color         : var(--text);
+    font-size     : 13px;
+    font-weight   : 600;
+    font-family   : 'Poppins', sans-serif;
+    cursor        : pointer;
+    transition    : all .25s;
+}
+.neu-footer-btn:hover { box-shadow: 8px 8px 20px rgba(163,177,198,.5), -4px -4px 14px rgba(255,255,255,1); transform: translateY(-2px); }
+.neu-footer-btn:active { box-shadow: var(--ni); transform: scale(0.98); }
+
+.neu-place-order-btn {
+    padding       : 12px 24px;
+    border-radius : var(--rs);
+    background    : linear-gradient(135deg, #f97316, #fb923c);
+    box-shadow    : 4px 4px 14px rgba(249,115,22,.4);
+    border        : none;
+    color         : #fff;
+    font-size     : 14px;
+    font-weight   : 700;
+    font-family   : 'Poppins', sans-serif;
+    cursor        : pointer;
+    transition    : all .25s;
+    width         : 100%;
+}
+.neu-place-order-btn:hover { box-shadow: 6px 6px 18px rgba(249,115,22,.5); transform: translateY(-2px); }
+.neu-place-order-btn:active { box-shadow: inset 3px 3px 8px rgba(0,0,0,.15); transform: scale(0.98); }
+
+/* ══ DARK MODE ══ */
+body.dark-mode, .dark {
+    --nb        : #2c2c2e;
+    --ns        : 6px 6px 18px #1e1e20, -6px -6px 18px #3a3a3c;
+    --ni        : inset 4px 4px 10px #1e1e20, inset -4px -4px 10px #3a3a3c;
+    --text      : #d1d5db;
+    --text-soft : #6b7280;
+}
+/* ══ TARJETAS DE PRODUCTO ══ */
+#product-list .aiz-pos-product,
+#product-list > div,
+#product-list > li {
+    border-radius : 16px !important;
+    background    : var(--nb) !important;
+    box-shadow    : var(--ns) !important;
+    border        : none !important;
+    overflow      : hidden !important;
+    transition    : transform .3s cubic-bezier(.34,1.56,.64,1),
+                    box-shadow .3s ease !important;
+    cursor        : pointer !important;
+}
+
+#product-list .aiz-pos-product:hover,
+#product-list > div:hover,
+#product-list > li:hover {
+    transform     : translateY(-6px) scale(1.02) !important;
+    box-shadow    : 10px 10px 28px rgba(163,177,198,.6),
+                    -6px -6px 20px rgba(255,255,255,1) !important;
+}
+
+#product-list .aiz-pos-product:active,
+#product-list > div:active,
+#product-list > li:active {
+    transform     : scale(0.97) !important;
+    box-shadow    : var(--ni) !important;
+}
+
+/* Imagen */
+#product-list img {
+    width         : 100% !important;
+    height        : 130px !important;
+    object-fit    : cover !important;
+    transition    : transform .4s ease !important;
+    display       : block !important;
+}
+#product-list > div:hover img,
+#product-list > li:hover img {
+    transform     : scale(1.08) !important;
+}
+
+/* Badge stock */
+#product-list .badge {
+    border-radius : 20px !important;
+    font-size     : 10px !important;
+    font-weight   : 700 !important;
+    padding       : 3px 10px !important;
+    letter-spacing: .3px !important;
+}
+
+/* Nombre producto */
+#product-list p,
+#product-list h6,
+#product-list .product-name {
+    font-family   : 'Poppins', sans-serif !important;
+    font-weight   : 600 !important;
+    font-size     : 12.5px !important;
+    color         : var(--text) !important;
+}
+
+/* Precio */
+#product-list .price,
+#product-list strong,
+#product-list b {
+    color         : var(--accent) !important;
+    font-family   : 'Poppins', sans-serif !important;
+    font-weight   : 700 !important;
+}
+
+/* Precio tachado */
+#product-list del,
+#product-list s {
+    color         : var(--text-soft) !important;
+    font-size     : 11px !important;
+}
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @endsection
 
@@ -494,6 +927,14 @@
                     setProductList(data);
                 });
             }
+            // Al final de setProductList
+if(products.links.next == null){
+    $('#btn-load-more').hide();
+    $('#btn-no-more').show();
+} else {
+    $('#btn-load-more').show();
+    $('#btn-no-more').hide();
+}
         }
 
         function setProductList(data){
