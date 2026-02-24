@@ -40,10 +40,10 @@
     .qa-btn {
         display        : flex;
         align-items    : center;
-        gap            : 6px;
-        padding        : 7px 14px;
+        gap            : 10px;
+        padding        : 12px 18px;
         border-radius  : 10px;
-        font-size      : 12px;
+        font-size      : 14px;
         font-weight    : 600;
         font-family    : 'Poppins', sans-serif;
         text-decoration: none !important;
@@ -65,7 +65,7 @@
         text-decoration: none !important;
     }
 
-    .qa-btn i { font-size: 15px; }
+    .qa-btn i { font-size: 18px; }
 
     .qa-purple { color: #7c3aed; }
     .qa-blue   { color: #2563eb; }
@@ -86,28 +86,25 @@
     <span class="qa-label"><i class="las la-bolt"></i> Acceso rápido</span>
     <div class="qa-divider"></div>
 
-    <a href="{{ url('admin/products') }}" class="qa-btn qa-purple">
+    <a href="{{ url('admin/pos') }}" class="qa-btn qa-purple">
         <i class="las la-box"></i> Vender en pos
     </a>
 
-    <a href="{{ url('admin/orders') }}" class="qa-btn qa-blue">
+    <a href="{{ url('admin/products/admin') }}" class="qa-btn qa-blue">
         <i class="las la-shopping-cart"></i> Agregar productos
     </a>
 
-    <a href="{{ url('admin/customers') }}" class="qa-btn qa-pink">
-        <i class="las la-users"></i> Ver pedidos online
+    <a href="{{ url('admin/all_orders') }}" class="qa-btn qa-pink">
+        <i class="las la-users"></i> Ver pedidos
     </a>
 
-    <a href="{{ url('admin/categories') }}" class="qa-btn qa-orange">
+    <a href="{{ url('admin/blog') }}" class="qa-btn qa-orange">
         <i class="las la-th-large"></i> Crear blogs
     </a>
 
-    <a href="{{ url('admin/brands') }}" class="qa-btn qa-green">
-        <i class="las la-tag"></i> Pedidos
-
     <div class="qa-divider"></div>
 
-    <a href="{{ url('admin/sellers') }}" class="qa-btn qa-teal">
+    <a href="{{ url('admin/in_house_sale_report') }}" class="qa-btn qa-teal">
         <i class="las la-store"></i> Informes
     </a>
 </div>
@@ -433,7 +430,7 @@ body.dark-mode .col-lg-6 .row.gutters-10 .card:hover,
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h6 class="mb-0 fs-14">{{ translate('Products') }}</h6>
+                        <h6 class="mb-0 fs-14">{{ translate('Ventas Online vs POS') }}</h6>
                     </div>
                     <div class="card-body">
                         <canvas id="pie-1" class="w-100" height="280"></canvas>
@@ -722,6 +719,10 @@ body.dark-mode .col-lg-6 .row.gutters-10 .card:hover,
         transition    : all 0.3s ease !important;
         overflow      : hidden;
         margin-bottom : 8px;
+        display       : flex !important;
+        flex-direction: row !important;
+        align-items   : stretch !important;
+        min-height    : 140px;
     }
 
     .neuro-product-card:hover {
@@ -737,6 +738,10 @@ body.dark-mode .col-lg-6 .row.gutters-10 .card:hover,
     .neuro-product-img-wrap {
         background    : #e8edf2;
         padding       : 10px;
+        flex          : 0 0 140px;
+        display       : flex;
+        align-items   : center;
+        justify-content: center;
     }
 
     .neuro-product-img-wrap a {
@@ -746,11 +751,16 @@ body.dark-mode .col-lg-6 .row.gutters-10 .card:hover,
         box-shadow    :
             inset 3px 3px 8px rgba(163,177,198,0.40),
             inset -2px -2px 6px rgba(255,255,255,0.75);
+        width         : 100%;
+        height        : 100%;
     }
 
     .neuro-product-img-wrap img {
         border-radius : 12px;
         transition    : transform 0.4s ease;
+        width         : 100%;
+        height        : 100%;
+        object-fit    : cover;
     }
 
     .neuro-product-card:hover .neuro-product-img-wrap img {
@@ -761,6 +771,10 @@ body.dark-mode .col-lg-6 .row.gutters-10 .card:hover,
     .neuro-product-info {
         padding       : 12px 14px 14px;
         background    : #e8edf2;
+        flex          : 1;
+        display       : flex;
+        flex-direction: column;
+        justify-content: space-between;
     }
 
     /* ── Precio ── */
@@ -798,8 +812,8 @@ body.dark-mode .col-lg-6 .row.gutters-10 .card:hover,
 
     /* ── Nombre producto ── */
     .neuro-product-name {
-        font-size     : 12px;
-        font-weight   : 600;
+        font-size     : 15px;
+        font-weight   : 700;
         color         : #3d4f6e;
         font-family   : 'Poppins', sans-serif;
         line-height   : 1.4;
@@ -882,11 +896,12 @@ body.dark-mode .col-lg-6 .row.gutters-10 .card:hover,
     {{-- Body --}}
     <div class="card-body neuro-top-body">
         <div class="aiz-carousel gutters-10 half-outside-arrow"
-             data-items="6"
-             data-xl-items="5"
-             data-lg-items="4"
-             data-md-items="3"
-             data-sm-items="2"
+             data-items="3"
+             data-xl-items="2"
+             data-lg-items="2"
+             data-md-items="1"
+             data-sm-items="1"
+             data-autoplay='true'
              data-arrows='true'>
 
             @foreach (filter_products(\App\Models\Product::where('published', 1)->orderBy('num_of_sale', 'desc'))->limit(12)->get() as $key => $product)
@@ -913,6 +928,13 @@ body.dark-mode .col-lg-6 .row.gutters-10 .card:hover,
                         {{-- Info --}}
                         <div class="neuro-product-info">
 
+                            {{-- Nombre --}}
+                            <h3 class="neuro-product-name">
+                                <a href="{{ route('product', $product->slug) }}">
+                                    {{ $product->getTranslation('name') }}
+                                </a>
+                            </h3>
+
                             {{-- Precio --}}
                             <div class="neuro-price-wrap">
                                 @if(home_base_price($product) != home_discounted_base_price($product))
@@ -925,13 +947,6 @@ body.dark-mode .col-lg-6 .row.gutters-10 .card:hover,
                             <div class="neuro-rating rating rating-sm">
                                 {{ renderStarRating($product->rating) }}
                             </div>
-
-                            {{-- Nombre --}}
-                            <h3 class="neuro-product-name">
-                                <a href="{{ route('product', $product->slug) }}">
-                                    {{ $product->getTranslation('name') }}
-                                </a>
-                            </h3>
 
                         </div>
                     </div>
@@ -1036,99 +1051,87 @@ Chart.pluginService.register({
 AIZ.plugins.chart('#pie-1', {
     type: 'doughnut',
     data: {
-        labels: [
-            '{{ translate('Ventas Online') }}',
-            '{{ translate('Ventas Local') }}'
-        ],
+        labels: ['🌐 Ventas Web', '🏪 Ventas POS'],
         datasets: [
-            // ── Aro exterior: Ventas Online ──
+            // ── Aro exterior: Web ──
             {
-                data: [
-                    {{ \App\Models\Product::where('published', 1)->where('added_by', 'seller')->count() }},
-                    {{ \App\Models\Product::where('published', 1)->where('added_by', 'admin')->count() }}
-                ],
-                backgroundColor: ['#6366f1', '#f91616'],
-                borderWidth: 3,
-                borderColor: '#e8edf2',
-                weight:      55,
-                hoverOffset: 0
+                data: [{{ \App\Models\Order::where('order_from', 'web')->count() }}, 0],
+                backgroundColor: ['#fffb00', 'rgba(0,0,0,0)'],
+                borderWidth: 0,
+                weight: 50,
+                hoverOffset: 15
             },
-            // ── Aro interior: Ventas Local ──
+            // ── Aro interior: POS ──
             {
-                data: [
-                    {{ \App\Models\Product::where('published', 1)->where('added_by', 'seller')->count() }},
-                    {{ \App\Models\Product::where('published', 1)->where('added_by', 'admin')->count() }}
-                ],
-                backgroundColor: ['#81f887', '#ffe81c'],
-                borderWidth: 3,
-                borderColor: '#000000',
-                weight:      28,
-                hoverOffset: 0
+                data: [0, {{ \App\Models\Order::where('order_from', 'pos')->count() }}],
+                backgroundColor: ['rgba(0,0,0,0)', '#ff0000'],
+                borderWidth: 0,
+                weight: 50,
+                hoverOffset: 15
             }
         ]
     },
     options: {
-        responsive:          true,
+        responsive: true,
         maintainAspectRatio: true,
-        rotation:            -90,
-        circumference:       360,
-        layout: {
-            padding: { top: 20, bottom: 20, left: 20, right: 20 }
-        },
-        animation: {
-            duration:      2500,
-            easing:        'easeOutElastic',
-            animateRotate: true,
-            animateScale:  true,
-            onProgress: function(animation) {
-                var progress = animation.currentStep / animation.numSteps;
-                var canvas   = animation.chart.canvas;
-                canvas.style.opacity         = Math.min(1, progress * 1.5);
-                canvas.style.transform       = 'scale(' + (0.3 + progress * 0.7) + ')';
-                canvas.style.transformOrigin = 'center center';
-            },
-            onComplete: function() {
-                var canvas          = this.chart.canvas;
-                canvas.style.opacity    = '1';
-                canvas.style.transform  = 'scale(1)';
-                canvas.style.transition = 'none';
-            }
-        },
+        rotation: -90,
+        circumference: 360,
+        animation: { duration: 1800, easing: 'easeOutElastic' },
         hover: {
-            animationDuration: 0,
-            mode:             'dataset'
+            animationDuration: 300
         },
         legend: { display: false },
         tooltips: {
-            backgroundColor: 'rgba(2, 126, 250, 0.98)',
+            enabled: true,
+            backgroundColor: 'rgba(255, 221, 0, 0.95)',
             titleFontFamily: 'Poppins',
-            titleFontSize:    12,
-            titleFontColor:  '#9dff00',
-            bodyFontFamily:  'Poppins',
-            bodyFontSize:     13,
-            borderColor:     'rgb(247, 0, 255)',
-            borderWidth:      1,
-            cornerRadius:     10,
-            xPadding:         12,
-            yPadding:          8,
-            displayColors:    false,
+            titleFontSize: 14,
+            titleFontColor: '#fff',
+            titleFontStyle: 'bold',
+            bodyFontFamily: 'Poppins',
+            bodyFontSize: 13,
+            bodyFontColor: '#e0f2fe',
+            borderColor: '#60a5fa',
+            borderWidth: 2,
+            cornerRadius: 10,
+            xPadding: 14,
+            yPadding: 10,
+            displayColors: true,
+            caretPadding: 10,
             callbacks: {
                 title: function(tooltipItems, data) {
-                    // Muestra si es aro exterior (Online) o interior (Local)
                     var datasetIndex = tooltipItems[0].datasetIndex;
-                    return datasetIndex === 0 ? '🌐 Ventas Online' : '🏪 Ventas Local';
+                    var index = tooltipItems[0].index;
+                    
+                    if (datasetIndex === 0 && index === 0) {
+                        return '🌐 VENTAS WEB';
+                    } else if (datasetIndex === 1 && index === 1) {
+                        return '🏪 VENTAS POS';
+                    } else {
+                        return '';
+                    }
                 },
                 label: function(tooltipItem, data) {
+                    var datasetIndex = tooltipItem.datasetIndex;
                     var index = tooltipItem.index;
-                    var value = data.datasets[0].data[index];
-                    var total = data.datasets[0].data.reduce(function(a, b) { return a + b; }, 0);
-                    var pct   = total > 0 ? Math.round((value / total) * 100) : 0;
-                    return ' ' + data.labels[index] + ': ' + value + ' productos (' + pct + '%)';
+                    
+                    if (datasetIndex === 0 && index === 0) {
+                        var webValue = {{ \App\Models\Order::where('order_from', 'web')->count() }};
+                        var posValue = {{ \App\Models\Order::where('order_from', 'pos')->count() }};
+                        var total = webValue + posValue;
+                        var pct = total > 0 ? Math.round((webValue / total) * 100) : 0;
+                        return 'Cantidad: ' + webValue + ' órdenes (' + pct + '%)';
+                    } else if (datasetIndex === 1 && index === 1) {
+                        var webValue = {{ \App\Models\Order::where('order_from', 'web')->count() }};
+                        var posValue = {{ \App\Models\Order::where('order_from', 'pos')->count() }};
+                        var total = webValue + posValue;
+                        var pct = total > 0 ? Math.round((posValue / total) * 100) : 0;
+                        return 'Cantidad: ' + posValue + ' órdenes (' + pct + '%)';
+                    } else {
+                        return '';
+                    }
                 }
             }
-        },
-        elements: {
-            arc: { borderAlign: 'center', hoverBorderWidth: 0 }
         }
     }
 });
@@ -1137,25 +1140,25 @@ AIZ.plugins.chart('#pie-1', {
 (function buildLegend() {
     var canvas = document.getElementById('pie-1');
     var labels = [
-        { color: '#6366f1', text: '{{ translate('Ventas Online') }}' },
-        { color: '#f97316', text: '{{ translate('Ventas Local') }}'  }
+        { color: '#fff712', text: '{{ translate('Ventas Web') }}' },
+        { color: '#ef4444', text: '{{ translate('Ventas POS') }}'  }
     ];
 
     var wrap = document.createElement('div');
     wrap.style.cssText = [
         'display:flex', 'flex-wrap:wrap', 'justify-content:center',
-        'gap:16px', 'margin-top:12px',
-        'font-family:Poppins,sans-serif', 'font-size:12px'
+        'gap:16px', 'margin-top:16px',
+        'font-family:Poppins,sans-serif', 'font-size:13px'
     ].join(';');
 
     labels.forEach(function(l) {
         var item = document.createElement('div');
-        item.style.cssText = 'display:flex;align-items:center;gap:7px;color:#5a6a85;font-weight:500;';
+        item.style.cssText = 'display:flex;align-items:center;gap:8px;color:#5a6a85;font-weight:500;';
         var dot = document.createElement('span');
         dot.style.cssText = [
-            'width:11px', 'height:11px', 'border-radius:50%',
+            'width:12px', 'height:12px', 'border-radius:50%',
             'background:' + l.color, 'flex-shrink:0',
-            'box-shadow:2px 2px 5px rgba(0, 255, 55, 0.18)'
+            'box-shadow:0 2px 8px ' + l.color + '40'
         ].join(';');
         item.appendChild(dot);
         item.appendChild(document.createTextNode(l.text));
