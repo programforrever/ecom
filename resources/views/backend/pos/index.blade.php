@@ -224,8 +224,7 @@
     background    : var(--nb) !important;
     border-radius : 20px !important;
     border        : none !important;
-    box-shadow    : 12px 12px 30px rgba(163,177,198,.6),
-                    -8px -8px 24px rgba(255,255,255,.95) !important;
+
     overflow      : hidden !important;
 }
 
@@ -826,10 +825,7 @@ body.dark-mode, .dark {
                         </div>
                         <div class="form-group">
                             <div class=" row">
-                                <label class="col-sm-2 control-label" for="postal_code">{{translate('Postal code')}}</label>
-                                <div class="col-sm-10">
-                                    <input type="number" min="0" placeholder="{{translate('Postal code')}}" id="postal_code" name="postal_code" class="form-control" required>
-                                </div>
+                               
                             </div>
                         </div>
                         <div class="form-group">
@@ -1237,22 +1233,28 @@ body.dark-mode, .dark {
             })
         });
 
-        function updateCart(data){
-            console.log('updateCart called with data length:', data.length);
-            console.log('Target element #cart-details exists:', $('#cart-details').length > 0);
-            
-            if (!data || data.length === 0) {
-                console.error('Error: Cart view data is empty!');
-                AIZ.plugins.notify('danger', 'Error: Empty cart view returned');
-                return;
-            }
-            
-            $('#cart-details').html(data);
-            console.log('Cart HTML updated. Current HTML length:', $('#cart-details').html().length);
-            
-            AIZ.extra.plusMinus();
-            console.log('plusMinus initialized');
-        }
+function updateCart(data){
+    console.log('updateCart called with data length:', data.length);
+    console.log('Target element #cart-details exists:', $('#cart-details').length > 0);
+    
+    if (!data || data.length === 0) {
+        console.error('Error: Cart view data is empty!');
+        AIZ.plugins.notify('danger', 'Error: Empty cart view returned');
+        return;
+    }
+    
+    // Guardar posición del scroll
+    var scrollPos = $('.aiz-pos-cart-list').scrollTop();
+    
+    $('#cart-details').html(data);
+    console.log('Cart HTML updated. Current HTML length:', $('#cart-details').html().length);
+    
+    // Restaurar posición del scroll
+    $('.aiz-pos-cart-list').scrollTop(scrollPos);
+    
+    AIZ.extra.plusMinus();
+    console.log('plusMinus initialized');
+}
 
         function filterProducts(){
             var keyword = $('input[name=keyword]').val();
