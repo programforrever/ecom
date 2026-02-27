@@ -224,4 +224,27 @@ class PosController extends Controller
 
         $mpdf->Output('order-' . $order->code . '.pdf', 'I');
     }
+
+    // Get POS sales list
+    public function getSalesList(Request $request)
+    {
+        try {
+            $limit = $request->get('limit', 10);
+            $page = $request->get('page', 1);
+            
+            // Get recent POS orders
+            $orders = Order::where('order_from', 'pos')
+                ->with('user', 'orderDetails.product')
+                ->orderBy('created_at', 'desc')
+                ->paginate($limit, ['*'], 'page', $page);
+            
+            return view('backend.pos.sales_list', compact('orders'));
+        } catch (\Exception $e) {
+            \Log::error('getSalesList error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }
