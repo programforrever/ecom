@@ -49,7 +49,6 @@
 
     .mobile-list { display: none; }
 
-    /* ── Título panel con badge filtro activo ── */
     .panel-title-row {
         display: flex;
         align-items: center;
@@ -77,7 +76,6 @@
         box-shadow: 0 0 8px var(--accent-light);
     }
 
-    /* ── Pill badge filtro activo ── */
     .filter-active-badge {
         display: inline-flex;
         align-items: center;
@@ -85,28 +83,21 @@
         background: var(--bg);
         border-radius: 20px;
         padding: 5px 12px 5px 10px;
-        box-shadow:
-            4px 4px 10px var(--shadow-dark),
-            -4px -4px 10px var(--shadow-light);
+        box-shadow: 4px 4px 10px var(--shadow-dark), -4px -4px 10px var(--shadow-light);
         text-decoration: none;
         transition: box-shadow 0.2s ease, transform 0.2s ease;
         animation: fadeInBadge 0.3s ease;
     }
     .filter-active-badge:hover {
-        box-shadow:
-            2px 2px 6px var(--shadow-dark),
-            -2px -2px 6px var(--shadow-light);
+        box-shadow: 2px 2px 6px var(--shadow-dark), -2px -2px 6px var(--shadow-light);
         transform: scale(0.97);
         text-decoration: none;
     }
     .filter-active-badge:active {
-        box-shadow:
-            inset 3px 3px 7px var(--shadow-dark),
-            inset -3px -3px 7px var(--shadow-light);
+        box-shadow: inset 3px 3px 7px var(--shadow-dark), inset -3px -3px 7px var(--shadow-light);
     }
     .badge-dot {
-        width: 7px;
-        height: 7px;
+        width: 7px; height: 7px;
         border-radius: 50%;
         background: var(--accent);
         box-shadow: 0 0 5px var(--accent-light);
@@ -131,7 +122,6 @@
         line-height: 1;
         flex-shrink: 0;
     }
-
     @keyframes fadeInBadge {
         from { opacity: 0; transform: scale(0.8); }
         to   { opacity: 1; transform: scale(1); }
@@ -150,7 +140,6 @@
         z-index: 9999;
         flex-wrap: nowrap;
     }
-
     .neuro-label {
         font-size: 0.85rem;
         font-weight: 600;
@@ -160,7 +149,6 @@
         white-space: nowrap;
         flex-shrink: 0;
     }
-
     .neuro-select {
         flex: 0 0 auto !important;
         width: auto !important;
@@ -181,7 +169,6 @@
         -webkit-appearance: none;
     }
 
-    /* ── bootstrap-select fix ── */
     .bootstrap-select {
         z-index: 9999 !important;
         position: relative !important;
@@ -192,25 +179,19 @@
         pointer-events: none !important;
     }
     .bootstrap-select > .dropdown-toggle,
-    .bootstrap-select .dropdown-menu {
-        pointer-events: auto !important;
-    }
+    .bootstrap-select .dropdown-menu { pointer-events: auto !important; }
     .bootstrap-select .dropdown-menu {
         z-index: 9999 !important;
         border-radius: 12px !important;
         border: none !important;
-        box-shadow:
-            6px 6px 16px var(--shadow-dark),
-            -6px -6px 16px var(--shadow-light) !important;
+        box-shadow: 6px 6px 16px var(--shadow-dark), -6px -6px 16px var(--shadow-light) !important;
         background: var(--bg) !important;
         padding: 8px !important;
         min-width: 200px !important;
         overflow: hidden !important;
         overflow-y: auto !important;
     }
-    .bootstrap-select .dropdown-menu .inner {
-        overflow-x: hidden !important;
-    }
+    .bootstrap-select .dropdown-menu .inner { overflow-x: hidden !important; }
     .bootstrap-select .dropdown-menu li a {
         border-radius: 8px !important;
         color: var(--text-primary) !important;
@@ -231,15 +212,11 @@
         color: var(--text-primary) !important;
         font-size: 0.9rem !important;
         width: 100% !important;
-        box-shadow:
-            inset 4px 4px 10px var(--shadow-dark),
-            inset -4px -4px 10px var(--shadow-light) !important;
+        box-shadow: inset 4px 4px 10px var(--shadow-dark), inset -4px -4px 10px var(--shadow-light) !important;
     }
     .bootstrap-select > .dropdown-toggle:focus {
         outline: none !important;
-        box-shadow:
-            inset 4px 4px 10px var(--shadow-dark),
-            inset -4px -4px 10px var(--shadow-light) !important;
+        box-shadow: inset 4px 4px 10px var(--shadow-dark), inset -4px -4px 10px var(--shadow-light) !important;
     }
 
     .neuro-btn {
@@ -301,13 +278,15 @@
         box-shadow: inset 3px 3px 7px var(--shadow-dark), inset -3px -3px 7px var(--shadow-light);
         font-size: 0.88rem;
     }
-
+/* categoria */
     .donut-left {
         display: flex;
         flex-direction: row;
         align-items: center;
-        gap: 8px;
+        gap: 6px;
         flex-shrink: 0;
+        min-width: 130px; /* dona para ordenar la fila*/
+    justify-content: flex-start;
     }
     .donut-rank {
         font-size: 0.68rem;
@@ -315,13 +294,7 @@
         text-align: center;
         white-space: nowrap;
     }
-    .donut-left-labels {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 4px;
-        margin-top: -5px;
-    }
+    /* CATEGORIA */
     .donut-cat-btn {
         background: var(--bg);
         border: 1.5px solid;
@@ -333,18 +306,14 @@
         letter-spacing: 0.4px;
         cursor: default;
         white-space: nowrap;
+        max-width: 180px;     /* categoria*/  
+        overflow: hidden;
+        text-overflow: ellipsis;
         box-shadow: 3px 3px 7px var(--shadow-dark), -3px -3px 7px var(--shadow-light);
         pointer-events: none;
         line-height: 1;
         height: fit-content;
-    }
-    .donut-stock-label {
-        font-size: 0.56rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.4px;
-        white-space: nowrap;
-        margin-left: 10px;
+        margin-top: -1px;
     }
 
     .donuts-container { position: relative; width: 100%; }
@@ -395,9 +364,6 @@
 
     .neuro-pagination { margin-top: 16px; }
 
-    /* =============================
-       MÓVIL
-    ============================= */
     @media (max-width: 900px) {
         .neuro-panels-wrapper { display: none; }
         .mobile-list { display: flex; flex-direction: column; gap: 16px; }
@@ -424,7 +390,6 @@
         }
         .bootstrap-select > .dropdown-toggle { width: 100% !important; }
         .neuro-btn { width: 100%; text-align: center; justify-content: center; }
-
         .panel-title-row { flex-wrap: wrap; gap: 8px; }
 
         .mobile-product-block { display: flex; flex-direction: column; gap: 10px; }
@@ -465,12 +430,26 @@
     $maxSales      = $products->max('num_of_sale') ?: 1;
     $circumference = 138.23;
 
-    /* Nombre de la categoría activa para el badge */
     $activeCategoryName = '';
     if ($sort_by) {
         $activeCat = \App\Models\Category::find($sort_by);
         if ($activeCat) $activeCategoryName = $activeCat->getTranslation('name');
     }
+
+    /* Helper para obtener nombre de categoría del producto */
+    $getCatName = function($product) {
+        if ($product->category_id) {
+            $cat = \App\Models\Category::find($product->category_id);
+            if ($cat) return $cat->getTranslation('name');
+        }
+        if (isset($product->categories) && $product->categories && $product->categories->count() > 0) {
+            return $product->categories->first()->getTranslation('name');
+        }
+        if (isset($product->category) && $product->category) {
+            return $product->category->getTranslation('name');
+        }
+        return '';
+    };
 @endphp
 
 <div class="neuro-page">
@@ -482,8 +461,6 @@
     <div class="neuro-panels-wrapper" id="panels-wrapper">
 
         <div class="neuro-panel" id="panel-table">
-
-            {{-- Título + badge filtro activo --}}
             <div class="panel-title-row">
                 <div class="neuro-panel-title">{{ translate('Product Sales') }}</div>
                 @if($sort_by && $activeCategoryName)
@@ -545,11 +522,12 @@
             <div class="donuts-container" id="donuts-container">
                 @foreach ($products as $key => $product)
                     @php
-                        $globalIdx = $key + ($products->currentPage() - 1) * $products->perPage();
-                        $color     = $colorPalette[$globalIdx % count($colorPalette)];
-                        $pct       = $product->num_of_sale / $maxSales;
-                        $offset    = round($circumference * (1 - $pct), 2);
-                        $barPct    = round($pct * 100, 1);
+                        $globalIdx  = $key + ($products->currentPage() - 1) * $products->perPage();
+                        $color      = $colorPalette[$globalIdx % count($colorPalette)];
+                        $pct        = $product->num_of_sale / $maxSales;
+                        $offset     = round($circumference * (1 - $pct), 2);
+                        $barPct     = round($pct * 100, 1);
+                        $productCat = $getCatName($product);
                     @endphp
                     <div class="donut-card"
                          id="donut-card-{{ $globalIdx }}"
@@ -560,12 +538,13 @@
 
                         <div class="donut-left">
                             <span class="donut-rank" style="color:{{ $color }}">#{{ $globalIdx + 1 }}</span>
-                            <div class="donut-left-labels">
-                                <button class="donut-cat-btn" style="border-color:{{ $color }};color:{{ $color }}">
-                                    {{ translate('Category') }}
+                            @if($productCat)
+                                <button class="donut-cat-btn"
+                                        style="border-color:{{ $color }};color:{{ $color }}"
+                                        title="{{ $productCat }}">
+                                    {{ $productCat }}
                                 </button>
-                                <span class="donut-stock-label" style="color:{{ $color }}">Stock</span>
-                            </div>
+                            @endif
                         </div>
 
                         <div class="donut-wrapper" style="width:54px;height:54px">
@@ -628,11 +607,12 @@
 
         @foreach ($products as $key => $product)
             @php
-                $globalIdx = $key + ($products->currentPage() - 1) * $products->perPage();
-                $color     = $colorPalette[$globalIdx % count($colorPalette)];
-                $pct       = $product->num_of_sale / $maxSales;
-                $offset    = round($circumference * (1 - $pct), 2);
-                $barPct    = round($pct * 100, 1);
+                $globalIdx  = $key + ($products->currentPage() - 1) * $products->perPage();
+                $color      = $colorPalette[$globalIdx % count($colorPalette)];
+                $pct        = $product->num_of_sale / $maxSales;
+                $offset     = round($circumference * (1 - $pct), 2);
+                $barPct     = round($pct * 100, 1);
+                $productCat = $getCatName($product);
             @endphp
 
             <div class="mobile-product-block">
@@ -643,12 +623,13 @@
 
                     <div class="donut-left">
                         <span class="donut-rank" style="color:{{ $color }}">#{{ $globalIdx + 1 }}</span>
-                        <div class="donut-left-labels">
-                            <button class="donut-cat-btn" style="border-color:{{ $color }};color:{{ $color }}">
-                                {{ translate('Category') }}
+                        @if($productCat)
+                            <button class="donut-cat-btn"
+                                    style="border-color:{{ $color }};color:{{ $color }}"
+                                    title="{{ $productCat }}">
+                                {{ $productCat }}
                             </button>
-                            <span class="donut-stock-label" style="color:{{ $color }}">Stock</span>
-                        </div>
+                        @endif
                     </div>
 
                     <div class="donut-wrapper" style="width:54px;height:54px">
@@ -691,7 +672,6 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
-    /* ── Fix definitivo bootstrap-select ── */
     document.querySelectorAll('.bootstrap-select').forEach(function (bs) {
         var toggle = bs.querySelector('.dropdown-toggle');
         var menu   = bs.querySelector('.dropdown-menu');
@@ -737,7 +717,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     window.addEventListener('resize', alignDonuts);
 
-    /* Animar donas desktop */
     document.querySelectorAll('#donuts-container .donut-card').forEach(function (card, i) {
         var idx    = card.dataset.idx;
         var circle = document.getElementById('donut-circle-' + idx);
@@ -748,7 +727,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 200 + i * 100);
     });
 
-    /* Animar donas móvil */
     document.querySelectorAll('.mobile-donut-card').forEach(function (card, i) {
         var idx    = card.dataset.mobileIdx;
         var circle = document.getElementById('mobile-circle-' + idx);
@@ -759,7 +737,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 200 + i * 100);
     });
 
-    /* Hover cruzado desktop */
     document.querySelectorAll('.neuro-table tbody tr[data-donut]').forEach(function (row) {
         var card = document.getElementById('donut-card-' + row.dataset.donut);
         row.addEventListener('mouseenter', function () {
