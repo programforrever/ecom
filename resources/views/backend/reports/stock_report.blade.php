@@ -75,7 +75,6 @@
         box-shadow: 0 0 8px var(--accent-light);
     }
 
-    /* ── Badge filtro activo ── */
     .filter-active-badge {
         display: inline-flex;
         align-items: center;
@@ -131,7 +130,6 @@
         50%       { box-shadow: 0 0 10px var(--accent); }
     }
 
-    /* ── Formulario ── */
     .neuro-form-group {
         display: flex;
         align-items: center;
@@ -170,7 +168,6 @@
         -webkit-appearance: none;
     }
 
-    /* ── bootstrap-select fix ── */
     .bootstrap-select {
         z-index: 9999 !important;
         position: relative !important;
@@ -237,7 +234,6 @@
     .neuro-btn:hover  { box-shadow: 3px 3px 8px var(--shadow-dark), -3px -3px 8px var(--shadow-light); color: var(--accent-light); }
     .neuro-btn:active { box-shadow: inset 4px 4px 10px var(--shadow-dark), inset -4px -4px 10px var(--shadow-light); }
 
-    /* ── Tabla ── */
     .neuro-table {
         width: 100%;
         border-collapse: separate;
@@ -282,7 +278,6 @@
         font-size: 0.88rem;
     }
 
-    /* ── Donas desktop ── */
     .donuts-container { position: relative; width: 100%; }
     .donut-card {
         position: absolute;
@@ -309,8 +304,9 @@
         display: flex;
         flex-direction: row;
         align-items: center;
-        gap: 8px;
+        gap: 6px;
         flex-shrink: 0;
+        min-width: 130px;
     }
     .donut-rank {
         font-size: 0.68rem;
@@ -318,13 +314,11 @@
         text-align: center;
         white-space: nowrap;
     }
-    /* categoria */
     .donut-left-labels {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
         gap: 4px;
-        margin-top: -5px;
     }
     .donut-cat-btn {
         background: var(--bg);
@@ -337,18 +331,36 @@
         letter-spacing: 0.4px;
         cursor: default;
         white-space: nowrap;
+        max-width: 75px;
+        overflow: hidden;
+        text-overflow: ellipsis;
         box-shadow: 3px 3px 7px var(--shadow-dark), -3px -3px 7px var(--shadow-light);
         pointer-events: none;
         line-height: 1;
         height: fit-content;
+                max-width: 180px;     /* categoria*/  
+
     }
-    .donut-sales-label-small {
-        font-size: 0.56rem;
-        font-weight: 700;
+
+    /* ── Badge LOW stock ── */
+    .donut-low-badge {
+        font-size: 0.52rem;
+        font-weight: 800;
         text-transform: uppercase;
-        letter-spacing: 0.4px;
+        letter-spacing: 0.6px;
         white-space: nowrap;
-        margin-left: 10px;
+        color: #d4506a;
+        background: var(--bg);
+        border: 1.5px solid #d4506a;
+        border-radius: 6px;
+        padding: 2px 5px;
+        box-shadow: 2px 2px 5px var(--shadow-dark), -2px -2px 5px var(--shadow-light);
+        line-height: 1;
+        animation: pulseRed 1.5s infinite;
+    }
+    @keyframes pulseRed {
+        0%, 100% { box-shadow: 2px 2px 5px var(--shadow-dark), -2px -2px 5px var(--shadow-light), 0 0 3px #d4506a44; }
+        50%       { box-shadow: 2px 2px 5px var(--shadow-dark), -2px -2px 5px var(--shadow-light), 0 0 8px #d4506a99; }
     }
 
     .donut-wrapper { position: relative; flex-shrink: 0; }
@@ -378,9 +390,6 @@
 
     .neuro-pagination { margin-top: 16px; }
 
-    /* =============================
-       MÓVIL
-    ============================= */
     @media (max-width: 900px) {
         .neuro-panels-wrapper { display: none; }
         .mobile-list { display: flex; flex-direction: column; gap: 16px; }
@@ -446,21 +455,34 @@
     $colorPalette  = ['#e07b3f','#4a9fd4','#5cba8a','#a06dd4','#d4506a','#d4b84a','#4ab8d4','#7ad45c','#d47a4a','#5c7ad4'];
     $circumference = 138.23;
 
-    /* Calcular qty por producto y el máximo */
     $qtyMap = [];
-    foreach ($products as $key => $product) {
+    foreach ($products as $product) {
         $qty = 0;
         foreach ($product->stocks as $stock) { $qty += $stock->qty; }
         $qtyMap[$product->id] = $qty;
     }
     $maxQty = max(array_values($qtyMap) ?: [1]) ?: 1;
 
-    /* Nombre de la categoría activa */
     $activeCategoryName = '';
     if ($sort_by) {
         $activeCat = \App\Models\Category::find($sort_by);
         if ($activeCat) $activeCategoryName = $activeCat->getTranslation('name');
     }
+
+    /* Helper categoría real del producto */
+    $getCatName = function($product) {
+        if (!empty($product->category_id)) {
+            $cat = \App\Models\Category::find($product->category_id);
+            if ($cat) return $cat->getTranslation('name');
+        }
+        if (isset($product->categories) && $product->categories && $product->categories->count() > 0) {
+            return $product->categories->first()->getTranslation('name');
+        }
+        if (isset($product->category) && $product->category) {
+            return $product->category->getTranslation('name');
+        }
+        return '';
+    };
 @endphp
 
 <div class="neuro-page">
@@ -471,9 +493,7 @@
     {{-- ===================== DESKTOP ===================== --}}
     <div class="neuro-panels-wrapper" id="stock-panels-wrapper">
 
-        {{-- Panel Tabla --}}
         <div class="neuro-panel" id="stock-panel-table">
-
             <div class="panel-title-row">
                 <div class="neuro-panel-title">{{ translate('Product Stock') }}</div>
                 @if($sort_by && $activeCategoryName)
@@ -528,7 +548,6 @@
             </div>
         </div>
 
-        {{-- Panel Donas --}}
         <div class="neuro-panel" id="stock-panel-donuts">
             <div class="panel-title-row">
                 <div class="neuro-panel-title">{{ translate('Stock Chart') }}</div>
@@ -536,12 +555,15 @@
             <div class="donuts-container" id="stock-donuts-container">
                 @foreach ($products as $key => $product)
                     @php
-                        $globalIdx = $key + ($products->currentPage() - 1) * $products->perPage();
-                        $color     = $colorPalette[$globalIdx % count($colorPalette)];
-                        $qty       = $qtyMap[$product->id];
-                        $pct       = $qty / $maxQty;
-                        $offset    = round($circumference * (1 - $pct), 2);
-                        $barPct    = round($pct * 100, 1);
+                        $globalIdx  = $key + ($products->currentPage() - 1) * $products->perPage();
+                        $color      = $colorPalette[$globalIdx % count($colorPalette)];
+                        $qty        = $qtyMap[$product->id];
+                        $pct        = $qty / $maxQty;
+                        $offset     = round($circumference * (1 - $pct), 2);
+                        $barPct     = round($pct * 100, 1);
+                        $productCat = $getCatName($product);
+                        // ✅ CORREGIDO: usa low_stock_quantity igual que la tabla de productos
+                        $isLow      = $qty <= $product->low_stock_quantity;
                     @endphp
                     <div class="donut-card"
                          id="stock-donut-card-{{ $globalIdx }}"
@@ -553,10 +575,16 @@
                         <div class="donut-left">
                             <span class="donut-rank" style="color:{{ $color }}">#{{ $globalIdx + 1 }}</span>
                             <div class="donut-left-labels">
-                                <button class="donut-cat-btn" style="border-color:{{ $color }};color:{{ $color }}">
-                                    {{ translate('Category') }}
-                                </button>
-                                <span class="donut-sales-label-small" style="color:{{ $color }}">Stock</span>
+                                @if($productCat)
+                                    <button class="donut-cat-btn"
+                                            style="border-color:{{ $color }};color:{{ $color }}"
+                                            title="{{ $productCat }}">
+                                        {{ $productCat }}
+                                    </button>
+                                @endif
+                                @if($isLow)
+                                    <span class="donut-low-badge">LOW</span>
+                                @endif
                             </div>
                         </div>
 
@@ -620,12 +648,15 @@
 
         @foreach ($products as $key => $product)
             @php
-                $globalIdx = $key + ($products->currentPage() - 1) * $products->perPage();
-                $color     = $colorPalette[$globalIdx % count($colorPalette)];
-                $qty       = $qtyMap[$product->id];
-                $pct       = $qty / $maxQty;
-                $offset    = round($circumference * (1 - $pct), 2);
-                $barPct    = round($pct * 100, 1);
+                $globalIdx  = $key + ($products->currentPage() - 1) * $products->perPage();
+                $color      = $colorPalette[$globalIdx % count($colorPalette)];
+                $qty        = $qtyMap[$product->id];
+                $pct        = $qty / $maxQty;
+                $offset     = round($circumference * (1 - $pct), 2);
+                $barPct     = round($pct * 100, 1);
+                $productCat = $getCatName($product);
+                // ✅ CORREGIDO: usa low_stock_quantity igual que la tabla de productos
+                $isLow      = $qty <= $product->low_stock_quantity;
             @endphp
 
             <div class="mobile-product-block">
@@ -637,10 +668,16 @@
                     <div class="donut-left">
                         <span class="donut-rank" style="color:{{ $color }}">#{{ $globalIdx + 1 }}</span>
                         <div class="donut-left-labels">
-                            <button class="donut-cat-btn" style="border-color:{{ $color }};color:{{ $color }}">
-                                {{ translate('Category') }}
-                            </button>
-                            <span class="donut-sales-label-small" style="color:{{ $color }}">Stock</span>
+                            @if($productCat)
+                                <button class="donut-cat-btn"
+                                        style="border-color:{{ $color }};color:{{ $color }}"
+                                        title="{{ $productCat }}">
+                                    {{ $productCat }}
+                                </button>
+                            @endif
+                            @if($isLow)
+                                <span class="donut-low-badge">LOW</span>
+                            @endif
                         </div>
                     </div>
 
@@ -669,7 +706,10 @@
                 <div class="mobile-product-row">
                     <span class="row-num">{{ $globalIdx + 1 }}</span>
                     <span class="row-name">{{ $product->getTranslation('name') }}</span>
-                    <span class="row-badge" style="color:{{ $color }}">{{ $qty }}</span>
+                    {{-- ✅ CORREGIDO: usa low_stock_quantity igual que la tabla de productos --}}
+                    <span class="row-badge" style="color:{{ $isLow ? '#d4506a' : $color }}">
+                        {{ $isLow ? 'LOW' : $qty }}
+                    </span>
                 </div>
             </div>
         @endforeach
@@ -684,7 +724,6 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
-    /* ── Fix bootstrap-select ── */
     document.querySelectorAll('.bootstrap-select').forEach(function (bs) {
         var toggle = bs.querySelector('.dropdown-toggle');
         var menu   = bs.querySelector('.dropdown-menu');
@@ -701,7 +740,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    /* ── Alinear donas desktop ── */
     function alignDonuts() {
         if (window.innerWidth <= 900) return;
         var container    = document.getElementById('stock-donuts-container');
@@ -730,7 +768,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     window.addEventListener('resize', alignDonuts);
 
-    /* ── Animar donas desktop ── */
     document.querySelectorAll('#stock-donuts-container .donut-card').forEach(function (card, i) {
         var idx    = card.dataset.idx;
         var circle = document.getElementById('stock-circle-' + idx);
@@ -741,7 +778,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 200 + i * 100);
     });
 
-    /* ── Animar donas móvil ── */
     document.querySelectorAll('.mobile-donut-card').forEach(function (card, i) {
         var idx    = card.dataset.mobileIdx;
         var circle = document.getElementById('stock-mobile-circle-' + idx);
@@ -752,7 +788,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 200 + i * 100);
     });
 
-    /* ── Hover cruzado desktop ── */
     document.querySelectorAll('#stock-products-table tbody tr[data-donut]').forEach(function (row) {
         var card = document.getElementById('stock-donut-card-' + row.dataset.donut);
         row.addEventListener('mouseenter', function () {
