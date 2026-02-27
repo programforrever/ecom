@@ -9,15 +9,18 @@
 
                 {{-- BARRA SUPERIOR --}}
                 <div class="pos-topbar mb-3">
-                    <div class="pos-topbar-inner">
-
+                    {{-- BÚSQUEDA ARRIBA --}}
+                    <div class="pos-search-row">
                         <div class="pos-field-wrap">
                             <span class="pos-field-icon">
                                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
                             </span>
                             <input class="pos-field-input" type="text" name="keyword" placeholder="{{ translate('Buscar por nombre/código') }}" onkeyup="filterProducts()">
                         </div>
+                    </div>
 
+                    {{-- FILTROS Y BOTONES ABAJO --}}
+                    <div class="pos-topbar-inner">
                         <div class="pos-field-wrap">
                             <span class="pos-field-icon">
                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 6h16M4 12h10M4 18h6"/></svg>
@@ -42,11 +45,10 @@
                             </select>
                         </div>
 
-                        <a href="#" class="pos-btn-ventas">
+                        <a href="javascript:void(0)" onclick="loadPosSalesList()" class="pos-btn-ventas">
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 17H5a2 2 0 0 0-2 2v0a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v0a2 2 0 0 0-2-2h-4"/><rect x="9" y="3" width="6" height="14" rx="1"/></svg>
                             {{ translate('Listado ventas') }}
                         </a>
-
                     </div>
                 </div>
 
@@ -62,8 +64,13 @@
                 </div>
             </div>
 
+            {{-- BOTÓN FLOTANTE PARA SCROLL AL CARRITO --}}
+            <button type="button" id="scroll-to-cart-btn" class="scroll-to-cart-btn" onclick="scrollToCart()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+            </button>
+
             {{-- PANEL DERECHO --}}
-            <div class="col-md-auto w-md-350px w-lg-400px w-xl-500px">
+            <div id="pos-cart-panel" class="col-md-auto w-md-350px w-lg-400px w-xl-500px">
                 <div class="neu-card mb-3">
                     <div class="neu-card-body">
                         <div class="d-flex border-bottom pb-3">
@@ -104,28 +111,44 @@
                                             $cartID = $cartItem['id'];
                                         @endphp
                                         <li class="list-group-item py-0 pl-2 neu-cart-item">
-                                            <div class="row gutters-5 align-items-center">
-                                                <div class="col-auto w-60px">
-                                                    <div class="row no-gutters align-items-center flex-column aiz-plus-minus">
-                                                        <button class="btn col-auto btn-icon btn-sm fs-15 neu-qty-btn" type="button" data-type="plus" data-field="qty-{{ $cartID }}" @if($product->digital == 1) disabled @endif>
+                                            <div class="neu-cart-row">
+                                                {{-- IMAGEN DEL PRODUCTO --}}
+                                                <div class="neu-cart-col-image">
+                                                    <div class="neu-cart-image-wrapper">
+                                                        @if($product->thumbnail_img)
+                                                            <img src="{{ uploaded_asset($product->thumbnail_img) }}" alt="{{ $product->name }}" class="neu-cart-image">
+                                                        @else
+                                                            <div class="neu-cart-image-placeholder">
+                                                                <i class="las la-image"></i>
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                                {{-- SELECTOR DE CANTIDAD --}}
+                                                <div class="neu-cart-col-qty">
+                                                    <div class="neu-qty-controls">
+                                                        <button class="btn btn-icon btn-sm neu-qty-btn" type="button" data-type="plus" data-field="qty-{{ $cartID }}" @if($product->digital == 1) disabled @endif>
                                                             <i class="las la-plus"></i>
                                                         </button>
-                                                        <input type="text" name="qty-{{ $cartID }}" id="qty-{{ $cartID }}" class="col border-0 text-center flex-grow-1 fs-16 input-number neu-qty-input" placeholder="1" value="{{ $cartItem['quantity'] }}" min="{{ $product->min_qty }}" max="{{ $stock->qty }}" onchange="updateQuantity({{ $cartID }})">
-                                                        <button class="btn col-auto btn-icon btn-sm fs-15 neu-qty-btn" type="button" data-type="minus" data-field="qty-{{ $cartID }}" @if($product->digital == 1) disabled @endif>
+                                                        <input type="text" name="qty-{{ $cartID }}" id="qty-{{ $cartID }}" class="border-0 text-center input-number neu-qty-input" placeholder="1" value="{{ $cartItem['quantity'] }}" min="{{ $product->min_qty }}" max="{{ $stock->qty }}" onchange="updateQuantity({{ $cartID }})">
+                                                        <button class="btn btn-icon btn-sm neu-qty-btn" type="button" data-type="minus" data-field="qty-{{ $cartID }}" @if($product->digital == 1) disabled @endif>
                                                             <i class="las la-minus"></i>
                                                         </button>
                                                     </div>
                                                 </div>
-                                                <div class="col">
+                                                {{-- NOMBRE Y VARIANTE --}}
+                                                <div class="neu-cart-col-name">
                                                     <div class="text-truncate-2 neu-product-name">{{ $product->name }}</div>
                                                     <span class="badge badge-inline fs-12 neu-variant-badge">{{ $cartItem['variant'] }}</span>
                                                 </div>
-                                                <div class="col-auto">
+                                                {{-- PRECIO --}}
+                                                <div class="neu-cart-col-price">
                                                     <div class="fs-12 opacity-60">{{ single_price($cartItem['price']) }} x {{ $cartItem['quantity'] }}</div>
                                                     <div class="fs-15 fw-600 neu-price">{{ single_price($cartItem['price']*$cartItem['quantity']) }}</div>
                                                 </div>
-                                                <div class="col-auto">
-                                                    <button type="button" class="neu-delete-btn ml-2 mr-0" onclick="removeFromCart({{ $cartItem->id }})">
+                                                {{-- BOTÓN ELIMINAR --}}
+                                                <div class="neu-cart-col-delete">
+                                                    <button type="button" class="neu-delete-btn" onclick="removeFromCart({{ $cartItem->id }})">
                                                         <i class="las la-trash-alt"></i>
                                                     </button>
                                                 </div>
@@ -335,15 +358,193 @@
     --rs        : 10px;
 }
 
+/* ══ LAYOUT RESPONSIVE ══ */
+.row.gutters-5 {
+    display: flex;
+    gap: 20px;
+}
+
+@media (max-width: 1024px) {
+    .row.gutters-5 {
+        gap: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .row.gutters-5 {
+        flex-direction: column;
+        gap: 0;
+    }
+    
+    .row.gutters-5 .col-md {
+        flex: 0 0 100%;
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    .row.gutters-5 .col-md-auto {
+        flex: 0 0 100%;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    
+    /* EXCEPCIÓN: Carrito en una fila */
+    .neu-cart-row {
+        flex-direction: row;
+        gap: 4px;
+        flex-wrap: nowrap;
+    }
+    
+    .neu-cart-col-image {
+        flex: 0 0 46px;
+        min-height: 46px;
+    }
+    
+    .neu-cart-col-qty {
+        flex: 0 0 46px;
+    }
+    
+    .neu-cart-col-name {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+    
+    .neu-cart-col-price {
+        flex: 0 0 50px;
+    }
+    
+    .neu-cart-col-delete {
+        flex: 0 0 24px;
+    }
+    
+    .neu-cart-image-wrapper {
+        width: 46px;
+        height: 46px;
+    }
+    
+    .neu-qty-btn {
+        width: 20px !important;
+        height: 20px !important;
+        font-size: 8px !important;
+    }
+    
+    .neu-qty-input {
+        width: 20px;
+        font-size: 12px !important;
+        padding: 2px !important;
+    }
+    
+    .neu-product-name {
+        font-size: 10px;
+    }
+    
+    .neu-variant-badge {
+        font-size: 6px !important;
+        padding: 1px 3px !important;
+    }
+    
+    .neu-delete-btn {
+        width: 24px;
+        height: 24px;
+        font-size: 10px;
+    }
+    
+    .neu-price {
+        font-size: 11px !important;
+    }
+}
+
+/* Carrito en 576px - Pantallas muy pequeñas */
+@media (max-width: 576px) {
+    .neu-cart-item {
+        padding       : 4px 6px !important;
+        margin-bottom : 6px !important;
+    }
+    
+    .neu-cart-row {
+        gap           : 3px;
+    }
+    
+    .neu-cart-image-wrapper {
+        width        : 40px;
+        height       : 40px;
+        border-radius: 4px;
+    }
+    
+    .neu-cart-col-image {
+        flex: 0 0 40px;
+        min-height: 40px;
+    }
+    
+    .neu-cart-col-qty {
+        flex: 0 0 40px;
+    }
+    
+    .neu-cart-col-price {
+        flex: 0 0 45px;
+    }
+    
+    .neu-cart-col-delete {
+        flex: 0 0 22px;
+    }
+    
+    .neu-qty-btn {
+        width         : 18px !important;
+        height        : 18px !important;
+        font-size     : 7px !important;
+    }
+    
+    .neu-qty-input {
+        width: 16px;
+        font-size     : 11px !important;
+        padding: 1px !important;
+    }
+    
+    .neu-product-name {
+        font-size: 8px;
+    }
+    
+    .neu-variant-badge {
+        font-size: 5px !important;
+        padding: 0px 2px !important;
+    }
+    
+    .neu-delete-btn {
+        width         : 22px;
+        height        : 22px;
+        font-size     : 9px;
+    }
+    
+    .neu-price {
+        font-size: 10px !important;
+    }
+    
+    .fs-12 {
+        font-size: 8px !important;
+    }
+}
+
 /* ══ TOPBAR ══ */
 .pos-topbar {
     background    : var(--nb);
     border-radius : 16px;
     box-shadow    : var(--ns);
-    padding       : 10px 14px;
-    display       : inline-block;  /* solo ocupa lo necesario */
+    padding       : 14px;
+    display       : block;
     width         : 100%;
 }
+
+.pos-search-row {
+    display       : flex;
+    align-items   : center;
+    gap           : 8px;
+    margin-bottom : 10px;
+}
+
+.pos-search-row .pos-field-wrap {
+    flex          : 1;
+}
+
 .pos-topbar-inner {
     display       : flex;
     align-items   : center;
@@ -382,8 +583,8 @@
 .pos-field-input::placeholder { color: var(--text-soft); font-size: 11.5px; }
 
 .pos-field-select {
-    width         : 120px;  /* ancho fijo para categorías y marcas */
-    padding       : 8px 8px 8px 26px;
+    flex          : 1 1 auto;
+    padding       : 9px 10px 9px 28px;
     border        : 1.5px solid rgba(163,177,198,0.45);
     border-radius : var(--rs);
     background    : #fff;
@@ -393,27 +594,257 @@
     outline       : none;
     appearance    : none;
     cursor        : pointer;
-    transition    : border-color .2s;
+    transition    : border-color .2s, background-color .2s;
+    height        : auto;
+    display       : block;
+    width         : 100%;
 }
-.pos-field-select:focus { border-color: rgba(99,102,241,.5); }
+.pos-field-select:focus { 
+    border-color: rgba(99,102,241,.5); 
+    background-color: rgba(99,102,241,.05);
+}
+
+/* Mejorados estilos para selectores */
+.bootstrap-select .dropdown-toggle {
+    background    : #fff !important;
+    border        : 1.5px solid rgba(163,177,198,0.45) !important;
+    border-radius : var(--rs) !important;
+    padding       : 8px 8px 8px 26px !important;
+    font-size     : 12px !important;
+    color         : var(--text) !important;
+}
+
+.bootstrap-select .dropdown-toggle:focus {
+    border-color : rgba(99,102,241,.5) !important;
+    box-shadow   : none !important;
+}
+
+/* Responsive - Topbar Mobile */
+@media (max-width: 1024px) {
+    .pos-topbar-inner {
+        gap           : 6px;
+        flex-wrap     : wrap;
+    }
+    
+    .pos-field-input {
+        width         : 200px;
+        padding       : 9px 8px 9px 22px;
+        font-size     : 11px;
+    }
+    
+    .pos-field-select {
+        flex          : 1 1 auto;
+        padding       : 9px 8px 9px 22px;
+        font-size     : 11px;
+    }
+    
+    .pos-btn-ventas {
+        padding       : 9px 10px;
+        font-size     : 11px;
+        gap           : 4px;
+        flex          : 1 1 auto;
+    }
+    
+    .pos-btn-ventas svg {
+        width         : 12px;
+        height        : 12px;
+    }
+}
+
+/* ══ BOTÓN FLOTANTE SCROLL ══ */
+.scroll-to-cart-btn {
+    position          : fixed;
+    bottom            : 20px;
+    right             : 20px;
+    width             : 52px;
+    height            : 52px;
+    border-radius     : 50%;
+    background        : linear-gradient(135deg, #f97316, #fb923c);
+    border            : none;
+    box-shadow        : 4px 4px 16px rgba(249,115,22,.4);
+    color             : #fff;
+    display           : none;
+    align-items       : center;
+    justify-content   : center;
+    cursor            : pointer;
+    z-index           : 9999;
+    transition        : all .3s ease;
+}
+
+.scroll-to-cart-btn.visible {
+    display           : flex;
+}
+
+.scroll-to-cart-btn:hover {
+    box-shadow        : 6px 6px 20px rgba(249,115,22,.5);
+    transform         : translateY(-3px);
+}
+
+.scroll-to-cart-btn:active {
+    box-shadow        : inset 3px 3px 8px rgba(0,0,0,.15);
+    transform         : scale(0.95);
+}
+
+@media (min-width: 768px) {
+    .scroll-to-cart-btn {
+        display        : none !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .pos-topbar {
+        padding       : 12px 10px;
+        display       : block;
+    }
+    
+    .pos-search-row {
+        display       : flex;
+        align-items   : center;
+        margin-bottom : 10px;
+    }
+    
+    .pos-search-row .pos-field-wrap {
+        flex          : 1;
+    }
+    
+    .pos-field-input {
+        width         : 100%;
+        padding       : 8px 8px 8px 28px;
+        font-size     : 11px;
+    }
+    
+    .pos-topbar-inner {
+        gap           : 8px;
+        flex-wrap     : wrap;
+        display       : flex;
+        flex-direction: column;
+        align-items   : stretch;
+    }
+    
+    .pos-field-wrap {
+        display       : flex;
+        align-items   : center;
+        position      : relative;
+        flex          : 1;
+    }
+    
+    .pos-field-select {
+        width         : 100%;
+        padding       : 9px 10px 9px 28px;
+        font-size     : 11px;
+        flex          : 1 1 auto;
+    }
+    
+    .pos-field-icon {
+        left          : 8px;
+    }
+    
+    .pos-btn-ventas {
+        padding       : 9px 12px;
+        font-size     : 11px;
+        gap           : 5px;
+        justify-content: center;
+        flex          : 1 1 auto;
+        display       : inline-flex;
+        align-items   : center;
+        white-space   : nowrap;
+        overflow      : hidden;
+        text-overflow : ellipsis;
+    }
+    
+    .pos-btn-ventas svg {
+        width         : 12px;
+        height        : 12px;
+        flex-shrink   : 0;
+    }
+}
+
+@media (max-width: 576px) {
+    .pos-topbar {
+        padding       : 12px 8px;
+    }
+    
+    .pos-search-row {
+        gap           : 0;
+        margin-bottom : 8px;
+    }
+    
+    .pos-topbar-inner {
+        gap           : 6px;
+        display       : flex;
+        flex-direction: column;
+        align-items   : stretch;
+    }
+    
+    .pos-field-wrap {
+        flex          : 0 0 auto;
+        position      : relative;
+    }
+    
+    .pos-field-input {
+        width         : 100%;
+        padding       : 8px 8px 8px 26px;
+        font-size     : 10px;
+    }
+    
+    .pos-field-select {
+        width         : 100%;
+        padding       : 8px 10px 8px 26px;
+        font-size     : 10px;
+        flex          : 1 1 auto;
+    }
+    
+    .pos-field-icon {
+        left          : 7px;
+        width         : 12px;
+        height        : 12px;
+    }
+    
+    .pos-btn-ventas {
+        padding       : 8px 10px;
+        font-size     : 10px;
+        justify-content: center;
+        flex          : 1 1 auto;
+        display       : inline-flex;
+        align-items   : center;
+        gap           : 4px;
+        box-shadow    : 2px 2px 8px rgba(249,115,22,.25);
+        white-space   : nowrap;
+        overflow      : hidden;
+        text-overflow : ellipsis;
+    }
+    
+    .pos-btn-ventas svg {
+        width         : 12px;
+        height        : 12px;
+        flex-shrink   : 0;
+    }
+    
+    .pos-btn-ventas:active {
+        box-shadow    : inset 2px 2px 6px rgba(0,0,0,.1);
+    }
+}
 
 /* Botón ver ventas */
 .pos-btn-ventas {
-    flex             : 0 0 auto;
+    flex             : 1 1 auto;
     display          : inline-flex;
     align-items      : center;
-    gap              : 5px;
-    padding          : 8px 12px;
+    justify-content  : center;
+    gap              : 6px;
+    padding          : 9px 12px;
     border-radius    : var(--rs);
     background       : linear-gradient(135deg, #f97316, #fb923c);
     box-shadow       : 4px 4px 12px rgba(249,115,22,.35);
     color            : #fff !important;
-    font-size        : 11.5px;
+    font-size        : 12px;
     font-weight      : 600;
     font-family      : 'Poppins', sans-serif;
     white-space      : nowrap;
     text-decoration  : none;
     transition       : all .25s;
+    border           : none;
+    height           : auto;
 }
 .pos-btn-ventas:hover {
     box-shadow       : 6px 6px 16px rgba(249,115,22,.45);
@@ -432,6 +863,30 @@
     grid-template-columns : repeat(4, 1fr) !important;
     gap                   : 16px;
     justify-content       : flex-start;
+}
+
+/* Responsive - Tablet */
+@media (max-width: 1199px) {
+    #product-list {
+        grid-template-columns : repeat(3, 1fr) !important;
+        gap                   : 12px;
+    }
+}
+
+/* Responsive - Mobile */
+@media (max-width: 768px) {
+    #product-list {
+        grid-template-columns : repeat(2, 1fr) !important;
+        gap                   : 10px;
+    }
+}
+
+/* Responsive - Small Mobile - Mantiene 2 columnas */
+@media (max-width: 576px) {
+    #product-list {
+        grid-template-columns : repeat(2, 1fr) !important;
+        gap                   : 8px;
+    }
 }
 
 /* ══ CARGAR MÁS ══ */
@@ -500,9 +955,82 @@
     background    : var(--nb) !important;
     border-radius : var(--rs) !important;
     box-shadow    : var(--ns) !important;
-    margin-bottom : 10px !important;
+    margin-bottom : 8px !important;
     border        : none !important;
-    padding       : 10px 12px !important;
+    padding       : 6px 8px !important;
+}
+
+/* Estructura flexible del carrito */
+.neu-cart-row {
+    display           : flex;
+    align-items       : center;
+    gap               : 6px;
+    flex-wrap         : nowrap;
+    width             : 100%;
+}
+
+.neu-cart-col-image {
+    flex              : 0 0 50px;
+    min-height        : 50px;
+}
+
+.neu-cart-col-qty {
+    flex              : 0 0 50px;
+    display           : flex;
+    align-items       : center;
+}
+
+.neu-cart-col-name {
+    flex              : 1 1 auto;
+    min-width         : 0;
+}
+
+.neu-cart-col-price {
+    flex              : 0 0 auto;
+    white-space       : nowrap;
+    min-width         : 55px;
+}
+
+.neu-cart-col-delete {
+    flex              : 0 0 auto;
+}
+
+/* Imagen del carrito */
+.neu-cart-image-wrapper {
+    width             : 50px;
+    height            : 50px;
+    border-radius     : 6px;
+    overflow          : hidden;
+    background        : var(--nb);
+    box-shadow        : var(--ni);
+    display           : flex;
+    align-items       : center;
+    justify-content   : center;
+    flex-shrink       : 0;
+}
+
+.neu-cart-image {
+    width             : 100%;
+    height            : 100%;
+    object-fit        : cover;
+}
+
+.neu-cart-image-placeholder {
+    width             : 100%;
+    height            : 100%;
+    display           : flex;
+    align-items       : center;
+    justify-content   : center;
+    color             : var(--text-soft);
+    font-size         : 20px;
+}
+
+/* Controles de cantidad */
+.neu-qty-controls {
+    display           : flex;
+    flex-direction    : row;
+    align-items       : center;
+    gap               : 2px;
 }
 .neu-qty-btn {
     background    : var(--nb) !important;
@@ -514,6 +1042,8 @@
     height        : 26px !important;
     padding       : 0 !important;
     transition    : all .2s !important;
+    flex-shrink   : 0;
+    font-size     : 12px !important;
 }
 .neu-qty-btn:hover { box-shadow: 4px 4px 10px rgba(163,177,198,.5), -2px -2px 8px rgba(255,255,255,1) !important; }
 .neu-qty-btn:active { box-shadow: var(--ni) !important; }
@@ -543,6 +1073,7 @@
     font-size        : 14px;
     cursor           : pointer;
     transition       : all .25s;
+    flex-shrink      : 0;
 }
 .neu-delete-btn:hover { box-shadow: 4px 4px 12px rgba(244,63,94,.25), -2px -2px 8px rgba(255,255,255,1); transform: scale(1.1); }
 .neu-delete-btn:active { box-shadow: var(--ni); }
@@ -652,6 +1183,31 @@ body.dark-mode, .dark {
     transform     : scale(1.08) !important;
 }
 
+/* Responsive image heights */
+@media (max-width: 1024px) {
+    #product-list img {
+        height        : 150px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    #product-list img {
+        height        : 130px !important;
+    }
+}
+
+@media (max-width: 576px) {
+    #product-list img {
+        height        : 120px !important;
+    }
+    
+    #product-list .aiz-pos-product:hover,
+    #product-list > div:hover,
+    #product-list > li:hover {
+        transform     : translateY(-3px) !important;
+    }
+}
+
 /* Badge stock */
 #product-list .badge {
     border-radius : 20px !important;
@@ -671,6 +1227,46 @@ body.dark-mode, .dark {
     color         : var(--text) !important;
 }
 
+/* Responsive text sizes */
+@media (max-width: 1024px) {
+    #product-list p,
+    #product-list h6,
+    #product-list .product-name {
+        font-size     : 11.5px !important;
+    }
+    
+    #product-list .badge {
+        font-size     : 9px !important;
+        padding       : 2px 8px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    #product-list p,
+    #product-list h6,
+    #product-list .product-name {
+        font-size     : 11px !important;
+    }
+    
+    #product-list .badge {
+        font-size     : 8px !important;
+        padding       : 2px 6px !important;
+    }
+}
+
+@media (max-width: 576px) {
+    #product-list p,
+    #product-list h6,
+    #product-list .product-name {
+        font-size     : 10px !important;
+    }
+    
+    #product-list .badge {
+        font-size     : 7px !important;
+        padding       : 2px 5px !important;
+    }
+}
+
 /* Precio */
 #product-list .price,
 #product-list strong,
@@ -685,6 +1281,98 @@ body.dark-mode, .dark {
 #product-list s {
     color         : var(--text-soft) !important;
     font-size     : 11px !important;
+}
+
+/* ══════ MEDIA QUERIES GENERAL ══════ */
+/* Extra Small Devices - Mobile */
+@media (max-width: 576px) {
+    .neu-card {
+        margin-bottom : 12px !important;
+    }
+    
+    .neu-card-body {
+        padding : 1rem !important;
+    }
+    
+    .aiz-pos-cart-list {
+        max-height : 200px !important;
+    }
+    
+    .neu-totals {
+        padding : 10px 12px !important;
+    }
+    
+    .neu-total-row {
+        font-size : 11px !important;
+        margin-bottom : 6px !important;
+    }
+    
+    .neu-total-final {
+        font-size : 14px !important;
+        padding-top : 8px !important;
+        margin-top : 3px !important;
+    }
+    
+    .neu-place-order-btn {
+        padding : 10px 16px !important;
+        font-size : 12px !important;
+    }
+    
+    .neu-footer-btn {
+        padding : 8px 12px !important;
+        font-size : 11px !important;
+    }
+    
+    .neu-select {
+        width : 100% !important;
+        font-size : 11px !important;
+        padding : 8px 8px 8px 10px !important;
+    }
+    
+    /* Productos carta */
+    .aiz-pos-product {
+        border-radius : 12px !important;
+    }
+
+    /* Panel derecho en móvil */
+    .aiz-pos-product-list {
+        margin-bottom : 20px !important;
+    }
+    
+    .w-md-350px, .w-lg-400px, .w-xl-500px {
+        width : 100% !important;
+    }
+}
+
+/* Small Devices - Tablet */
+@media (max-width: 768px) {
+    .aiz-pos-cart-list {
+        max-height : 250px !important;
+    }
+    
+    .neu-totals {
+        padding : 12px 14px !important;
+    }
+    
+    .neu-total-row {
+        font-size : 12px !important;
+    }
+    
+    .neu-place-order-btn {
+        padding : 11px 18px !important;
+        font-size : 13px !important;
+    }
+    
+    .w-md-350px, .w-lg-400px, .w-xl-500px {
+        width : 100% !important;
+    }
+}
+
+/* Medium Devices and Up - Landscape */
+@media (max-width: 1024px) {
+    .aiz-pos-cart-list {
+        max-height : 300px !important;
+    }
 }
 </style>
 
@@ -1173,6 +1861,26 @@ body.dark-mode, .dark {
         </div>
     </div>
 
+    <!-- POS Sales List Modal -->
+    <div id="pos-sales-list" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header bord-btm">
+                    <h4 class="modal-title h6">{{translate('Listado de Ventas - POS')}}</h4>
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body" id="sales-list-content" style="max-height: 600px; overflow-y: auto;">
+                    <div class="text-center py-5">
+                        <i class="las la-spinner la-spin la-3x"></i>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-base-3" data-dismiss="modal">{{translate('Close')}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 
@@ -1298,9 +2006,11 @@ if(products.links.next == null){
                                 ${data.data[i].digital == 0 
                                     ?
                                         `<span class="absolute-top-left mt-1 ml-1 mr-0">
-                                            ${data.data[i].qty > 0
+                                            ${data.data[i].qty > (data.data[i].low_stock_quantity || 5)
                                                 ? `<span class="badge badge-inline badge-success fs-13">{{ translate('In stock') }}`
-                                                : `<span class="badge badge-inline badge-danger fs-13">{{ translate('Out of stock') }}` }
+                                                : data.data[i].qty > 0
+                                                    ? `<span class="badge badge-inline badge-danger fs-13">{{ translate('Pocas unidades') }}`
+                                                    : `<span class="badge badge-inline badge-danger fs-13">{{ translate('Out of stock') }}` }
                                             : ${data.data[i].qty}</span>
                                         </span>`
                                     : ''
@@ -1436,11 +2146,45 @@ if(products.links.next == null){
             }, function(data){
                 if(data.success == 1){
                     AIZ.plugins.notify('success', data.message );
-                    location.reload();
+                    
+                    // Auto-open print dialog and reload page after a short delay
+                    if(data.order_id) {
+                        setTimeout(function() {
+                            window.open('{{ route('admin.invoice.thermal_printer', '') }}/' + data.order_id, '_blank');
+                            setTimeout(function() {
+                                location.reload();
+                            }, 500);
+                        }, 500);
+                    } else {
+                        location.reload();
+                    }
                 }
                 else{
                     AIZ.plugins.notify('danger', data.message );
                 }
+            });
+        }
+
+        // Load POS Sales List
+        function loadPosSalesList() {
+            $('#sales-list-content').html('<div class="text-center py-5"><i class="las la-spinner la-spin la-3x"></i></div>');
+            $('#pos-sales-list').modal('show');
+            
+            $.post('{{ route('pos.getSalesList') }}',{_token:AIZ.data.csrf, page:1}, function(data){
+                $('#sales-list-content').html(data);
+            }).fail(function(error) {
+                $('#sales-list-content').html('<div class="alert alert-danger">{{ translate("Error loading sales list") }}</div>');
+            });
+        }
+
+        // Load page for sales list pagination
+        function loadPageSalesList(page) {
+            $('#sales-list-content').html('<div class="text-center py-5"><i class="las la-spinner la-spin la-3x"></i></div>');
+            
+            $.post('{{ route('pos.getSalesList') }}',{_token:AIZ.data.csrf, page:page}, function(data){
+                $('#sales-list-content').html(data);
+            }).fail(function(error) {
+                $('#sales-list-content').html('<div class="alert alert-danger">{{ translate("Error loading sales list") }}</div>');
             });
         }
 
@@ -1496,6 +2240,43 @@ if(products.links.next == null){
                     }
                 }
             });
+        }
+
+        // Mostrar/ocultar botón flotante según visibilidad del carrito
+        function toggleScrollButton() {
+            var cartPanel = $('#pos-cart-panel');
+            if (!cartPanel.length) return;
+            
+            var cartRect = cartPanel[0].getBoundingClientRect();
+            var isVisible = (cartRect.top < window.innerHeight && cartRect.bottom > 0);
+            
+            var btn = $('#scroll-to-cart-btn');
+            if (isVisible) {
+                btn.removeClass('visible');
+            } else {
+                btn.addClass('visible');
+            }
+        }
+
+        // Detectar scroll y resize
+        $(window).on('scroll resize orientationchange', function() {
+            toggleScrollButton();
+        });
+
+        // Inicializar al cargar
+        $(document).ready(function() {
+            toggleScrollButton();
+        });
+
+        // Función para hacer scroll al carrito
+        function scrollToCart() {
+            var cartPanel = $('#pos-cart-panel');
+            if (cartPanel.length) {
+                $('html, body').animate({
+                    scrollTop: cartPanel.offset().top - 50
+                }, 600);
+                setTimeout(toggleScrollButton, 650);
+            }
         }
     </script>
 @endsection

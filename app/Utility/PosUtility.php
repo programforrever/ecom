@@ -370,7 +370,7 @@ class PosUtility
 
                     Cart::where('user_id', $order->user_id)->orWhere('temp_user_id', $order->guest_id)->delete();
 
-                    return array('success' => 1, 'message' => translate('Order Completed Successfully.'));
+                    return array('success' => 1, 'message' => translate('Order Completed Successfully.'), 'order_id' => $order->id);
                 } else {
                     return array('success' => 0, 'message' => translate('Please input customer information.'));
                 }

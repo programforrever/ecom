@@ -166,7 +166,7 @@
                                     }
                                 @endphp
                                 @if($qty <= $product->low_stock_quantity)
-                                    <span class="badge badge-inline badge-danger">{{ translate('Low') }}</span>
+                                    <span class="badge badge-inline badge-danger">{{ translate('Pocas unidades') }}</span>
                                 @endif
                             @endif
                             

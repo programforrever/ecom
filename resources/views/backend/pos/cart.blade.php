@@ -15,28 +15,44 @@
                 $cartID = $cartItem['id'];
             @endphp
             <li class="list-group-item py-0 pl-2 neu-cart-item">
-                <div class="row gutters-5 align-items-center">
-                    <div class="col-auto w-60px">
-                        <div class="row no-gutters align-items-center flex-column aiz-plus-minus">
-                            <button class="btn col-auto btn-icon btn-sm fs-15 neu-qty-btn" type="button" data-type="plus" data-field="qty-{{ $cartID }}" @if($product->digital == 1) disabled @endif>
+                <div class="neu-cart-row">
+                    {{-- IMAGEN DEL PRODUCTO --}}
+                    <div class="neu-cart-col-image">
+                        <div class="neu-cart-image-wrapper">
+                            @if($product->thumbnail_img)
+                                <img src="{{ uploaded_asset($product->thumbnail_img) }}" alt="{{ $product->name }}" class="neu-cart-image">
+                            @else
+                                <div class="neu-cart-image-placeholder">
+                                    <i class="las la-image"></i>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                    {{-- SELECTOR DE CANTIDAD --}}
+                    <div class="neu-cart-col-qty">
+                        <div class="neu-qty-controls">
+                            <button class="btn btn-icon btn-sm neu-qty-btn" type="button" data-type="plus" data-field="qty-{{ $cartID }}" @if($product->digital == 1) disabled @endif>
                                 <i class="las la-plus"></i>
                             </button>
-                            <input type="text" name="qty-{{ $cartID }}" id="qty-{{ $cartID }}" class="col border-0 text-center flex-grow-1 fs-16 input-number neu-qty-input" placeholder="1" value="{{ $cartItem['quantity'] }}" min="{{ $product->min_qty }}" max="{{ $stock->qty }}" onchange="updateQuantity({{ $cartID }})">
-                            <button class="btn col-auto btn-icon btn-sm fs-15 neu-qty-btn" type="button" data-type="minus" data-field="qty-{{ $cartID }}" @if($product->digital == 1) disabled @endif>
+                            <input type="text" name="qty-{{ $cartID }}" id="qty-{{ $cartID }}" class="border-0 text-center input-number neu-qty-input" placeholder="1" value="{{ $cartItem['quantity'] }}" min="{{ $product->min_qty }}" max="{{ $stock->qty }}" onchange="updateQuantity({{ $cartID }})">
+                            <button class="btn btn-icon btn-sm neu-qty-btn" type="button" data-type="minus" data-field="qty-{{ $cartID }}" @if($product->digital == 1) disabled @endif>
                                 <i class="las la-minus"></i>
                             </button>
                         </div>
                     </div>
-                    <div class="col">
+                    {{-- NOMBRE Y VARIANTE --}}
+                    <div class="neu-cart-col-name">
                         <div class="text-truncate-2 neu-product-name">{{ $product->name }}</div>
                         <span class="badge badge-inline fs-12 neu-variant-badge">{{ $cartItem['variant'] }}</span>
                     </div>
-                    <div class="col-auto">
+                    {{-- PRECIO --}}
+                    <div class="neu-cart-col-price">
                         <div class="fs-12 opacity-60">{{ single_price($cartItem['price']) }} x {{ $cartItem['quantity'] }}</div>
                         <div class="fs-15 fw-600 neu-price">{{ single_price($cartItem['price']*$cartItem['quantity']) }}</div>
                     </div>
-                    <div class="col-auto">
-                        <button type="button" class="neu-delete-btn ml-2 mr-0" onclick="removeFromCart({{ $cartItem['id'] }})">
+                    {{-- BOTÓN ELIMINAR --}}
+                    <div class="neu-cart-col-delete">
+                        <button type="button" class="neu-delete-btn" onclick="removeFromCart({{ $cartItem->id }})">
                             <i class="las la-trash-alt"></i>
                         </button>
                     </div>
