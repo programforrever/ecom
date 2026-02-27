@@ -2009,7 +2009,7 @@ if(products.links.next == null){
                                             ${data.data[i].qty > (data.data[i].low_stock_quantity || 5)
                                                 ? `<span class="badge badge-inline badge-success fs-13">{{ translate('In stock') }}`
                                                 : data.data[i].qty > 0
-                                                    ? `<span class="badge badge-inline badge-warning fs-13">{{ translate('Pocas unidades') }}`
+                                                    ? `<span class="badge badge-inline badge-danger fs-13">{{ translate('Pocas unidades') }}`
                                                     : `<span class="badge badge-inline badge-danger fs-13">{{ translate('Out of stock') }}` }
                                             : ${data.data[i].qty}</span>
                                         </span>`

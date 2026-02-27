@@ -583,7 +583,7 @@
                                     </button>
                                 @endif
                                 @if($isLow)
-                                    <span class="donut-low-badge">LOW</span>
+                                    <span class="donut-low-badge">{{ translate('Pocas unidades') }}</span>
                                 @endif
                             </div>
                         </div>
@@ -676,7 +676,7 @@
                                 </button>
                             @endif
                             @if($isLow)
-                                <span class="donut-low-badge">LOW</span>
+                                <span class="donut-low-badge">{{ translate('Pocas unidades') }}</span>
                             @endif
                         </div>
                     </div>
