@@ -136,7 +136,7 @@
         gap: 14px;
         margin-bottom: 24px;
         position: relative;
-        z-index: 9999;
+        z-index: 100;
         flex-wrap: nowrap;
     }
     .neuro-label {
@@ -169,7 +169,7 @@
     }
 
     .bootstrap-select {
-        z-index: 9999 !important;
+        z-index: 100 !important;
         position: relative !important;
         width: auto !important;
         min-width: 160px !important;
@@ -180,7 +180,7 @@
     .bootstrap-select > .dropdown-toggle,
     .bootstrap-select .dropdown-menu { pointer-events: auto !important; }
     .bootstrap-select .dropdown-menu {
-        z-index: 9999 !important;
+        z-index: 1000 !important;
         border-radius: 12px !important;
         border: none !important;
         box-shadow: 6px 6px 16px var(--shadow-dark), -6px -6px 16px var(--shadow-light) !important;
@@ -449,6 +449,50 @@
             font-weight: 700;
         }
     }
+
+    /* ── EXTRA MOBILE BREAKPOINTS ── */
+    @media (max-width: 768px) {
+        .neuro-page { padding: 16px 12px; }
+        .neuro-title { font-size: 1.2rem; margin-bottom: 16px; }
+        .mobile-filter { padding: 16px 12px; border-radius: 16px; }
+        .mobile-product-block { gap: 8px; }
+        .mobile-donut-card { padding: 12px; gap: 10px; }
+        .mobile-product-row { padding: 10px 12px; }
+        .donut-left { min-width: 100px; }
+        .donut-info { gap: 3px; }
+    }
+
+    @media (max-width: 576px) {
+        .neuro-page { padding: 12px 8px; }
+        .neuro-title { font-size: 1.05rem; margin-bottom: 12px; }
+        .mobile-filter { padding: 12px 10px; border-radius: 14px; }
+        .neuro-form-group { gap: 8px; }
+        .neuro-label { font-size: 0.78rem; }
+        .neuro-btn { padding: 8px 16px; font-size: 0.8rem; }
+        .mobile-donut-card { padding: 10px; gap: 8px; flex-direction: column; align-items: stretch; }
+        .donut-left { min-width: unset; flex-direction: row; }
+        .donut-wrapper { width: 48px !important; height: 48px !important; }
+        .donut-wrapper svg { width: 48px !important; height: 48px !important; }
+        .donut-rank { font-size: 0.65rem; }
+        .donut-cat-btn { font-size: 0.5rem; max-width: 100%; }
+        .donut-low-badge { font-size: 0.48rem; }
+        .donut-product-name { font-size: 0.78rem; }
+        .donut-stock-info { font-size: 0.65rem; }
+        .mobile-product-row { padding: 8px 10px; gap: 6px; }
+        .mobile-product-row .row-num { font-size: 0.72rem; }
+        .mobile-product-row .row-name { font-size: 0.8rem; padding: 0 6px; }
+        .mobile-product-row .row-badge { font-size: 0.78rem; padding: 2px 8px; }
+    }
+
+    @media (max-width: 400px) {
+        .neuro-page { padding: 8px; }
+        .neuro-title { font-size: 0.95rem; margin-bottom: 8px; }
+        .mobile-filter { padding: 10px 8px; }
+        .mobile-donut-card { gap: 6px; }
+        .donut-left { gap: 4px; }
+        .donut-info { gap: 2px; }
+        .mobile-product-row { padding: 6px 8px; }
+    }
 </style>
 <!--  -->
 @php
@@ -708,7 +752,7 @@
                     <span class="row-name">{{ $product->getTranslation('name') }}</span>
                     {{-- ✅ CORREGIDO: usa low_stock_quantity igual que la tabla de productos --}}
                     <span class="row-badge" style="color:{{ $isLow ? '#d4506a' : $color }}">
-                        {{ $isLow ? 'LOW' : $qty }}
+                        {{ $isLow ? translate('Pocas unidades') : $qty }}
                     </span>
                 </div>
             </div>

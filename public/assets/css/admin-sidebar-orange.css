@@ -460,6 +460,8 @@
         width: 260px;
         left: -260px;
         box-shadow: 8px 0 30px rgba(0, 0, 0, 0.1);
+        z-index: 1050;
+        position: fixed;
     }
 
     .aiz-side-nav-list .aiz-side-nav-link {
