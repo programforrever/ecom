@@ -450,7 +450,7 @@
         }
     }
 </style>
-<!-- a -->
+<!--  -->
 @php
     $colorPalette  = ['#e07b3f','#4a9fd4','#5cba8a','#a06dd4','#d4506a','#d4b84a','#4ab8d4','#7ad45c','#d47a4a','#5c7ad4'];
     $circumference = 138.23;
