@@ -2,6 +2,262 @@
 
 @section('content')
     @php $lang = get_system_language()->code;  @endphp
+
+    <style>
+        /* Animated Slider Styles */
+        .home-slider {
+            flex: 1;
+            position: relative;
+        }
+
+        .slider-main {
+            background: linear-gradient(135deg, #f0eded 0%, #e8dfe5 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-height: 380px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+
+        .slides-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            display: none;
+            padding: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        .slide-content {
+            flex: 1;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .slide-image {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .slide-image img {
+            max-width: 100%;
+            height: auto;
+            animation: revealLR 0.8s ease forwards;
+        }
+
+        .slide:nth-child(even) .slide-image img {
+            animation: revealRL 0.8s ease forwards;
+        }
+
+        @keyframes revealLR {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes revealRL {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .slide-tag {
+            font-size: 14px;
+            color: #a90000;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            animation: itemSlideIn 0.5s ease forwards;
+            animation-delay: 0s;
+            opacity: 0;
+        }
+
+        .slide-old {
+            font-size: 16px;
+            color: #999;
+            text-decoration: line-through;
+            margin-bottom: 5px;
+            animation: itemSlideIn 0.5s ease forwards;
+            animation-delay: 0.15s;
+            opacity: 0;
+        }
+
+        .slide-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+            line-height: 1.2;
+            animation: itemSlideIn 0.5s ease forwards;
+            animation-delay: 0.3s;
+            opacity: 0;
+        }
+
+        .slide-new {
+            font-size: 28px;
+            color: #a90000;
+            font-weight: 700;
+            margin-bottom: 20px;
+            animation: itemSlideIn 0.5s ease forwards;
+            animation-delay: 0.45s;
+            opacity: 0;
+        }
+
+        .slide-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: #a90000;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+            width: fit-content;
+            animation: itemSlideIn 0.5s ease forwards;
+            animation-delay: 0.6s;
+            opacity: 0;
+        }
+
+        .slide-btn:hover {
+            background-color: #8b0000;
+            color: white;
+        }
+
+        @keyframes itemSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .arrow-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(4px);
+            border: none;
+            color: white;
+            font-size: 24px;
+            padding: 10px 15px;
+            cursor: pointer;
+            z-index: 10;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        .arrow-btn:hover {
+            background-color: #a90000;
+        }
+
+        .arrow-btn.prev {
+            left: 20px;
+        }
+
+        .arrow-btn.next {
+            right: 20px;
+        }
+
+        .dot {
+            height: 8px;
+            width: 8px;
+            margin: 0 5px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            display: inline-block;
+            cursor: pointer;
+            transition: width 0.3s ease;
+        }
+
+        .dot.active {
+            background-color: white;
+            width: 24px;
+            border-radius: 4px;
+        }
+
+        .dots-container {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .slider-main {
+                min-height: 300px;
+                padding: 20px;
+            }
+
+            .slide {
+                flex-direction: column;
+                padding: 20px;
+                gap: 20px;
+            }
+
+            .slide-title {
+                font-size: 28px;
+            }
+
+            .slide-new {
+                font-size: 20px;
+            }
+
+            .arrow-btn {
+                padding: 8px 10px;
+                font-size: 18px;
+            }
+
+            .arrow-btn.prev {
+                left: 10px;
+            }
+
+            .arrow-btn.next {
+                right: 10px;
+            }
+        }
+    </style>
+
     <!-- Sliders -->
     <div class="home-banner-area mb-3" style="">
         <div class="container">
@@ -12,29 +268,80 @@
 
                 <!-- Sliders -->
                 <div class="home-slider">
-                    @if (get_setting('home_slider_images') != null)
-                        <div class="aiz-carousel dots-inside-bottom" data-autoplay="true" data-infinite="true">
-                            @php
-                                $decoded_slider_images = json_decode(get_setting('home_slider_images', null, $lang), true);
-                                $sliders = get_slider_images($decoded_slider_images);
-                            @endphp
-                            @foreach ($sliders as $key => $slider)
-                                <div class="carousel-box">
-                                    <a href="{{ json_decode(get_setting('home_slider_links'), true)[$key] }}">
-                                        <!-- Image -->
-                                        <img class="d-block mw-100 img-fit overflow-hidden h-180px h-md-320px h-lg-460px overflow-hidden"
-                                            src="{{ $slider ? my_asset($slider->file_name) : static_asset('assets/img/placeholder.jpg') }}"
-                                            alt="{{ env('APP_NAME') }} promo"
-                                            onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder-rect.jpg') }}';">
-                                    </a>
-                                </div>
-                            @endforeach
+                    <div class="slider-main">
+                        <div class="slides-container">
+                            @if (get_setting('home_slider_images') != null)
+                                @php
+                                    $decoded_slider_images = json_decode(get_setting('home_slider_images', null, $lang), true);
+                                    $sliders = get_slider_images($decoded_slider_images);
+                                @endphp
+                                @foreach ($sliders as $key => $slider)
+                                    <div class="slide {{ $key == 0 ? 'active' : '' }}">
+                                        <div class="slide-content">
+                                            <span class="slide-tag">{{ translate('Special Offer') }}</span>
+                                            <span class="slide-old">$99.99</span>
+                                            <h1 class="slide-title">{{ translate('Amazing Product') }}</h1>
+                                            <span class="slide-new">$49.99</span>
+                                            <a href="{{ json_decode(get_setting('home_slider_links'), true)[$key] ?? '#' }}" class="slide-btn">{{ translate('Shop Now') }}</a>
+                                        </div>
+                                        <div class="slide-image">
+                                            <img src="{{ $slider ? my_asset($slider->file_name) : static_asset('assets/img/placeholder.jpg') }}"
+                                                alt="{{ env('APP_NAME') }}"
+                                                onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder-rect.jpg') }}';">
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @endif
                         </div>
-                    @endif
+
+                        <!-- Navigation Arrows -->
+                        <button class="arrow-btn prev" onclick="changeSlide(-1)">❮</button>
+                        <button class="arrow-btn next" onclick="changeSlide(1)">❯</button>
+
+                        <!-- Dot Indicators -->
+                        <div class="dots-container">
+                            @if (get_setting('home_slider_images') != null)
+                                @php
+                                    $decoded_slider_images = json_decode(get_setting('home_slider_images', null, $lang), true);
+                                    $sliders = get_slider_images($decoded_slider_images);
+                                @endphp
+                                @foreach ($sliders as $key => $slider)
+                                    <span class="dot {{ $key == 0 ? 'active' : '' }}" onclick="goSlide({{ $key }})"></span>
+                                @endforeach
+                            @endif
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.dot');
+
+        function showSlide(n) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+
+            n = (n + slides.length) % slides.length;
+            currentSlide = n;
+
+            if (slides[n]) slides[n].classList.add('active');
+            if (dots[n]) dots[n].classList.add('active');
+        }
+
+        function changeSlide(dir) {
+            showSlide(currentSlide + dir);
+        }
+
+        function goSlide(n) {
+            showSlide(n);
+        }
+
+        setInterval(() => { changeSlide(1); }, 4500);
+    </script>
 
     <!-- Flash Deal -->
     @php
