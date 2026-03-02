@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Electme - Slider</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&display=swap" rel="stylesheet">
+<style>
+
+.slider-main {
+  background: linear-gradient(135deg, #f0eded 0%, #f0eded  60%, #f0eded  100%);
+  border-radius: 10px;
+  min-height: 380px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  max-width: 900px;
+  margin: 20px auto;
+}
+
+.slide {
+  display: none;
+  width: 100%;
+  padding: 50px 60px;
+  align-items: center;
+  gap: 40px;
+}
+.slide.active { display: flex; }
+
+/* ============================================================
+   TEXTO: cada elemento empieza invisible y se mueve a la derecha
+============================================================ */
+.slide-text { flex: 1; }
+
+/* Todos los elementos del texto empiezan ocultos */
+.slide-tag,
+.slide-old,
+.slide-title,
+.slide-new,
+.slide-btn {
+  opacity: 0;
+  transform: translateX(-40px); /* Empieza desplazado a la izquierda */
+}
+
+/* Al activarse el slide: cada elemento entra con delay escalonado */
+
+/* 1ro: Badge rojo — entra primero (delay 0s) */
+.slide.active .slide-tag {
+  animation: itemSlideIn .5s ease 0s forwards;
+}
+
+/* 2do: Precio tachado (delay 0.15s) */
+.slide.active .slide-old {
+  animation: itemSlideIn .5s ease 0.15s forwards;
+}
+
+/* 3ro: Título grande (delay 0.3s) */
+.slide.active .slide-title {
+  animation: itemSlideIn .5s ease 0.3s forwards;
+}
+
+/* 4to: Precio nuevo (delay 0.45s) */
+.slide.active .slide-new {
+  animation: itemSlideIn .5s ease 0.45s forwards;
+}
+
+/* 5to: Botón Shop Now (delay 0.6s) */
+.slide.active .slide-btn {
+  animation: itemSlideIn .5s ease 0.6s forwards;
+}
+
+/* Keyframe: elemento entra desde la izquierda hacia su posición */
+@keyframes itemSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-40px); /* Desplazado a la izquierda */
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);     /* En su posición normal */
+  }
+}
+
+/* Estilos de cada elemento de texto */
+.slide-tag {
+  display: inline-block;
+  background: #a90000;
+  color: rgb(255, 255, 255);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 3px;
+  margin-bottom: 14px;
+  font-family: 'Rajdhani', sans-serif;
+}
+/* letras */
+.slide-old {
+  color: #aaa;
+  font-size: 14px;
+  text-decoration: line-through;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.slide-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 48px;
+  font-weight: 700;
+  color: rgb(70, 70, 70);
+  line-height: 1.1;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  display: block;
+}
+.slide-title span { color: #fad505; }
+
+.slide-new {
+  color: #7effa0;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 28px;
+  font-family: 'Rajdhani', sans-serif;
+  display: block;
+}
+
+.slide-btn {
+  display: inline-block;
+  background: #a90000;
+  color: white;
+  padding: 14px 32px;
+  border-radius: 5px;
+  font-weight: 700;
+  font-family: 'Rajdhani', sans-serif;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-size: 14px;
+  text-decoration: none;
+  transition: background .2s, transform .2s;
+  cursor: pointer;
+}
+.slide-btn:hover { background: #800000; transform: translateY(-2px); }
+
+/* ============================================================
+   IMAGEN BASE
+============================================================ */
+.slide-img {
+  flex-shrink: 0;
+  width: 220px;
+  height: 220px;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 30px rgba(0,0,0,.5));
+}
+.slide-img-emoji {
+  flex-shrink: 0;
+  font-size: 140px;
+  line-height: 1;
+  filter: drop-shadow(0 8px 30px rgba(0,0,0,.5));
+}
+
+/* SLIDE 1: imagen IZQUIERDA → DERECHA */
+.slide-1 .slide-img,
+.slide-1 .slide-img-emoji {
+  clip-path: inset(0 100% 0 0);
+}
+.slide-1.active .slide-img,
+.slide-1.active .slide-img-emoji {
+  animation: revealLR .8s ease .3s forwards;
+}
+@keyframes revealLR {
+  from { clip-path: inset(0 100% 0 0); }
+  to   { clip-path: inset(0 0% 0 0); }
+}
+
+/* SLIDE 2: imagen DERECHA → IZQUIERDA */
+.slide-2 .slide-img,
+.slide-2 .slide-img-emoji {
+  clip-path: inset(0 0 0 100%);
+}
+.slide-2.active .slide-img,
+.slide-2.active .slide-img-emoji {
+  animation: revealRL .8s ease .3s forwards;
+}
+@keyframes revealRL {
+  from { clip-path: inset(0 0 0 100%); }
+  to   { clip-path: inset(0 0 0 0%); }
+}
+
+/* SLIDE 3: imagen IZQUIERDA → DERECHA */
+.slide-3 .slide-img,
+.slide-3 .slide-img-emoji {
+  clip-path: inset(0 100% 0 0);
+}
+.slide-3.active .slide-img,
+.slide-3.active .slide-img-emoji {
+  animation: revealLR .8s ease .3s forwards;
+}
+
+/* FLECHAS */
+.slider-arrows {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 14px;
+  pointer-events: none;
+}
+.arrow-btn {
+  pointer-events: all;
+  background: rgba(255,255,255,.15);
+  border: none;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .2s;
+  backdrop-filter: blur(4px);
+}
+.arrow-btn:hover { background: #a90000; }
+
+/* DOTS */
+.slider-nav {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+}
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.3);
+  cursor: pointer;
+  transition: all .3s;
+  border: none;
+}
+.dot.active {
+  background: #fad505;
+  width: 24px;
+  border-radius: 4px;
+}
+
+</style>
+</head>
+<body style="background:#eee; margin:0; padding:20px;">
+
+<div class="slider-main">
+
+  <!-- SLIDE 1: Smart Watch — texto entra escalonado + imagen L→R -->
+  <div class="slide slide-1 active">
+    <div class="slide-text">
+      <div class="slide-tag">Limited Time Offer!!</div>
+      <span class="slide-old">Old Price: $499</span>
+      <h2 class="slide-title">BUY <span>SMARTWATCH</span><br>WITH NEW<br>ACTIVITY TRACKER</h2>
+      <span class="slide-new">New Price: $399</span>
+      <a href="#" class="slide-btn">Shop Now →</a>
+    </div>
+    <img class="slide-img" src="relog.png" alt="Smart Watch">
+  </div>
+
+  <!-- SLIDE 2: Beat Samsung — texto entra escalonado + imagen R→L -->
+  <div class="slide slide-2">
+    <div class="slide-text">
+      <div class="slide-tag">Hurry! Limited Time Only!</div>
+      <span class="slide-old">Old Price: $399</span>
+      <h2 class="slide-title">GET YOUR<br><span>BEAT SAMSUNG</span><br>RADIANT 360</h2>
+      <span class="slide-new">New Price: $299</span>
+      <a href="#" class="slide-btn">Shop Now →</a>
+    </div>
+    <img class="slide-img" src="1.PNG" alt="Smart Watch">
+  </div>
+
+  <!-- SLIDE 3: Cameras — texto entra escalonado + imagen L→R -->
+  <div class="slide slide-3">
+    <div class="slide-text">
+      <div class="slide-tag">Limited Time Offer!</div>
+      <span class="slide-old">Old Price: $599</span>
+      <h2 class="slide-title">SHOP & SAVE<br>BIG ON <span>HOTTEST</span><br>CAMERAS</h2>
+      <span class="slide-new">New Price: $499</span>
+      <a href="#" class="slide-btn">Shop Now →</a>
+    </div>
+    <img class="slide-img" src="cel.png" alt="Smart Watch">
+  </div>
+
+  <!-- Flechas -->
+  <div class="slider-arrows">
+    <button class="arrow-btn" onclick="changeSlide(-1)">‹</button>
+    <button class="arrow-btn" onclick="changeSlide(1)">›</button>
+  </div>
+
+  <!-- Dots -->
+  <div class="slider-nav">
+    <button class="dot active" onclick="goSlide(0)"></button>
+    <button class="dot"        onclick="goSlide(1)"></button>
+    <button class="dot"        onclick="goSlide(2)"></button>
+  </div>
+
+</div>
+
+<script>
+let currentSlide = 0;
+const slides = document.querySelectorAll('.slide');
+const dots   = document.querySelectorAll('.dot');
+
+function showSlide(n) {
+  slides[currentSlide].classList.remove('active');
+  dots[currentSlide].classList.remove('active');
+  currentSlide = (n + slides.length) % slides.length;
+  slides[currentSlide].classList.add('active');
+  dots[currentSlide].classList.add('active');
+}
+
+function changeSlide(dir) { showSlide(currentSlide + dir); }
+function goSlide(n) { showSlide(n); }
+
+setInterval(() => changeSlide(1), 4500);
+</script>
+</body>
+</html>
