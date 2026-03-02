@@ -37,6 +37,7 @@
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
                         <a class="dropdown-item confirm-alert" href="javascript:void(0)"  data-target="#bulk-delete-modal"> {{translate('Delete selection')}}</a>
+                        <a class="dropdown-item confirm-alert" href="javascript:void(0)"  data-target="#bulk-optimize-modal"> {{translate('Optimize Images')}}</a>
                     </div>
                 </div>
             @endcan
@@ -241,6 +242,27 @@
     @include('modals.delete_modal')
     <!-- Bulk Delete modal -->
     @include('modals.bulk_delete_modal')
+    
+    <!-- Bulk Optimize Images Modal -->
+    <div id="bulk-optimize-modal" class="modal fade">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title h6">{{ translate('Optimize Images') }}</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p class="mt-1">{{ translate('Convert selected product images to WebP format for better performance?') }}</p>
+                    <p class="text-muted small">
+                        <i class="fas fa-info-circle"></i> 
+                        {{ translate('This will save disk space and improve loading speed.') }}
+                    </p>
+                    <button type="button" class="btn btn-link mt-2" data-dismiss="modal">{{ translate('Cancel') }}</button>
+                    <a href="javascript:void(0)" onclick="bulk_optimize_images()" class="btn btn-primary mt-2">{{ translate('Optimize') }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 
@@ -357,6 +379,91 @@
                     if(response == 1) {
                         location.reload();
                     }
+                }
+            });
+        }
+
+        function bulk_optimize_images() {
+            var ids = [];
+            $('input.check-one:checked').each(function() {
+                ids.push($(this).val());
+            });
+
+            if(ids.length == 0) {
+                AIZ.plugins.notify('danger', '{{ translate('Please select at least one product') }}');
+                return;
+            }
+
+            var modal = $('#bulk-optimize-modal');
+            modal.find('.modal-title').text('{{ translate('Optimizing Images') }}...');
+            modal.find('.modal-body').html('<div class="text-center"><i class="fas fa-spinner fa-spin fa-2x"></i><p class="mt-2">{{ translate('Converting images to WebP format...') }}</p></div>');
+            modal.find('button, a').prop('disabled', true);
+
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: "{{route('products.bulk-optimize-images')}}",
+                type: 'POST',
+                data: {ids: ids},
+                dataType: 'json',
+                success: function (response) {
+                    if(response.success) {
+                        modal.find('.modal-title').text('{{ translate('Optimization Complete') }}');
+                        var errorMsg = '';
+                        if(response.errors && response.errors > 0) {
+                            errorMsg = '<div class="alert alert-warning mt-2">⚠️ Errors: ' + response.errors + '</div>';
+                        }
+                        modal.find('.modal-body').html(
+                            '<div class="alert alert-success" role="alert">' +
+                            '<strong>✔️ {{ translate('Done!') }}</strong><br>' +
+                            '{{ translate('Converted') }}: <strong>' + response.converted + '</strong> images<br>' +
+                            '{{ translate('Skipped') }}: <strong>' + response.skipped + '</strong> images<br>' +
+                            '<strong>💾 {{ translate('Space saved') }}: ' + response.space_saved_mb + ' MB</strong>' +
+                            '</div>' + errorMsg
+                        );
+                        modal.find('.btn-primary').text('{{ translate('Done') }}').click(function() {
+                            location.reload();
+                        });
+                    } else {
+                        modal.find('.modal-title').text('{{ translate('Error') }}');
+                        var errorText = response.error ? response.error : '{{ translate('Unknown error') }}';
+                        modal.find('.modal-body').html('<div class="alert alert-danger"><strong>Error:</strong> ' + errorText + '</div>');
+                        modal.find('.btn-primary').text('{{ translate('Close') }}').click(function() {
+                            modal.modal('hide');
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    modal.find('.modal-title').text('{{ translate('Error') }}');
+                    var errorMsg = '{{ translate('An error occurred during optimization') }}';
+                    console.log('AJAX Error:', {xhr: xhr, status: status, error: error});
+                    
+                    // Try to parse response for more details
+                    if(xhr.responseJSON && xhr.responseJSON.error) {
+                        errorMsg = xhr.responseJSON.error;
+                    } else if(xhr.responseText) {
+                        try {
+                            var json = JSON.parse(xhr.responseText);
+                            if(json.error) errorMsg = json.error;
+                            else if(json.message) errorMsg = json.message;
+                        } catch(e) {
+                            if(xhr.status === 0) {
+                                errorMsg = 'Network error - please check your connection';
+                            } else if(xhr.status === 404) {
+                                errorMsg = 'Endpoint not found (404)';
+                            } else if(xhr.status === 500) {
+                                errorMsg = 'Server error (500) - check logs for details';
+                            } else {
+                                errorMsg = 'Status: ' + xhr.status + ' ' + error;
+                            }
+                        }
+                    }
+                    
+                    modal.find('.modal-body').html('<div class="alert alert-danger"><strong>Error:</strong> ' + errorMsg + '</div>');
+                    modal.find('.btn-primary').text('{{ translate('Close') }}').click(function() {
+                        modal.modal('hide');
+                    });
                 }
             });
         }

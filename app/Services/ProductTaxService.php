@@ -12,12 +12,15 @@ class ProductTaxService
 
         if ($collection['tax_id']) {
             foreach ($collection['tax_id'] as $key => $val) {
-                $product_tax = new ProductTax();
-                $product_tax->tax_id = $val;
-                $product_tax->product_id = $collection['product_id'];
-                $product_tax->tax = $collection['tax'][$key];
-                $product_tax->tax_type = $collection['tax_type'][$key];
-                $product_tax->save();
+                if (!empty($val)) {
+                    $product_tax = new ProductTax();
+                    $product_tax->tax_id = $val;
+                    $product_tax->product_id = $collection['product_id'];
+                    // Ensure tax value is numeric and not null
+                    $product_tax->tax = is_numeric($collection['tax'][$key]) ? $collection['tax'][$key] : 0;
+                    $product_tax->tax_type = $collection['tax_type'][$key] ?? 'amount';
+                    $product_tax->save();
+                }
             }
         }
 

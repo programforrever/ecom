@@ -450,6 +450,9 @@ Route::controller(BlogController::class)->group(function () {
     Route::get('/blog/{slug}', 'blog_details')->name('blog.details');
 });
 
+// Debug routes for WebP verification (BEFORE catch-all route)
+require __DIR__.'/debug.php';
+
 Route::controller(PageController::class)->group(function () {
     //mobile app balnk page for webview
     Route::get('/mobile-page/{slug}', 'mobile_custom_page')->name('mobile.custom-pages');
