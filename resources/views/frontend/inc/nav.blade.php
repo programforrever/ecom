@@ -112,7 +112,7 @@
         </div>
     </div>
 
-    <header class="@if (get_setting('header_stikcy') == 'on') sticky-top @endif z-1020 bg-white">
+    <header class="z-1020 bg-white">
         <!-- Search Bar -->
         <div class="position-relative logo-bar-area border-bottom border-md-nonea z-1025">
             <div class="container">

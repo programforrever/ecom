@@ -365,13 +365,6 @@
                 AIZ.plugins.slickCarousel();
             });
 
-            $.post('{{ route('home.section.todays_deal') }}', {
-                _token: '{{ csrf_token() }}'
-            }, function(data) {
-                $('#todays_deal').html(data);
-                AIZ.plugins.slickCarousel();
-            });
-
             $.post('{{ route('home.section.best_selling') }}', {
                 _token: '{{ csrf_token() }}'
             }, function(data) {
@@ -397,6 +390,13 @@
                 _token: '{{ csrf_token() }}'
             }, function(data) {
                 $('#section_home_categories').html(data);
+                AIZ.plugins.slickCarousel();
+            });
+
+            $.post('{{ route('home.section.todays_deal') }}', {
+                _token: '{{ csrf_token() }}'
+            }, function(data) {
+                $('#todays_deal_bottom').html(data);
                 AIZ.plugins.slickCarousel();
             });
         @endif
