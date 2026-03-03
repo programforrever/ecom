@@ -3,328 +3,876 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Electme - Slider</title>
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&display=swap" rel="stylesheet">
+<title>Featured Products</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-.slider-main {
-  background: linear-gradient(135deg, #f0eded 0%, #f0eded  60%, #f0eded  100%);
-  border-radius: 10px;
-  min-height: 380px;
-  display: flex;
-  align-items: center;
-  position: relative;
-  overflow: hidden;
-  max-width: 900px;
-  margin: 20px auto;
-}
-
-.slide {
-  display: none;
-  width: 100%;
-  padding: 50px 60px;
-  align-items: center;
-  gap: 40px;
-}
-.slide.active { display: flex; }
-
-/* ============================================================
-   TEXTO: cada elemento empieza invisible y se mueve a la derecha
-============================================================ */
-.slide-text { flex: 1; }
-
-/* Todos los elementos del texto empiezan ocultos */
-.slide-tag,
-.slide-old,
-.slide-title,
-.slide-new,
-.slide-btn {
-  opacity: 0;
-  transform: translateX(-40px); /* Empieza desplazado a la izquierda */
-}
-
-/* Al activarse el slide: cada elemento entra con delay escalonado */
-
-/* 1ro: Badge rojo — entra primero (delay 0s) */
-.slide.active .slide-tag {
-  animation: itemSlideIn .5s ease 0s forwards;
-}
-
-/* 2do: Precio tachado (delay 0.15s) */
-.slide.active .slide-old {
-  animation: itemSlideIn .5s ease 0.15s forwards;
-}
-
-/* 3ro: Título grande (delay 0.3s) */
-.slide.active .slide-title {
-  animation: itemSlideIn .5s ease 0.3s forwards;
-}
-
-/* 4to: Precio nuevo (delay 0.45s) */
-.slide.active .slide-new {
-  animation: itemSlideIn .5s ease 0.45s forwards;
-}
-
-/* 5to: Botón Shop Now (delay 0.6s) */
-.slide.active .slide-btn {
-  animation: itemSlideIn .5s ease 0.6s forwards;
-}
-
-/* Keyframe: elemento entra desde la izquierda hacia su posición */
-@keyframes itemSlideIn {
-  from {
-    opacity: 0;
-    transform: translateX(-40px); /* Desplazado a la izquierda */
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #f5f5f5;
+    padding: 40px 20px;
   }
-  to {
-    opacity: 1;
-    transform: translateX(0);     /* En su posición normal */
+
+  /* ===== SECTION ===== */
+  .section {
+    max-width: 1100px;
+    margin: 0 auto 48px;
   }
-}
 
-/* Estilos de cada elemento de texto */
-.slide-tag {
-  display: inline-block;
-  background: #a90000;
-  color: rgb(255, 255, 255);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  padding: 4px 12px;
-  border-radius: 3px;
-  margin-bottom: 14px;
-  font-family: 'Rajdhani', sans-serif;
-}
-/* letras */
-.slide-old {
-  color: #aaa;
-  font-size: 14px;
-  text-decoration: line-through;
-  margin-bottom: 4px;
-  display: block;
-}
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
 
-.slide-title {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 48px;
-  font-weight: 700;
-  color: rgb(70, 70, 70);
-  line-height: 1.1;
-  margin-bottom: 8px;
-  text-transform: uppercase;
-  display: block;
-}
-.slide-title span { color: #fad505; }
+  .section-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #111;
+    border-bottom: 3px solid #d4e000;
+    display: inline-block;
+    padding-bottom: 4px;
+  }
 
-.slide-new {
-  color: #7effa0;
-  font-size: 20px;
-  font-weight: 700;
-  margin-bottom: 28px;
-  font-family: 'Rajdhani', sans-serif;
-  display: block;
-}
+  .view-all {
+    font-size: 12px;
+    font-weight: 700;
+    color: #2563eb;
+    text-decoration: none;
+  }
+  .view-all:hover { text-decoration: underline; }
 
-.slide-btn {
-  display: inline-block;
-  background: #a90000;
-  color: white;
-  padding: 14px 32px;
-  border-radius: 5px;
-  font-weight: 700;
-  font-family: 'Rajdhani', sans-serif;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  font-size: 14px;
-  text-decoration: none;
-  transition: background .2s, transform .2s;
-  cursor: pointer;
-}
-.slide-btn:hover { background: #800000; transform: translateY(-2px); }
+  /* ===== CAROUSEL ===== */
+  .carousel-outer {
+    position: relative;
+    border: 1px solid #e5e5e5;
+    background: #fff;
+  }
 
-/* ============================================================
-   IMAGEN BASE
-============================================================ */
-.slide-img {
-  flex-shrink: 0;
-  width: 220px;
-  height: 220px;
-  object-fit: contain;
-  filter: drop-shadow(0 8px 30px rgba(0,0,0,.5));
-}
-.slide-img-emoji {
-  flex-shrink: 0;
-  font-size: 140px;
-  line-height: 1;
-  filter: drop-shadow(0 8px 30px rgba(0,0,0,.5));
-}
+  .carousel-viewport {
+    overflow: hidden;
+  }
 
-/* SLIDE 1: imagen IZQUIERDA → DERECHA */
-.slide-1 .slide-img,
-.slide-1 .slide-img-emoji {
-  clip-path: inset(0 100% 0 0);
-}
-.slide-1.active .slide-img,
-.slide-1.active .slide-img-emoji {
-  animation: revealLR .8s ease .3s forwards;
-}
-@keyframes revealLR {
-  from { clip-path: inset(0 100% 0 0); }
-  to   { clip-path: inset(0 0% 0 0); }
-}
+  .carousel-track {
+    display: flex;
+    transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+  }
 
-/* SLIDE 2: imagen DERECHA → IZQUIERDA */
-.slide-2 .slide-img,
-.slide-2 .slide-img-emoji {
-  clip-path: inset(0 0 0 100%);
-}
-.slide-2.active .slide-img,
-.slide-2.active .slide-img-emoji {
-  animation: revealRL .8s ease .3s forwards;
-}
-@keyframes revealRL {
-  from { clip-path: inset(0 0 0 100%); }
-  to   { clip-path: inset(0 0 0 0%); }
-}
+  .carousel-page {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    min-width: 100%;
+    padding: 4px 0;
+  }
 
-/* SLIDE 3: imagen IZQUIERDA → DERECHA */
-.slide-3 .slide-img,
-.slide-3 .slide-img-emoji {
-  clip-path: inset(0 100% 0 0);
-}
-.slide-3.active .slide-img,
-.slide-3.active .slide-img-emoji {
-  animation: revealLR .8s ease .3s forwards;
-}
+  /* ===== NAV BUTTONS ===== */
+  .carousel-btn {
+    position: absolute;
+    top: 42%;
+    transform: translateY(-50%);
+    width: 34px;
+    height: 34px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+    z-index: 10;
+    transition: background 0.2s, box-shadow 0.2s;
+  }
 
-/* FLECHAS */
-.slider-arrows {
+  .carousel-btn:hover {
+    background: #d4e000;
+    border-color: #d4e000;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+  }
+
+  .carousel-btn svg {
+    width: 14px; height: 14px;
+    stroke: #333; fill: none;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .carousel-btn-prev { left: -17px; }
+  .carousel-btn-next { right: -17px; }
+
+  /* ===== PRODUCT CARD ===== */
+  .product-card {
+    background: #fff;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    border-right: 1px solid #e5e5e5;
+  }
+
+  .product-card:last-child {
+    border-right: none;
+  }
+
+  .product-img-wrap {
+    position: relative;
+    width: 100%;
+    padding-top: 100%;
+    overflow: hidden;
+    background: #fafafa;
+  }
+
+  .product-img-wrap img {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: contain;
+    padding: 16px;
+    transition: opacity 0.35s ease, transform 0.35s ease;
+  }
+
+  .img-primary { opacity: 1; transform: scale(1); }
+  .img-hover   { opacity: 0; transform: scale(1.04); }
+
+  .product-card:hover .img-primary { opacity: 0; transform: scale(1.04); }
+  .product-card:hover .img-hover   { opacity: 1; transform: scale(1); }
+
+.product-actions {
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 100%;
+  top: 12px;
+  right: 12px;
   display: flex;
-  justify-content: space-between;
-  padding: 0 14px;
-  pointer-events: none;
+  flex-direction: column;
+  gap: 10px;
+  opacity: 0;
+  transform: translateX(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
-.arrow-btn {
-  pointer-events: all;
-  background: rgba(255,255,255,.15);
-  border: none;
-  color: white;
-  width: 40px;
-  height: 40px;
+
+.product-card:hover .product-actions {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.action-icon {
+  width: 36px;
+  height: 36px;
+  background: #ffffff;
   border-radius: 50%;
-  cursor: pointer;
-  font-size: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background .2s;
-  backdrop-filter: blur(4px);
-}
-.arrow-btn:hover { background: #a90000; }
-
-/* DOTS */
-.slider-nav {
-  position: absolute;
-  bottom: 18px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 8px;
-}
-.dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: rgba(255,255,255,.3);
-  cursor: pointer;
-  transition: all .3s;
-  border: none;
-}
-.dot.active {
-  background: #fad505;
-  width: 24px;
-  border-radius: 4px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+  transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
 }
 
+.action-icon svg {
+  width: 18px;
+  height: 18px;
+  stroke: #333;
+  stroke-width: 2.2;
+  fill: none;
+}
+
+.action-icon:hover {
+  background: #d4e000;
+  box-shadow: 0 5px 16px rgba(0,0,0,0.2);
+  transform: scale(1.08);
+}
+
+
+  /* Badge nuevo */
+  .badge-new {
+    position: absolute;
+    top: 10px; left: 10px;
+    background: #22c55e;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    z-index: 2;
+  }
+
+  /* Product info */
+  .product-info { padding: 12px 12px 0; }
+
+  .product-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: #222;
+    line-height: 1.4;
+    margin-bottom: 8px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 36px;
+  }
+
+  .stars { display: flex; gap: 2px; margin-bottom: 8px; }
+  .star  { color: #f5a623; font-size: 14px; }
+  .star.empty { color: #ddd; }
+
+  .product-price {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 12px;
+  }
+
+  .btn-wrap { overflow: hidden; height: 40px; }
+
+  .btn-select {
+    display: block;
+    width: 100%;
+    background: #d4e000;
+    color: #111;
+    font-size: 13px;
+    font-weight: 700;
+    text-align: center;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    transform: translateY(-100%);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    text-transform: uppercase;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .product-card:hover .btn-select {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  @media (max-width: 700px) {
+    .carousel-page { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .carousel-btn {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .carousel-outer:hover .carousel-btn {
+    opacity: 1;
+    pointer-events: auto;
+  }
 </style>
 </head>
-<body style="background:#eee; margin:0; padding:20px;">
+<body>
 
-<div class="slider-main">
 
-  <!-- SLIDE 1: Smart Watch — texto entra escalonado + imagen L→R -->
-  <div class="slide slide-1 active">
-    <div class="slide-text">
-      <div class="slide-tag">Limited Time Offer!!</div>
-      <span class="slide-old">Old Price: $499</span>
-      <h2 class="slide-title">BUY <span>SMARTWATCH</span><br>WITH NEW<br>ACTIVITY TRACKER</h2>
-      <span class="slide-new">New Price: $399</span>
-      <a href="#" class="slide-btn">Shop Now →</a>
+<!-- ===== FEATURED PRODUCTS ===== -->
+<div class="section">
+  <div class="section-header">
+    <h2 class="section-title">Featured Products</h2>
+    <a href="#" class="view-all">Ver todos los productos</a>
+  </div>
+  <div class="carousel-outer">
+    <button class="carousel-btn carousel-btn-prev" onclick="slide(this,-1)">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <div class="carousel-viewport">
+      <div class="carousel-track" data-current="0">
+
+        <div class="carousel-page">
+          <div class="product-card">
+            <div class="product-img-wrap">
+              <img class="img-primary" src="/resources/views/frontend/nuevotema/reloj.png" alt="">
+              <img class="img-hover" src="/resources/views/frontend/nuevotema/relojj.png" alt="">
+              <div class="product-actions">
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="none" stroke="#333" stroke-width="2"/><path d="M12 4.5c5 0 9 7.5 9 7.5s-4 7.5-9 7.5-9-7.5-9-7.5 4-7.5 9-7.5z" fill="none" stroke="#333" stroke-width="2"/></svg></span>
+              </div>
+            </div>
+            <div class="product-info">
+              <p class="product-name">Galaxy Watch5 44mm Bluetooth Smart Watch</p>
+              <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+              <p class="product-price">$155.00</p>
+            </div>
+            <div class="btn-wrap"><button class="btn-select">Select Options</button></div>
+          </div>
+
+          <div class="product-card">
+            <div class="product-img-wrap">
+              <img class="img-primary" src="/resources/views/frontend/nuevotema/reloj.png" alt="">
+              <img class="img-hover" src="/resources/views/frontend/nuevotema/relojj.png" alt="">
+              <div class="product-actions">
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="none" stroke="#333" stroke-width="2"/><path d="M12 4.5c5 0 9 7.5 9 7.5s-4 7.5-9 7.5-9-7.5-9-7.5 4-7.5 9-7.5z" fill="none" stroke="#333" stroke-width="2"/></svg></span>
+              </div>
+            </div>
+            <div class="product-info">
+              <p class="product-name">Samsung Galaxy Buds2 Pro Wireless Earbuds</p>
+              <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star empty">★</span></div>
+              <p class="product-price">$89.00</p>
+            </div>
+            <div class="btn-wrap"><button class="btn-select">Select Options</button></div>
+          </div>
+
+          <div class="product-card">
+            <div class="product-img-wrap">
+    <img class="img-primary" src="/resources/views/frontend/nuevotema/reloj.png" alt="">
+              <img class="img-hover" src="/resources/views/frontend/nuevotema/relojj.png" alt="">
+              <div class="product-actions">
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="none" stroke="#333" stroke-width="2"/><path d="M12 4.5c5 0 9 7.5 9 7.5s-4 7.5-9 7.5-9-7.5-9-7.5 4-7.5 9-7.5z" fill="none" stroke="#333" stroke-width="2"/></svg></span>
+              </div>
+            </div>
+            <div class="product-info">
+              <p class="product-name">Samsung Galaxy S23 Ultra 5G 256GB</p>
+              <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+              <p class="product-price">$799.00</p>
+            </div>
+            <div class="btn-wrap"><button class="btn-select">Select Options</button></div>
+          </div>
+
+          <div class="product-card">
+            <div class="product-img-wrap">
+    <img class="img-primary" src="/resources/views/frontend/nuevotema/reloj.png" alt="">
+              <img class="img-hover" src="/resources/views/frontend/nuevotema/relojj.png" alt="">
+              <div class="product-actions">
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="none" stroke="#333" stroke-width="2"/><path d="M12 4.5c5 0 9 7.5 9 7.5s-4 7.5-9 7.5-9-7.5-9-7.5 4-7.5 9-7.5z" fill="none" stroke="#333" stroke-width="2"/></svg></span>
+              </div>
+            </div>
+            <div class="product-info">
+              <p class="product-name">Galaxy Tab S8 11" 128GB WiFi Tablet</p>
+              <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star empty">★</span></div>
+              <p class="product-price">$449.00</p>
+            </div>
+            <div class="btn-wrap"><button class="btn-select">Select Options</button></div>
+          </div>
+        </div>
+
+        <div class="carousel-page">
+          <div class="product-card">
+            <div class="product-img-wrap">
+                 <img class="img-primary" src="/resources/views/frontend/nuevotema/reloj.png" alt="">
+              <img class="img-hover" src="/resources/views/frontend/nuevotema/relojj.png" alt="">
+              <div class="product-actions">
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="none" stroke="#333" stroke-width="2"/><path d="M12 4.5c5 0 9 7.5 9 7.5s-4 7.5-9 7.5-9-7.5-9-7.5 4-7.5 9-7.5z" fill="none" stroke="#333" stroke-width="2"/></svg></span>
+              </div>
+            </div>
+            <div class="product-info">
+              <p class="product-name">Samsung 55" QLED 4K Smart TV 2024</p>
+              <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+              <p class="product-price">$1,299.00</p>
+            </div>
+            <div class="btn-wrap"><button class="btn-select">Select Options</button></div>
+          </div>
+
+          <div class="product-card">
+            <div class="product-img-wrap">
+                  <img class="img-primary" src="/resources/views/frontend/nuevotema/reloj.png" alt="">
+              <img class="img-hover" src="/resources/views/frontend/nuevotema/relojj.png" alt="">
+              <div class="product-actions">
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="none" stroke="#333" stroke-width="2"/><path d="M12 4.5c5 0 9 7.5 9 7.5s-4 7.5-9 7.5-9-7.5-9-7.5 4-7.5 9-7.5z" fill="none" stroke="#333" stroke-width="2"/></svg></span>
+              </div>
+            </div>
+            <div class="product-info">
+              <p class="product-name">Logitech MX Master 3S Wireless Mouse</p>
+              <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+              <p class="product-price">$99.00</p>
+            </div>
+            <div class="btn-wrap"><button class="btn-select">Select Options</button></div>
+          </div>
+
+          <div class="product-card">
+            <div class="product-img-wrap">
+                 <img class="img-primary" src="/resources/views/frontend/nuevotema/reloj.png" alt="">
+              <img class="img-hover" src="/resources/views/frontend/nuevotema/relojj.png" alt="">
+              <div class="product-actions">
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="none" stroke="#333" stroke-width="2"/><path d="M12 4.5c5 0 9 7.5 9 7.5s-4 7.5-9 7.5-9-7.5-9-7.5 4-7.5 9-7.5z" fill="none" stroke="#333" stroke-width="2"/></svg></span>
+              </div>
+            </div>
+            <div class="product-info">
+              <p class="product-name">Keychron K8 Pro Mechanical Keyboard</p>
+              <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star empty">★</span></div>
+              <p class="product-price">$119.00</p>
+            </div>
+            <div class="btn-wrap"><button class="btn-select">Select Options</button></div>
+          </div>
+
+          <div class="product-card">
+            <div class="product-img-wrap">
+                  <img class="img-primary" src="/resources/views/frontend/nuevotema/reloj.png" alt="">
+              <img class="img-hover" src="/resources/views/frontend/nuevotema/relojj.png" alt="">
+              <div class="product-actions">
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="none" stroke="#333" stroke-width="2"/><path d="M12 4.5c5 0 9 7.5 9 7.5s-4 7.5-9 7.5-9-7.5-9-7.5 4-7.5 9-7.5z" fill="none" stroke="#333" stroke-width="2"/></svg></span>
+              </div>
+            </div>
+            <div class="product-info">
+              <p class="product-name">Sony WH-1000XM5 Noise Cancelling Headphones</p>
+              <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+              <p class="product-price">$348.00</p>
+            </div>
+            <div class="btn-wrap"><button class="btn-select">Select Options</button></div>
+          </div>
+        </div>
+
+        <div class="carousel-page">
+          <div class="product-card">
+            <div class="product-img-wrap">
+                <img class="img-primary" src="/resources/views/frontend/nuevotema/reloj.png" alt="">
+              <img class="img-hover" src="/resources/views/frontend/nuevotema/relojj.png" alt="">
+              <div class="product-actions">
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="none" stroke="#333" stroke-width="2"/><path d="M12 4.5c5 0 9 7.5 9 7.5s-4 7.5-9 7.5-9-7.5-9-7.5 4-7.5 9-7.5z" fill="none" stroke="#333" stroke-width="2"/></svg></span>
+              </div>
+            </div>
+            <div class="product-info">
+              <p class="product-name">PlayStation 5 Slim Digital Edition</p>
+              <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+              <p class="product-price">$449.00</p>
+            </div>
+            <div class="btn-wrap"><button class="btn-select">Select Options</button></div>
+          </div>
+
+          <div class="product-card">
+            <div class="product-img-wrap">
+              <img class="img-primary" src="/resources/views/frontend/nuevotema/reloj.png" alt="">
+              <img class="img-hover" src="/resources/views/frontend/nuevotema/relojj.png" alt="">
+              <div class="product-actions">
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="none" stroke="#333" stroke-width="2"/><path d="M12 4.5c5 0 9 7.5 9 7.5s-4 7.5-9 7.5-9-7.5-9-7.5 4-7.5 9-7.5z" fill="none" stroke="#333" stroke-width="2"/></svg></span>
+              </div>
+            </div>
+            <div class="product-info">
+              <p class="product-name">Anker 140W USB-C GaN Fast Charger</p>
+              <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star empty">★</span></div>
+              <p class="product-price">$59.00</p>
+            </div>
+            <div class="btn-wrap"><button class="btn-select">Select Options</button></div>
+          </div>
+
+          <div class="product-card">
+            <div class="product-img-wrap">
+               <img class="img-primary" src="/resources/views/frontend/nuevotema/reloj.png" alt="">
+              <img class="img-hover" src="/resources/views/frontend/nuevotema/relojj.png" alt="">
+              <div class="product-actions">
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="none" stroke="#333" stroke-width="2"/><path d="M12 4.5c5 0 9 7.5 9 7.5s-4 7.5-9 7.5-9-7.5-9-7.5 4-7.5 9-7.5z" fill="none" stroke="#333" stroke-width="2"/></svg></span>
+              </div>
+            </div>
+            <div class="product-info">
+              <p class="product-name">Ring Video Doorbell Pro 2 HD</p>
+              <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+              <p class="product-price">$249.00</p>
+            </div>
+            <div class="btn-wrap"><button class="btn-select">Select Options</button></div>
+          </div>
+
+          <div class="product-card">
+            <div class="product-img-wrap">
+           <img class="img-primary" src="/resources/views/frontend/nuevotema/reloj.png" alt="">
+              <img class="img-hover" src="/resources/views/frontend/nuevotema/relojj.png" alt="">
+              <div class="product-actions">
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="none" stroke="#333" stroke-width="2"/><path d="M12 4.5c5 0 9 7.5 9 7.5s-4 7.5-9 7.5-9-7.5-9-7.5 4-7.5 9-7.5z" fill="none" stroke="#333" stroke-width="2"/></svg></span>
+              </div>
+            </div>
+            <div class="product-info">
+              <p class="product-name">Xiaomi Mi Smart Band 8 Fitness Tracker</p>
+              <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star empty">★</span></div>
+              <p class="product-price">$49.00</p>
+            </div>
+            <div class="btn-wrap"><button class="btn-select">Select Options</button></div>
+          </div>
+        </div>
+
+      </div>
     </div>
-    <img class="slide-img" src="relog.png" alt="Smart Watch">
+    <button class="carousel-btn carousel-btn-next" onclick="slide(this,1)">
+      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
   </div>
-
-  <!-- SLIDE 2: Beat Samsung — texto entra escalonado + imagen R→L -->
-  <div class="slide slide-2">
-    <div class="slide-text">
-      <div class="slide-tag">Hurry! Limited Time Only!</div>
-      <span class="slide-old">Old Price: $399</span>
-      <h2 class="slide-title">GET YOUR<br><span>BEAT SAMSUNG</span><br>RADIANT 360</h2>
-      <span class="slide-new">New Price: $299</span>
-      <a href="#" class="slide-btn">Shop Now →</a>
-    </div>
-    <img class="slide-img" src="1.PNG" alt="Smart Watch">
-  </div>
-
-  <!-- SLIDE 3: Cameras — texto entra escalonado + imagen L→R -->
-  <div class="slide slide-3">
-    <div class="slide-text">
-      <div class="slide-tag">Limited Time Offer!</div>
-      <span class="slide-old">Old Price: $599</span>
-      <h2 class="slide-title">SHOP & SAVE<br>BIG ON <span>HOTTEST</span><br>CAMERAS</h2>
-      <span class="slide-new">New Price: $499</span>
-      <a href="#" class="slide-btn">Shop Now →</a>
-    </div>
-    <img class="slide-img" src="cel.png" alt="Smart Watch">
-  </div>
-
-  <!-- Flechas -->
-  <div class="slider-arrows">
-    <button class="arrow-btn" onclick="changeSlide(-1)">‹</button>
-    <button class="arrow-btn" onclick="changeSlide(1)">›</button>
-  </div>
-
-  <!-- Dots -->
-  <div class="slider-nav">
-    <button class="dot active" onclick="goSlide(0)"></button>
-    <button class="dot"        onclick="goSlide(1)"></button>
-    <button class="dot"        onclick="goSlide(2)"></button>
-  </div>
-
 </div>
 
+<!-- ===== VENDEDORES POPULARES ===== -->
+<div class="section">
+  <div class="section-header">
+    <h2 class="section-title">Vendedores Populares</h2>
+    <a href="#" class="view-all">Ver todos los vendedores</a>
+  </div>
+  <div class="carousel-outer">
+    <button class="carousel-btn carousel-btn-prev" onclick="slide(this,-1)">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <div class="carousel-viewport">
+      <div class="carousel-track" data-current="0">
+
+        <div class="carousel-page">
+          <div class="product-card">
+            <div class="product-img-wrap">
+       <img class="img-primary" src="/resources/views/frontend/nuevotema/reloj.png" alt="">
+              <img class="img-hover" src="/resources/views/frontend/nuevotema/relojj.png" alt="">
+              <div class="product-actions">
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="none" stroke="#333" stroke-width="2"/><path d="M12 4.5c5 0 9 7.5 9 7.5s-4 7.5-9 7.5-9-7.5-9-7.5 4-7.5 9-7.5z" fill="none" stroke="#333" stroke-width="2"/></svg></span>
+              </div>
+            </div>
+            <div class="product-info">
+              <p class="product-name">TechZone Store</p>
+              <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+              <p class="product-price">248 Reseñas</p>
+            </div>
+            <div class="btn-wrap"><button class="btn-select">Visit Store</button></div>
+          </div>
+
+          <div class="product-card">
+            <div class="product-img-wrap">
+                 <img class="img-primary" src="/resources/views/frontend/nuevotema/reloj.png" alt="">
+              <img class="img-hover" src="/resources/views/frontend/nuevotema/relojj.png" alt="">
+              <div class="product-actions">
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="none" stroke="#333" stroke-width="2"/><path d="M12 4.5c5 0 9 7.5 9 7.5s-4 7.5-9 7.5-9-7.5-9-7.5 4-7.5 9-7.5z" fill="none" stroke="#333" stroke-width="2"/></svg></span>
+              </div>
+            </div>
+            <div class="product-info">
+              <p class="product-name">MegaShop</p>
+              <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star empty">★</span></div>
+              <p class="product-price">183 Reseñas</p>
+            </div>
+            <div class="btn-wrap"><button class="btn-select">Visit Store</button></div>
+          </div>
+
+          <div class="product-card">
+            <div class="product-img-wrap">
+                 <img class="img-primary" src="/resources/views/frontend/nuevotema/reloj.png" alt="">
+              <img class="img-hover" src="/resources/views/frontend/nuevotema/relojj.png" alt="">
+              <div class="product-actions">
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="none" stroke="#333" stroke-width="2"/><path d="M12 4.5c5 0 9 7.5 9 7.5s-4 7.5-9 7.5-9-7.5-9-7.5 4-7.5 9-7.5z" fill="none" stroke="#333" stroke-width="2"/></svg></span>
+              </div>
+            </div>
+            <div class="product-info">
+              <p class="product-name">GadgetHub</p>
+              <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star empty">★</span></div>
+              <p class="product-price">97 Reseñas</p>
+            </div>
+            <div class="btn-wrap"><button class="btn-select">Visit Store</button></div>
+          </div>
+
+          <div class="product-card">
+            <div class="product-img-wrap">
+    <img class="img-primary" src="/resources/views/frontend/nuevotema/reloj.png" alt="">
+              <img class="img-hover" src="/resources/views/frontend/nuevotema/relojj.png" alt="">
+              <div class="product-actions">
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="none" stroke="#333" stroke-width="2"/><path d="M12 4.5c5 0 9 7.5 9 7.5s-4 7.5-9 7.5-9-7.5-9-7.5 4-7.5 9-7.5z" fill="none" stroke="#333" stroke-width="2"/></svg></span>
+              </div>
+            </div>
+            <div class="product-info">
+              <p class="product-name">StyleMart</p>
+              <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+              <p class="product-price">312 Reseñas</p>
+            </div>
+            <div class="btn-wrap"><button class="btn-select">Visit Store</button></div>
+          </div>
+        </div>
+
+        <div class="carousel-page">
+          <div class="product-card">
+            <div class="product-img-wrap">
+            <img class="img-primary" src="/resources/views/frontend/nuevotema/reloj.png" alt="">
+              <img class="img-hover" src="/resources/views/frontend/nuevotema/relojj.png" alt="">
+              <div class="product-actions">
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="none" stroke="#333" stroke-width="2"/><path d="M12 4.5c5 0 9 7.5 9 7.5s-4 7.5-9 7.5-9-7.5-9-7.5 4-7.5 9-7.5z" fill="none" stroke="#333" stroke-width="2"/></svg></span>
+              </div>
+            </div>
+            <div class="product-info">
+              <p class="product-name">ProDeals</p>
+              <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star empty">★</span><span class="star empty">★</span></div>
+              <p class="product-price">54 Reseñas</p>
+            </div>
+            <div class="btn-wrap"><button class="btn-select">Visit Store</button></div>
+          </div>
+
+          <div class="product-card">
+            <div class="product-img-wrap">
+              <img class="img-primary" src="/resources/views/frontend/nuevotema/reloj.png" alt="">
+              <img class="img-hover" src="/resources/views/frontend/nuevotema/relojj.png" alt="">
+              <div class="product-actions">
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="none" stroke="#333" stroke-width="2"/><path d="M12 4.5c5 0 9 7.5 9 7.5s-4 7.5-9 7.5-9-7.5-9-7.5 4-7.5 9-7.5z" fill="none" stroke="#333" stroke-width="2"/></svg></span>
+              </div>
+            </div>
+            <div class="product-info">
+              <p class="product-name">EcoStore</p>
+              <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+              <p class="product-price">201 Reseñas</p>
+            </div>
+            <div class="btn-wrap"><button class="btn-select">Visit Store</button></div>
+          </div>
+
+          <div class="product-card">
+            <div class="product-img-wrap">
+       <img class="img-primary" src="/resources/views/frontend/nuevotema/reloj.png" alt="">
+              <img class="img-hover" src="/resources/views/frontend/nuevotema/relojj.png" alt="">
+              <div class="product-actions">
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="none" stroke="#333" stroke-width="2"/><path d="M12 4.5c5 0 9 7.5 9 7.5s-4 7.5-9 7.5-9-7.5-9-7.5 4-7.5 9-7.5z" fill="none" stroke="#333" stroke-width="2"/></svg></span>
+              </div>
+            </div>
+            <div class="product-info">
+              <p class="product-name">GoldShop</p>
+              <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star empty">★</span></div>
+              <p class="product-price">134 Reseñas</p>
+            </div>
+            <div class="btn-wrap"><button class="btn-select">Visit Store</button></div>
+          </div>
+
+          <div class="product-card">
+            <div class="product-img-wrap">
+                   <img class="img-primary" src="/resources/views/frontend/nuevotema/reloj.png" alt="">
+              <img class="img-hover" src="/resources/views/frontend/nuevotema/relojj.png" alt="">
+              <div class="product-actions">
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="none" stroke="#333" stroke-width="2"/><path d="M12 4.5c5 0 9 7.5 9 7.5s-4 7.5-9 7.5-9-7.5-9-7.5 4-7.5 9-7.5z" fill="none" stroke="#333" stroke-width="2"/></svg></span>
+              </div>
+            </div>
+            <div class="product-info">
+              <p class="product-name">SpeedMart</p>
+              <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+              <p class="product-price">178 Reseñas</p>
+            </div>
+            <div class="btn-wrap"><button class="btn-select">Visit Store</button></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <button class="carousel-btn carousel-btn-next" onclick="slide(this,1)">
+      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- ===== NUEVOS PRODUCTOS ===== -->
+<div class="section">
+  <div class="section-header">
+    <h2 class="section-title">Nuevos Productos</h2>
+    <a href="#" class="view-all">Ver todos los nuevos</a>
+  </div>
+  <div class="carousel-outer">
+    <button class="carousel-btn carousel-btn-prev" onclick="slide(this,-1)">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <div class="carousel-viewport">
+      <div class="carousel-track" data-current="0">
+
+        <div class="carousel-page">
+          <div class="product-card">
+            <div class="product-img-wrap">
+              <span class="badge-new">Nuevo</span>
+ <img class="img-primary" src="/resources/views/frontend/nuevotema/reloj.png" alt="">
+              <img class="img-hover" src="/resources/views/frontend/nuevotema/relojj.png" alt="">
+              <div class="product-actions">
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="none" stroke="#333" stroke-width="2"/><path d="M12 4.5c5 0 9 7.5 9 7.5s-4 7.5-9 7.5-9-7.5-9-7.5 4-7.5 9-7.5z" fill="none" stroke="#333" stroke-width="2"/></svg></span>
+              </div>
+            </div>
+            <div class="product-info">
+              <p class="product-name">MacBook Air M3 13" 256GB SSD</p>
+              <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+              <p class="product-price">$1,099.00</p>
+            </div>
+            <div class="btn-wrap"><button class="btn-select">Select Options</button></div>
+          </div>
+
+          <div class="product-card">
+            <div class="product-img-wrap">
+              <span class="badge-new">Nuevo</span>
+              <img class="img-primary" src="/resources/views/frontend/nuevotema/reloj.png" alt="">
+              <img class="img-hover" src="/resources/views/frontend/nuevotema/relojj.png" alt="">
+              <div class="product-actions">
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="none" stroke="#333" stroke-width="2"/><path d="M12 4.5c5 0 9 7.5 9 7.5s-4 7.5-9 7.5-9-7.5-9-7.5 4-7.5 9-7.5z" fill="none" stroke="#333" stroke-width="2"/></svg></span>
+              </div>
+            </div>
+            <div class="product-info">
+              <p class="product-name">Sony Alpha ZV-E10 Mirrorless Camera</p>
+              <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star empty">★</span></div>
+              <p class="product-price">$648.00</p>
+            </div>
+            <div class="btn-wrap"><button class="btn-select">Select Options</button></div>
+          </div>
+
+          <div class="product-card">
+            <div class="product-img-wrap">
+              <span class="badge-new">Nuevo</span>
+              <img class="img-primary" src="https://placehold.co/400x400/ffffff/cccccc?text=Speaker+Front" alt="">
+              <img class="img-hover" src="https://placehold.co/400x400/f0f0f0/999999?text=Speaker+Side" alt="">
+              <div class="product-actions">
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="none" stroke="#333" stroke-width="2"/><path d="M12 4.5c5 0 9 7.5 9 7.5s-4 7.5-9 7.5-9-7.5-9-7.5 4-7.5 9-7.5z" fill="none" stroke="#333" stroke-width="2"/></svg></span>
+              </div>
+            </div>
+            <div class="product-info">
+              <p class="product-name">JBL Charge 5 Portable Bluetooth Speaker</p>
+              <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+              <p class="product-price">$179.00</p>
+            </div>
+            <div class="btn-wrap"><button class="btn-select">Select Options</button></div>
+          </div>
+
+          <div class="product-card">
+            <div class="product-img-wrap">
+              <span class="badge-new">Nuevo</span>
+              <img class="img-primary" src="https://placehold.co/400x400/ffffff/cccccc?text=Drone+Front" alt="">
+              <img class="img-hover" src="https://placehold.co/400x400/f0f0f0/999999?text=Drone+Top" alt="">
+              <div class="product-actions">
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="none" stroke="#333" stroke-width="2"/><path d="M12 4.5c5 0 9 7.5 9 7.5s-4 7.5-9 7.5-9-7.5-9-7.5 4-7.5 9-7.5z" fill="none" stroke="#333" stroke-width="2"/></svg></span>
+              </div>
+            </div>
+            <div class="product-info">
+              <p class="product-name">DJI Mini 4 Pro Drone 4K Camera</p>
+              <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star empty">★</span></div>
+              <p class="product-price">$759.00</p>
+            </div>
+            <div class="btn-wrap"><button class="btn-select">Select Options</button></div>
+          </div>
+        </div>
+
+        <div class="carousel-page">
+          <div class="product-card">
+            <div class="product-img-wrap">
+              <span class="badge-new">Nuevo</span>
+              <img class="img-primary" src="https://placehold.co/400x400/ffffff/cccccc?text=iPad+Front" alt="">
+              <img class="img-hover" src="https://placehold.co/400x400/f0f0f0/999999?text=iPad+Back" alt="">
+              <div class="product-actions">
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="none" stroke="#333" stroke-width="2"/><path d="M12 4.5c5 0 9 7.5 9 7.5s-4 7.5-9 7.5-9-7.5-9-7.5 4-7.5 9-7.5z" fill="none" stroke="#333" stroke-width="2"/></svg></span>
+              </div>
+            </div>
+            <div class="product-info">
+              <p class="product-name">Apple iPad Pro 11" M4 WiFi 256GB</p>
+              <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+              <p class="product-price">$999.00</p>
+            </div>
+            <div class="btn-wrap"><button class="btn-select">Select Options</button></div>
+          </div>
+
+          <div class="product-card">
+            <div class="product-img-wrap">
+              <span class="badge-new">Nuevo</span>
+              <img class="img-primary" src="https://placehold.co/400x400/ffffff/cccccc?text=Pixel+Front" alt="">
+              <img class="img-hover" src="https://placehold.co/400x400/f0f0f0/999999?text=Pixel+Back" alt="">
+              <div class="product-actions">
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="none" stroke="#333" stroke-width="2"/><path d="M12 4.5c5 0 9 7.5 9 7.5s-4 7.5-9 7.5-9-7.5-9-7.5 4-7.5 9-7.5z" fill="none" stroke="#333" stroke-width="2"/></svg></span>
+              </div>
+            </div>
+            <div class="product-info">
+              <p class="product-name">Google Pixel 9 Pro 128GB 5G</p>
+              <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star empty">★</span></div>
+              <p class="product-price">$899.00</p>
+            </div>
+            <div class="btn-wrap"><button class="btn-select">Select Options</button></div>
+          </div>
+
+          <div class="product-card">
+            <div class="product-img-wrap">
+              <span class="badge-new">Nuevo</span>
+              <img class="img-primary" src="https://placehold.co/400x400/ffffff/cccccc?text=AirPods+Front" alt="">
+              <img class="img-hover" src="https://placehold.co/400x400/f0f0f0/999999?text=AirPods+Case" alt="">
+              <div class="product-actions">
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="none" stroke="#333" stroke-width="2"/><path d="M12 4.5c5 0 9 7.5 9 7.5s-4 7.5-9 7.5-9-7.5-9-7.5 4-7.5 9-7.5z" fill="none" stroke="#333" stroke-width="2"/></svg></span>
+              </div>
+            </div>
+            <div class="product-info">
+              <p class="product-name">Apple AirPods Pro 2nd Generation</p>
+              <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+              <p class="product-price">$249.00</p>
+            </div>
+            <div class="btn-wrap"><button class="btn-select">Select Options</button></div>
+          </div>
+
+          <div class="product-card">
+            <div class="product-img-wrap">
+              <span class="badge-new">Nuevo</span>
+              <img class="img-primary" src="https://placehold.co/400x400/ffffff/cccccc?text=Monitor+Front" alt="">
+              <img class="img-hover" src="https://placehold.co/400x400/f0f0f0/999999?text=Monitor+Back" alt="">
+              <div class="product-actions">
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span>
+                <span class="action-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="none" stroke="#333" stroke-width="2"/><path d="M12 4.5c5 0 9 7.5 9 7.5s-4 7.5-9 7.5-9-7.5-9-7.5 4-7.5 9-7.5z" fill="none" stroke="#333" stroke-width="2"/></svg></span>
+              </div>
+            </div>
+            <div class="product-info">
+              <p class="product-name">LG 27" UltraWide 4K Nano IPS Monitor</p>
+              <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star empty">★</span></div>
+              <p class="product-price">$549.00</p>
+            </div>
+            <div class="btn-wrap"><button class="btn-select">Select Options</button></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <button class="carousel-btn carousel-btn-next" onclick="slide(this,1)">
+      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+  </div>
+</div>
+
+
+
 <script>
-let currentSlide = 0;
-const slides = document.querySelectorAll('.slide');
-const dots   = document.querySelectorAll('.dot');
-
-function showSlide(n) {
-  slides[currentSlide].classList.remove('active');
-  dots[currentSlide].classList.remove('active');
-  currentSlide = (n + slides.length) % slides.length;
-  slides[currentSlide].classList.add('active');
-  dots[currentSlide].classList.add('active');
-}
-
-function changeSlide(dir) { showSlide(currentSlide + dir); }
-function goSlide(n) { showSlide(n); }
-
-setInterval(() => changeSlide(1), 4500);
+  function slide(btn, dir) {
+    const outer   = btn.closest('.carousel-outer');
+    const track   = outer.querySelector('.carousel-track');
+    const total   = track.querySelectorAll('.carousel-page').length;
+    let current   = parseInt(track.dataset.current) || 0;
+    current       = (current + dir + total) % total;
+    track.dataset.current = current;
+    track.style.transform = `translateX(-${current * 100}%)`;
+  }
 </script>
+
 </body>
 </html>

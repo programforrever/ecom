@@ -1549,8 +1549,7 @@ if (!function_exists('get_slider_images')) {
 if (!function_exists('get_featured_flash_deal')) {
     function get_featured_flash_deal()
     {
-        $flash_deal_query = FlashDeal::query();
-        $featured_flash_deal = $flash_deal_query->isActiveAndFeatured()
+        $featured_flash_deal = FlashDeal::where('status', 1)
             ->where('start_date', '<=', strtotime(date('Y-m-d H:i:s')))
             ->where('end_date', '>=', strtotime(date('Y-m-d H:i:s')))
             ->first();

@@ -120,8 +120,16 @@ class DigitalProductController extends Controller
         }
 
         // Product Translations
+        $lang = $request->lang ?? default_language();
+        if (!$lang) {
+            $lang = 'en';
+        }
+        
         ProductTranslation::updateOrCreate(
-            $request->only(['lang', 'product_id']),
+            [
+                'lang' => $lang,
+                'product_id' => $product->id
+            ],
             $request->only(['name', 'description'])
         );
 

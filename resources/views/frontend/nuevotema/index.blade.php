@@ -66,26 +66,32 @@
         }
 
         .slide {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            display: none;
+            position: absolute !important;
+            width: 100% !important;
+            height: 100% !important;
+            top: 0 !important;
+            left: 0 !important;
+            display: none !important;
             align-items: stretch;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            z-index: 0 !important;
         }
 
         .slide.active {
-            display: flex;
+            display: flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            z-index: 1 !important;
         }
 
         .slide-content {
-            flex: 0 0 500px;
+            flex: 0 0 850px;
             z-index: 2;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            padding: 40px 20px 40px 100px;
+            padding: 40px 80px 40px 60px;
             min-width: 0;
         }
 
@@ -95,13 +101,13 @@
             align-items: stretch;
             overflow: hidden;
             min-width: 0;
-            margin-left: 40px;
+            margin-left: 0;
         }
 
         .slide-image img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
             object-position: center;
             display: block;
         }
@@ -158,9 +164,10 @@
             font-size: 15px;
             color: #aaa;
             text-decoration: line-through;
-            margin-bottom: 4px;
+            margin-right: 8px;
             animation: itemSlideIn 0.5s ease forwards 0.1s;
             opacity: 0;
+            display: inline;
         }
 
         .slide-title {
@@ -173,13 +180,19 @@
             opacity: 0;
         }
 
+        .slide-prices {
+            display: flex;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
         .slide-new {
             font-size: 22px;
             color: #a90000;
             font-weight: 700;
-            margin-bottom: 24px;
             animation: itemSlideIn 0.5s ease forwards 0.4s;
             opacity: 0;
+            display: inline;
         }
 
         .slide-btn {
@@ -366,12 +379,484 @@
             }
         }
 
+
+
         /* =============================================
-           ZOOM 110% - Make everything 110% bigger
+           UTILITY CLASSES - Heights
         ============================================= */
-        body {
+        .h-140px {
+            height: 140px !important;
+        }
+        
+        .h-md-200px {
+            height: 200px !important;
+        }
+        
+        .h-35px {
+            height: 35px !important;
+        }
+        
+        .h-40px {
+            height: 40px !important;
+        }
+        
+        .h-100px {
+            height: 100px !important;
+        }
+
+        /* =============================================
+           PRODUCT CARD SIZE - Wider cards, sin espacios
+        ============================================= */
+        .carousel-box {
+            width: 100%;
+            border: none !important;
+            border-color: transparent !important;
+            padding: 0 !important;
+            gap: 0 !important;
+        }
+        
+        .carousel-box:hover {
+            border: none !important;
+            border-color: transparent !important;
+            outline: none !important;
+        }
+
+        .aiz-carousel .carousel-box {
+            padding: 0 !important;
+            gap: 0 !important;
+            margin: 0 !important;
+        }
+        
+        /* Remover animación de outline en hover */
+        .carousel-box.hov-animate-outline:hover {
+            outline: none !important;
+            border: none !important;
+        }
+        
+        /* Asegurar que el carousel no tenga gutters */
+        .aiz-carousel {
+            gap: 0 !important;
+        }
+        
+        .aiz-carousel.sm-gutters-16 {
+            gap: 0 !important;
+        }
+        
+        /* Banner Section 2 - Espacio entre banners */
+        .aiz-carousel.gutters-16 {
+            gap: 16px !important;
+        }
+        
+        .aiz-carousel.gutters-16 .slick-track {
+            gap: 16px !important;
+        }
+        
+        .aiz-carousel.gutters-16 .slick-slide {
+            padding: 0 8px !important;
+        }
+        
+        /* Slick carousel slides sin espacios */
+        .slick-slide {
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        
+        .slick-track {
+            gap: 0 !important;
+        }
+
+        /* =============================================
+           PRODUCT CARD ANIMATIONS - Premium Hover Effects (a.html style)
+        ============================================= */
+        
+        /* Card Base - Flex layout */
+        .product-card {
+            position: relative;
+            overflow: hidden;
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            min-height: 350px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+        }
+
+        .product-card:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15) !important;
+            transform: translateY(-4px);
+            border: 1px solid #e0e0e0;
+            outline: none !important;
+            border-color: #e0e0e0 !important;
+        }
+
+        /* Image Container */
+        .product-img-wrap {
+            position: relative;
+            overflow: hidden;
+            background: #fafafa;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 140px;
+            animation: skeleton-loading 1s linear infinite alternate;
+        }
+
+        .product-img-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            text-decoration: none;
+        }
+        
+        .product-img-container:hover {
+            text-decoration: none;
+        }
+
+        /* Skeleton loader animation */
+        @keyframes skeleton-loading {
+            0% {
+                background-color: #f0f0f0;
+            }
+            100% {
+                background-color: #e0e0e0;
+            }
+        }
+
+        /* Remover animación cuando las imágenes están cargadas */
+        .product-img-wrap.loaded {
+            animation: none;
+        }
+
+        .product-img-wrap img.lazyloaded {
+            animation: fade-in 0.3s ease-in-out;
+        }
+
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* PRIMARY IMAGE */
+        .product-img.img-primary {
+            visibility: visible;
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1;
+            position: relative;
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            display: block;
+            object-fit: contain;
+        }
+
+        /* HOVER IMAGE */
+        .product-img.img-hover {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            visibility: hidden;
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(1.08);
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: 100%;
+            transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s 0.35s;
+            z-index: 2;
+            display: block;
+            object-fit: contain;
+        }
+
+        /* Image swap on hover */
+        .product-card:hover .product-img.img-primary {
+            visibility: hidden;
+            opacity: 0;
+            transform: scale(1.08);
+            z-index: 1;
+            transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s 0.35s;
+        }
+
+        .product-card:hover .product-img.img-hover {
+            visibility: visible;
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+            z-index: 2;
+            transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s;
+        }
+
+        /* ACTIONS (WISHLIST, COMPARE) */
+        .product-card .aiz-p-hov-icon {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            opacity: 0;
+            transform: translateX(15px);
+            transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 5;
+        }
+
+        .product-card:hover .aiz-p-hov-icon {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .product-card .aiz-p-hov-icon a {
+            width: 36px;
+            height: 36px;
+            background: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+            transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+        }
+
+        .product-card .aiz-p-hov-icon a:hover {
+            background: var(--primary);
+            box-shadow: 0 5px 16px rgba(0, 0, 0, 0.2);
             transform: scale(1.1);
-            transform-origin: top center;
+        }
+
+        .product-card .aiz-p-hov-icon svg {
+            stroke: #333;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        /* Product Info Section */
+        .product-card .flex-grow-1 {
+            flex-grow: 1;
+            padding: 12px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* PRODUCT NAME */
+        .product-card h3 {
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
+            margin-bottom: 8px;
+            margin-top: 0;
+            font-size: 13px;
+            line-height: 1.4;
+            color: #0961b3;
+        }
+
+        .product-card:hover h3 {
+            opacity: 1;
+        }
+        
+        /* PRODUCT RATING / STARS */
+        .product-card .text-warning {
+            color: #ffc107 !important;
+            font-size: 12px;
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+        
+        .product-card .text-warning i {
+            display: inline-block;
+            margin: 0 1px;
+        }
+
+        /* PRICES */
+        .product-card .fs-14 {
+            opacity: 0.85;
+            transition: opacity 0.3s ease;
+            margin-bottom: 0;
+            margin-top: auto;
+            font-size: 16px;
+            font-weight: 700;
+            color: #a90000;
+        }
+
+        .product-card:hover .fs-14 {
+            opacity: 1;
+        }
+
+        /* ADD TO CART BUTTON - At bottom, slide up */
+        .cart-btn {
+            position: relative;
+            width: 100%;
+            height: 40px;
+            background: var(--primary) !important;
+            color: white !important;
+            border: none;
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+            transform: translateY(100%);
+            opacity: 0;
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease, background 0.25s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .product-card:hover .cart-btn {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .cart-btn:hover {
+            background: var(--hov-primary) !important;
+        }
+
+        .cart-btn-text {
+            font-size: 11px;
+            margin-bottom: 2px;
+        }
+        
+        /* Discount Tag - Sobre las imágenes */
+        .product-card .absolute-top-left {
+            z-index: 10 !important;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        /* =============================================
+           BANNER SECTION 3 - Different widths, SAME HEIGHT
+        ============================================= */
+        .banner-section-3.aiz-carousel {
+            display: flex !important;
+            height: 250px !important;
+            min-height: 250px !important;
+        }
+
+        .banner-section-3 .slick-track {
+            display: flex !important;
+            width: 100% !important;
+            height: 250px !important;
+            align-items: stretch !important;
+            gap: 20px !important;
+        }
+
+        .banner-section-3 .slick-slide {
+            height: 250px !important;
+            min-height: 250px !important;
+            display: flex !important;
+            align-items: stretch !important;
+            padding: 0 !important;
+        }
+
+        .banner-section-3 .slick-slide > div {
+            height: 100% !important;
+            display: flex !important;
+            align-items: stretch !important;
+        }
+
+        .banner-section-3 .slick-slide:first-child {
+            width: 28% !important;
+            flex: 0 0 28% !important;
+        }
+
+        .banner-section-3 .slick-slide:nth-child(2) {
+            width: 72% !important;
+            flex: 0 0 72% !important;
+        }
+
+        .banner-section-3 .carousel-box {
+            width: 100% !important;
+            height: 250px !important;
+            min-height: 250px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        .banner-section-3 .carousel-box img {
+            width: 100% !important;
+            height: 250px !important;
+            min-height: 250px !important;
+            object-fit: cover !important;
+            object-position: center !important;
+            display: block !important;
+        }
+
+        @media (max-width: 992px) {
+            .banner-section-3.aiz-carousel {
+                height: 250px !important;
+                min-height: 250px !important;
+            }
+
+            .banner-section-3 .slick-track {
+                height: 250px !important;
+                gap: 20px !important;
+            }
+
+            .banner-section-3 .slick-slide {
+                height: 250px !important;
+                min-height: 250px !important;
+            }
+
+            .banner-section-3 .carousel-box {
+                height: 250px !important;
+                min-height: 250px !important;
+            }
+
+            .banner-section-3 .carousel-box img {
+                height: 250px !important;
+                min-height: 250px !important;
+            }
+
+            .banner-section-3 .slick-slide:first-child,
+            .banner-section-3 .slick-slide:nth-child(2) {
+                width: 100% !important;
+                flex: 0 0 100% !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .banner-section-3.aiz-carousel {
+                height: 200px !important;
+                min-height: 200px !important;
+            }
+
+            .banner-section-3 .slick-track {
+                height: 200px !important;
+                gap: 15px !important;
+            }
+
+            .banner-section-3 .slick-slide {
+                height: 200px !important;
+                min-height: 200px !important;
+            }
+
+            .banner-section-3 .carousel-box {
+                height: 200px !important;
+                min-height: 200px !important;
+            }
+
+            .banner-section-3 .carousel-box img {
+                height: 200px !important;
+                min-height: 200px !important;
+            }
         }
     </style>
 
@@ -390,7 +875,7 @@
                 <!-- ② SLIDER full width -->
                 <div class="home-slider-fullwidth">
                     <div class="slider-main">
-                        <div class="slides-container">
+                        <div class="slides-container" id="hero-slides-container">
                             @if (get_setting('home_slider_images') != null)
                                 @php
                                     $decoded_slider_images = json_decode(get_setting('home_slider_images', null, $lang), true);
@@ -406,9 +891,11 @@
                                     <div class="slide {{ $key == 0 ? 'active' : '' }}">
                                         <div class="slide-content">
                                             <span class="slide-tag">{{ $slider_tags[$key] ?? translate('Special Offer') }}</span>
-                                            <span class="slide-old">{{ $slider_old_prices[$key] ?? '$99.99' }}</span>
                                             <h1 class="slide-title">{{ $slider_titles[$key] ?? translate('Amazing Product') }}</h1>
-                                            <span class="slide-new">{{ $slider_new_prices[$key] ?? '$49.99' }}</span>
+                                            <div class="slide-prices">
+                                                <span class="slide-old">{{ $slider_old_prices[$key] ?? '$99.99' }}</span>
+                                                <span class="slide-new">{{ $slider_new_prices[$key] ?? '$49.99' }}</span>
+                                            </div>
                                             <a href="{{ json_decode(get_setting('home_slider_links'), true)[$key] ?? '#' }}" class="slide-btn">{{ $slider_btn_texts[$key] ?? translate('Shop Now') }}</a>
                                         </div>
                                         <div class="slide-image">
@@ -438,7 +925,7 @@
                         <button class="arrow-btn prev" id="sliderPrevBtn" onclick="changeSlide(-1)">&#10094;</button>
                         <button class="arrow-btn next" onclick="changeSlide(1)">&#10095;</button>
 
-                        <div class="dots-container" id="sliderDots">
+                        <div class="dots-container" id="hero-dots-container">
                             @if (get_setting('home_slider_images') != null)
                                 @foreach ($sliders as $key => $slider)
                                     <span class="dot {{ $key == 0 ? 'active' : '' }}" onclick="goSlide({{ $key }})"></span>
@@ -467,13 +954,16 @@
         }
 
         function adjustSliderLayout() {
+            const heroContainer = document.getElementById('hero-slides-container');
             const menuEl = document.getElementById('bannerCategoryMenu');
             const prevBtn = document.getElementById('sliderPrevBtn');
-            const dotsEl = document.getElementById('sliderDots');
-            const slides = document.querySelectorAll('.slide');
+            const dotsEl = document.getElementById('hero-dots-container');
+            
+            // Solo obtener los slides del hero, no todos
+            const slideContents = heroContainer ? Array.from(heroContainer.querySelectorAll('.slide-content')) : [];
 
             if (!menuEl || window.getComputedStyle(menuEl).display === 'none') {
-                slides.forEach(s => s.style.paddingLeft = '0');
+                slideContents.forEach(s => s.style.paddingLeft = '60px');
                 if (prevBtn) prevBtn.style.left = '10px';
                 if (dotsEl) {
                     dotsEl.style.left = '50%';
@@ -484,12 +974,13 @@
 
             const totalPadding = getMenuOffset();
 
-            slides.forEach(s => {
-                s.style.paddingLeft = totalPadding + 'px';
+            // Ajustar padding de slide-content basado en el ancho del menú
+            slideContents.forEach(s => {
+                s.style.paddingLeft = (totalPadding + 40) + 'px';
             });
 
             if (prevBtn) {
-                prevBtn.style.left = '15px';
+                prevBtn.style.left = (totalPadding + 15) + 'px';
             }
 
             if (dotsEl) {
@@ -521,112 +1012,78 @@
         setTimeout(adjustAllLayouts, 500);
 
         // =============================================
-        // Slider logic
+        // Skeleton Loading - Remover cuando las imágenes cargan
+        // =============================================
+        document.addEventListener('lazyloaded', function(e) {
+            const img = e.target;
+            const imgWrap = img.closest('.product-img-wrap');
+            if (imgWrap) {
+                imgWrap.classList.add('loaded');
+            }
+        });
+
+        // Detectar imágenes que ya estaban cargadas
+        document.querySelectorAll('.product-img-wrap img').forEach(img => {
+            if (img.complete || img.naturalHeight !== 0) {
+                img.closest('.product-img-wrap')?.classList.add('loaded');
+            }
+        });
+
+        // =============================================
+        // Slider Hero - Funciones del carrusel
         // =============================================
         let currentSlide = 0;
-        const slides = document.querySelectorAll('.slide');
-        const dots   = document.querySelectorAll('.dot');
+        let slides = [];
+        let dots = [];
 
         function showSlide(n) {
-            slides.forEach(s => s.classList.remove('active'));
-            dots.forEach(d => d.classList.remove('active'));
-            n = (n + slides.length) % slides.length;
-            currentSlide = n;
-            if (slides[n]) slides[n].classList.add('active');
-            if (dots[n])   dots[n].classList.add('active');
+            if (slides.length === 0) return;
+            
+            // Calcular indice válido
+            currentSlide = ((n % slides.length) + slides.length) % slides.length;
+            
+            // Remover active de todos
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+            
+            // Añadir active al slide actual
+            slides[currentSlide].classList.add('active');
+            
+            if (dots[currentSlide]) {
+                dots[currentSlide].classList.add('active');
+            }
         }
 
-        function changeSlide(dir) { showSlide(currentSlide + dir); }
-        function goSlide(n)       { showSlide(n); }
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
 
-        setInterval(() => changeSlide(1), 4500);
+        function goSlide(n) {
+            showSlide(n);
+        }
+
+        // Inicializar slider cuando el DOM está listo
+        document.addEventListener('DOMContentLoaded', function() {
+            const heroContainer = document.getElementById('hero-slides-container');
+            const heroDots = document.getElementById('hero-dots-container');
+            
+            if (heroContainer && heroDots) {
+                // Obtener solo los slides directos dentro del contenedor
+                slides = Array.from(heroContainer.children).filter(el => el.classList.contains('slide'));
+                dots = Array.from(heroDots.children).filter(el => el.classList.contains('dot'));
+                
+                if (slides.length > 0) {
+                    // Mostrar primer slide
+                    showSlide(0);
+                    
+                    // Auto-advance slides cada 5 segundos
+                    setInterval(() => changeSlide(1), 5000);
+                }
+            }
+        });
     </script>
 
-    <!-- Flash Deal -->
-    @php
-        $flash_deal = get_featured_flash_deal();
-    @endphp
-    @if ($flash_deal != null)
-        <section class="mb-2 mb-md-3 mt-2 mt-md-3 section-offset" id="flash_deal">
-            <div class="container-fluid px-0">
-                <div class="container">
-                    <div class="d-flex flex-wrap mb-2 mb-md-3 align-items-baseline justify-content-between">
-                        <h3 class="fs-16 fs-md-20 fw-700 mb-2 mb-sm-0">
-                            <span class="d-inline-block">{{ translate('Flash Sale') }}</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="24" viewBox="0 0 16 24" class="ml-3">
-                                <path d="M30.953,13.695a.474.474,0,0,0-.424-.25h-4.9l3.917-7.81a.423.423,0,0,0-.028-.428.477.477,0,0,0-.4-.207H21.588a.473.473,0,0,0-.429.263L15.041,18.151a.423.423,0,0,0,.034.423.478.478,0,0,0,.4.2h4.593l-2.229,9.683a.438.438,0,0,0,.259.5.489.489,0,0,0,.571-.127L30.9,14.164a.425.425,0,0,0,.054-.469Z" transform="translate(-15 -5)" fill="#fcc201"/>
-                            </svg>
-                        </h3>
-                        <div>
-                            <div class="text-dark d-flex align-items-center mb-0">
-                                <a href="{{ route('flash-deals') }}" class="fs-10 fs-md-12 fw-700 text-reset has-transition opacity-60 hov-opacity-100 hov-text-primary animate-underline-primary mr-3">{{ translate('View All Flash Sale') }}</a>
-                                <span class="border-left border-soft-light border-width-2 pl-3">
-                                    <a href="{{ route('flash-deal-details', $flash_deal->slug) }}" class="fs-10 fs-md-12 fw-700 text-reset has-transition opacity-60 hov-opacity-100 hov-text-primary animate-underline-primary">{{ translate('View All Products from This Flash Sale') }}</a>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="bg-white mb-3 d-md-none">
-                        <div class="aiz-count-down-circle" end-date="{{ date('Y/m/d H:i:s', $flash_deal->end_date) }}"></div>
-                    </div>
-
-                    <div class="row gutters-5 gutters-md-16">
-                        <div class="col-xxl-4 col-lg-5 col-6 h-200px h-md-400px h-lg-475px">
-                            <div class="h-100 w-100 w-xl-auto"
-                                style="background-image: url('{{ uploaded_asset($flash_deal->banner) }}'); background-size: cover; background-position: center center;">
-                                <div class="py-5 px-md-3 px-xl-5 d-none d-md-block">
-                                    <div class="bg-white">
-                                        <div class="aiz-count-down-circle" end-date="{{ date('Y/m/d H:i:s', $flash_deal->end_date) }}"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xxl-8 col-lg-7 col-6">
-                            @php $flash_deal_products = get_flash_deal_products($flash_deal->id); @endphp
-                            <div class="aiz-carousel border-top @if (count($flash_deal_products) > 8) border-right @endif arrow-inactive-none arrow-x-0"
-                                data-items="5" data-xxl-items="5" data-xl-items="3.5" data-lg-items="3" data-md-items="2"
-                                data-sm-items="2.5" data-xs-items="2" data-arrows="true" data-dots="false">
-                                @php $init = 0; $end = 1; @endphp
-                                @for ($i = 0; $i < 5; $i++)
-                                    <div class="carousel-box @if ($i == 0) border-left @endif">
-                                        @foreach ($flash_deal_products as $key => $flash_deal_product)
-                                            @if ($key >= $init && $key <= $end)
-                                                @if ($flash_deal_product->product != null && $flash_deal_product->product->published != 0)
-                                                    @php
-                                                        $product_url = route('product', $flash_deal_product->product->slug);
-                                                        if ($flash_deal_product->product->auction_product == 1) {
-                                                            $product_url = route('auction-product', $flash_deal_product->product->slug);
-                                                        }
-                                                    @endphp
-                                                    <div class="h-100px h-md-200px h-lg-auto flash-deal-item position-relative text-center border-bottom @if ($i != 4) border-right @endif has-transition hov-shadow-out z-1">
-                                                        <a href="{{ $product_url }}" class="d-block py-md-3 overflow-hidden hov-scale-img"
-                                                            title="{{ $flash_deal_product->product->getTranslation('name') }}">
-                                                            <img src="{{ get_image($flash_deal_product->product->thumbnail) }}"
-                                                                class="lazyload h-60px h-md-100px h-lg-140px mw-100 mx-auto has-transition"
-                                                                alt="{{ $flash_deal_product->product->getTranslation('name') }}"
-                                                                onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
-                                                            <div class="fs-10 fs-md-14 mt-md-3 text-center h-md-48px has-transition overflow-hidden pt-md-4 flash-deal-price">
-                                                                <span class="d-block text-primary fw-700">{{ home_discounted_base_price($flash_deal_product->product) }}</span>
-                                                                @if (home_base_price($flash_deal_product->product) != home_discounted_base_price($flash_deal_product->product))
-                                                                    <del class="d-block fw-400 text-secondary">{{ home_base_price($flash_deal_product->product) }}</del>
-                                                                @endif
-                                                            </div>
-                                                        </a>
-                                                    </div>
-                                                @endif
-                                            @endif
-                                        @endforeach
-                                        @php $init += 2; $end += 2; @endphp
-                                    </div>
-                                @endfor
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    @endif
 
     <!-- Section: Banner 1 Left + Featured/Best/New Products Right -->
     <div class="mb-2 mb-md-3 mt-2 mt-md-3">
@@ -659,6 +1116,14 @@
                             </div>
                         </div>
                     @endif
+
+                    <!-- Today's Deals Card -->
+                    @php $flash_deal = get_featured_flash_deal(); @endphp
+                    @if ($flash_deal != null)
+                        <div class="mb-2 mb-md-3">
+                            @include('frontend.'.get_setting('homepage_select').'.partials.todays_deals_card')
+                        </div>
+                    @endif
                 </div>
 
                 <!-- Right: Featured Products + Best Selling + New Products (remaining space) -->
@@ -670,7 +1135,7 @@
                         <!-- Banner Section 2 -->
                         @php $homeBanner2Images = get_setting('home_banner2_images', null, $lang); @endphp
                         @if ($homeBanner2Images != null)
-                            <div class="mb-2 mb-md-3">
+                            <div class="mb-2 mb-md-3 px-3">
                                 @php
                                     $banner_2_imags = json_decode($homeBanner2Images);
                                     $data_md = count($banner_2_imags) >= 2 ? 2 : 1;
@@ -744,12 +1209,12 @@
                         <!-- Banner Section 3 -->
                         @php $homeBanner3Images = get_setting('home_banner3_images', null, $lang); @endphp
                         @if ($homeBanner3Images != null)
-                            <div class="mb-2 mb-md-3">
+                            <div class="mb-2 mb-md-3 px-3">
                                 @php
                                     $banner_3_imags = json_decode($homeBanner3Images);
                                     $data_md = count($banner_3_imags) >= 2 ? 2 : 1;
                                 @endphp
-                                <div class="aiz-carousel gutters-16 overflow-hidden arrow-inactive-none arrow-dark arrow-x-15"
+                                <div class="banner-section-3 aiz-carousel gutters-16 overflow-hidden arrow-inactive-none arrow-dark arrow-x-15"
                                     data-items="{{ count($banner_3_imags) }}" data-xxl-items="{{ count($banner_3_imags) }}"
                                     data-xl-items="{{ count($banner_3_imags) }}" data-lg-items="{{ $data_md }}"
                                     data-md-items="{{ $data_md }}" data-sm-items="1" data-xs-items="1" data-arrows="true"

@@ -4,8 +4,8 @@
 #/app/Exceptions
 #/node_modules
 #/public/hot
-#/public/storage
-#/public/uploads
+/public/storage
+/public/uploads
 #/storage/*.key
 #/storage/debugbar
 #/vendor
@@ -20,7 +20,7 @@
 #.DS_Store
 #.idea/
 
-#updates/
+updates/
 #composer.lock
 #*.lock
 #resources/lang/en.json

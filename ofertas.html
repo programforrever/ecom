@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Today's Deals</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+
+  /* ── Card ── */
+  .deals-card {
+    width: 300px;
+    border: 2px solid #e8c83a;
+    border-radius: 6px;
+    background: #fff;
+    padding: 18px 18px 22px;
+    position: relative;
+    user-select: none;
+  }
+
+  /* ── Title ── */
+  .deals-title {
+    text-align: center;
+    font-size: 17px;
+    font-weight: 800;
+    color: #222;
+    margin-bottom: 16px;
+    letter-spacing: 0.3px;
+  }
+
+  /* ── Slider ── */
+  .slider-wrapper {
+    position: relative;
+    width: 100%;
+  }
+
+  .slider-track {
+    overflow: hidden;
+    width: 100%;
+    border-radius: 4px;
+  }
+
+  .slides {
+    display: flex;
+    transition: transform 0.42s cubic-bezier(.4,0,.2,1);
+  }
+
+  .slide {
+    min-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ── Image area ── */
+  .img-wrap {
+    position: relative;
+    width: 264px;
+    height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+  }
+
+  .img-wrap img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  /* discount badge */
+  .badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: #e74c3c;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 800;
+    border-radius: 50%;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+    box-shadow: 0 2px 6px rgba(0,0,0,.18);
+  }
+
+  /* ── Nav buttons ── */
+  .nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #fff;
+    border: 2px solid #ddd;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    color: #555;
+    z-index: 10;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .22s, background .2s, border-color .2s, color .2s;
+    padding: 0;
+  }
+  .nav-btn.prev { left: -15px; }
+  .nav-btn.next { right: -15px; }
+
+  /* show BOTH on hover over the whole card */
+  .deals-card:hover .nav-btn {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .nav-btn:hover {
+    background: #e8c83a;
+    border-color: #e8c83a;
+    color: #fff;
+  }
+
+  /* ── Product info ── */
+  .product-info {
+    text-align: center;
+    margin-top: 14px;
+    width: 100%;
+    padding: 0 4px;
+  }
+
+  .product-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: #2563eb;
+    line-height: 1.45;
+    margin-bottom: 8px;
+  }
+
+  /* stars */
+  .stars {
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: center;
+    gap: 2px;
+  }
+  .star {
+    width: 14px;
+    height: 14px;
+    fill: #ccc;
+  }
+
+  /* price */
+  .price-row {
+    font-size: 13px;
+    margin-bottom: 2px;
+  }
+  .old-price {
+    color: #999;
+    text-decoration: line-through;
+    margin-right: 5px;
+    font-size: 12px;
+  }
+  .new-price {
+    color: #e74c3c;
+    font-weight: 800;
+    font-size: 16px;
+  }
+
+  /* ── Countdown ── */
+  .countdown {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 14px;
+  }
+
+  .count-block {
+    background: #fafafa;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    padding: 5px 8px;
+    min-width: 52px;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06);
+  }
+
+  .count-num {
+    display: block;
+    font-size: 15px;
+    font-weight: 800;
+    color: #222;
+  }
+
+  .count-label {
+    font-size: 9px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+  }
+
+  /* ── Dots ── */
+  .dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 12px;
+  }
+  .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #ddd;
+    transition: background .3s;
+    cursor: pointer;
+  }
+  .dot.active { background: #e8c83a; }
+</style>
+</head>
+<body>
+
+<div class="deals-card">
+  <div class="deals-title">Today's Deals</div>
+
+  <div class="slider-wrapper">
+    <button class="nav-btn prev" onclick="changeSlide(-1)">&#8249;</button>
+    <button class="nav-btn next" onclick="changeSlide(1)">&#8250;</button>
+
+    <div class="slider-track">
+      <div class="slides" id="slides">
+
+        <!-- Slide 1 -->
+        <div class="slide">
+          <div class="img-wrap">
+            <span class="badge">-14%</span>
+            <img src="https://coderplace.net/woo/WCM02/WCM02045/WP04/wp-content/uploads/2023/06/10_a1.jpg" alt="Over Ear Stereo Wireless Headset" />
+          </div>
+          <div class="product-info">
+            <div class="product-name">Over Ear Stereo Wireless Headset 40H Playtime</div>
+            <div class="stars">
+              <svg class="star" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+              <svg class="star" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+              <svg class="star" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+              <svg class="star" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+              <svg class="star" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+            </div>
+            <div class="price-row">
+              <span class="old-price">$145.00</span>
+              <span class="new-price">$125.00</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="slide">
+          <div class="img-wrap">
+            <span class="badge">-20%</span>
+            <img src="https://coderplace.net/woo/WCM02/WCM02045/WP04/wp-content/uploads/2019/01/14_a1.jpg" alt="Apple AirPods Max" />
+          </div>
+          <div class="product-info">
+            <div class="product-name">Apple AirPods Max, Over Ear Headphones</div>
+            <div class="stars">
+              <svg class="star" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+              <svg class="star" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+              <svg class="star" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+              <svg class="star" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+              <svg class="star" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+            </div>
+            <div class="price-row">
+              <span class="old-price">$49.00</span>
+              <span class="new-price">$39.00</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="slide">
+          <div class="img-wrap">
+            <span class="badge">-29%</span>
+            <img src="https://coderplace.net/woo/WCM02/WCM02045/WP04/wp-content/uploads/2019/01/05_a1.jpg" alt="Wireless Earbud Bluetooth" />
+          </div>
+          <div class="product-info">
+            <div class="product-name">Wireless Earbud Bluetooth Earphones with Deep Bass</div>
+            <div class="stars">
+              <svg class="star" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+              <svg class="star" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+              <svg class="star" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+              <svg class="star" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+              <svg class="star" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+            </div>
+            <div class="price-row">
+              <span class="old-price">$69.00</span>
+              <span class="new-price">$49.00</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Countdown -->
+  <div class="countdown">
+    <div class="count-block"><span class="count-num" id="days">209</span><span class="count-label">Day</span></div>
+    <div class="count-block"><span class="count-num" id="hours">04</span><span class="count-label">Hour</span></div>
+    <div class="count-block"><span class="count-num" id="mins">16</span><span class="count-label">Min</span></div>
+    <div class="count-block"><span class="count-num" id="secs">58</span><span class="count-label">Sec</span></div>
+  </div>
+
+  <!-- Dots -->
+  <div class="dots" id="dots">
+    <div class="dot active" onclick="goTo(0)"></div>
+    <div class="dot" onclick="goTo(1)"></div>
+    <div class="dot" onclick="goTo(2)"></div>
+  </div>
+</div>
+
+<script>
+  const TOTAL = 3;
+  let current = 0;
+  const slidesEl = document.getElementById('slides');
+  const dotsEl   = document.getElementById('dots');
+
+  function goTo(idx) {
+    current = (idx + TOTAL) % TOTAL;
+    slidesEl.style.transform = translateX(-${current * 100}%);
+    [...dotsEl.children].forEach((d, i) => d.classList.toggle('active', i === current));
+  }
+
+  function changeSlide(dir) {
+    goTo(current + dir);
+    resetAutoPlay();
+  }
+
+  let autoPlay = setInterval(() => goTo(current + 1), 2000);
+  function resetAutoPlay() {
+    clearInterval(autoPlay);
+    autoPlay = setInterval(() => goTo(current + 1), 2000);
+  }
+
+  // Countdown
+  let totalSec = 209 * 86400 + 4 * 3600 + 16 * 60 + 58;
+  function pad(n, l = 2) { return String(n).padStart(l, '0'); }
+  function tick() {
+    if (totalSec <= 0) return;
+    totalSec--;
+    document.getElementById('days').textContent  = pad(Math.floor(totalSec / 86400), 3);
+    document.getElementById('hours').textContent = pad(Math.floor((totalSec % 86400) / 3600));
+    document.getElementById('mins').textContent  = pad(Math.floor((totalSec % 3600) / 60));
+    document.getElementById('secs').textContent  = pad(totalSec % 60);
+  }
+  setInterval(tick, 1000);
+</script>
+</body>
+</html>

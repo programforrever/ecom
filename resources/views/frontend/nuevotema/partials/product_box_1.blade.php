@@ -1,8 +1,8 @@
 @php
     $cart_added = [];
 @endphp
-<div class="aiz-card-box h-auto bg-white py-3 hov-scale-img">
-    <div class="position-relative h-140px h-md-200px img-fit overflow-hidden">
+<div class="aiz-card-box h-auto bg-white d-flex flex-column product-card">
+    <div class="position-relative h-140px h-md-200px img-fit overflow-hidden product-img-wrap">
         @php
             $product_url = route('product', $product->slug);
             if ($product->auction_product == 1) {
@@ -10,11 +10,34 @@
             }
         @endphp
         <!-- Image -->
-        <a href="{{ $product_url }}" class="d-block h-100">
-            <img class="lazyload mx-auto img-fit has-transition"
+        <a href="{{ $product_url }}" class="d-block h-100 product-img-container">
+            <img class="lazyload mx-auto img-fit has-transition product-img img-primary"
                 src="{{ get_image($product->thumbnail) }}"
                 alt="{{ $product->getTranslation('name') }}" title="{{ $product->getTranslation('name') }}"
                 onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
+            @php
+                // Usar imagen hover (thumbnail_hover_img) si existe, sino usar primera imagen de galería
+                $secondary_image = null;
+                if ($product->thumbnail_hover_img) {
+                    $secondary_image = $product->thumbnail_hover_img;
+                } else {
+                    $images = $product->product_images;
+                    $secondary_image = $images && count($images) > 0 ? $images[0]->file_name : null;
+                }
+            @endphp
+            @if ($secondary_image)
+                <img class="lazyload mx-auto img-fit has-transition product-img img-hover"
+                    src="{{ static_asset('assets/img/placeholder.jpg') }}"
+                    data-src="
+                    @if ($product->thumbnail_hover_img)
+                        {{ uploaded_asset($product->thumbnail_hover_img) }}
+                    @else
+                        {{ uploaded_asset($secondary_image) }}
+                    @endif
+                    "
+                    alt="{{ $product->getTranslation('name') }}" title="{{ $product->getTranslation('name') }}"
+                    onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
+            @endif
         </a>
         <!-- Discount percentage tag -->
         @if (discount_in_percentage($product) > 0)
@@ -29,7 +52,7 @@
             </span>
         @endif
         @if ($product->auction_product == 0)
-            <!-- wishlisht & compare icons -->
+            <!-- wishlist & compare icons -->
             <div class="absolute-top-right aiz-p-hov-icon">
                 <a href="javascript:void(0)" class="hov-svg-white" onclick="addToWishList({{ $product->id }})"
                     data-toggle="tooltip" data-title="{{ translate('Add to wishlist') }}" data-placement="left">
@@ -54,45 +77,38 @@
                     </svg>
                 </a>
             </div>
-            <!-- add to cart -->
-            <a class="cart-btn absolute-bottom-left w-100 h-35px aiz-p-hov-icon text-white fs-13 fw-700 d-flex flex-column justify-content-center align-items-center @if (in_array($product->id, $cart_added)) active @endif"
-                href="javascript:void(0)"
-                @if (Auth::check()) onclick="showAddToCartModal({{ $product->id }})" @else onclick="showLoginModal()" @endif>
-                <span class="cart-btn-text">
-                    {{ translate('Add to Cart') }}
-                </span>
-                <span><i class="las la-2x la-shopping-cart"></i></span>
-            </a>
-        @endif
-        @if (
-            $product->auction_product == 1 &&
-                $product->auction_start_date <= strtotime('now') &&
-                $product->auction_end_date >= strtotime('now'))
-            <!-- Place Bid -->
-            @php
-                $carts = get_user_cart();
-                if (count($carts) > 0) {
-                    $cart_added = $carts->pluck('product_id')->toArray();
-                }
-                $highest_bid = $product->bids->max('amount');
-                $min_bid_amount = $highest_bid != null ? $highest_bid + 1 : $product->starting_bid;
-            @endphp
-            <a class="cart-btn absolute-bottom-left w-100 h-35px aiz-p-hov-icon text-white fs-13 fw-700 d-flex flex-column justify-content-center align-items-center @if (in_array($product->id, $cart_added)) active @endif"
-                href="javascript:void(0)" onclick="bid_single_modal({{ $product->id }}, {{ $min_bid_amount }})">
-                <span class="cart-btn-text">{{ translate('Place Bid') }}</span>
-                <br>
-                <span><i class="las la-2x la-gavel"></i></span>
-            </a>
         @endif
     </div>
 
-    <div class="p-2 p-md-3 text-left">
+    <div class="p-2 p-md-3 text-center flex-grow-1 d-flex flex-column">
         <!-- Product name -->
-        <h3 class="fw-400 fs-13 text-truncate-2 lh-1-4 mb-0 h-35px text-center">
+        <h3 class="fw-400 fs-13 text-truncate-2 lh-1-4 mb-2 h-35px">
             <a href="{{ $product_url }}" class="d-block text-reset hov-text-primary"
                 title="{{ $product->getTranslation('name') }}">{{ $product->getTranslation('name') }}</a>
         </h3>
-        <div class="fs-14 d-flex justify-content-center mt-3">
+
+        <!-- Product Rating / Stars -->
+        <div class="mb-2">
+            @php
+                $rating = $product->rating ?? 0;
+            @endphp
+            <div class="d-flex justify-content-center align-items-center">
+                <span class="fs-11 fw-700 text-warning">
+                    @for ($i = 0; $i < 5; $i++)
+                        @if ($i < floor($rating))
+                            <i class="las la-star"></i>
+                        @elseif ($i < $rating)
+                            <i class="las la-star-half-alt"></i>
+                        @else
+                            <i class="las la-star" style="opacity: 0.3;"></i>
+                        @endif
+                    @endfor
+                </span>
+            </div>
+        </div>
+
+        <!-- Price -->
+        <div class="fs-14 d-flex justify-content-center mb-auto">
             @if ($product->auction_product == 0)
                 <!-- Previous price -->
                 @if (home_base_price($product) != home_discounted_base_price($product))
@@ -102,15 +118,43 @@
                 @endif
                 <!-- price -->
                 <div class="">
-                    <span class="fw-700 text-primary">{{ home_discounted_base_price($product) }}</span>
+                    <span class="fw-700" style="color: #a90000;">{{ home_discounted_base_price($product) }}</span>
                 </div>
             @endif
             @if ($product->auction_product == 1)
                 <!-- Bid Amount -->
                 <div class="">
-                    <span class="fw-700 text-primary">{{ single_price($product->starting_bid) }}</span>
+                    <span class="fw-700" style="color: #a90000;">{{ single_price($product->starting_bid) }}</span>
                 </div>
             @endif
         </div>
     </div>
+
+    <!-- BUTTON AT BOTTOM -->
+    @if ($product->auction_product == 0)
+        <a class="cart-btn w-100 h-40px text-white fs-13 fw-700 d-flex flex-column justify-content-center align-items-center @if (in_array($product->id, $cart_added)) active @endif"
+            href="javascript:void(0)"
+            @if (Auth::check()) onclick="showAddToCartModal({{ $product->id }})" @else onclick="showLoginModal()" @endif>
+            <span class="cart-btn-text">{{ translate('Add to Cart') }}</span>
+            <span><i class="las la-shopping-cart"></i></span>
+        </a>
+    @endif
+    @if (
+        $product->auction_product == 1 &&
+            $product->auction_start_date <= strtotime('now') &&
+            $product->auction_end_date >= strtotime('now'))
+        <!-- Place Bid -->
+        @php
+            $carts = get_user_cart();
+            if (count($carts) > 0) {
+                $cart_added = $carts->pluck('product_id')->toArray();
+            }
+            $highest_bid = $product->bids->max('amount');
+            $min_bid_amount = $highest_bid != null ? $highest_bid + 1 : $product->starting_bid;
+        @endphp
+        <a class="cart-btn w-100 h-40px text-white fs-13 fw-700 d-flex flex-column justify-content-center align-items-center @if (in_array($product->id, $cart_added)) active @endif"
+            href="javascript:void(0)" onclick="bid_single_modal({{ $product->id }}, {{ $min_bid_amount }})">
+            <span class="cart-btn-text">{{ translate('Place Bid') }}</span>
+        </a>
+    @endif
 </div>

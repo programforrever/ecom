@@ -365,6 +365,23 @@
                                         <small class="text-muted">{{translate('This image is visible in all product box. Use 300x300 sizes image. Keep some blank space around main object of your image as we had to crop some edge in different devices to make it responsive.')}}</small>
                                     </div>
                                 </div>
+                                
+                                <!-- Thumbnail Hover Image (Secondary) -->
+                                <div class="form-group row">
+                                    <label class="col-md-3 col-form-label">{{translate('Thumbnail Hover Image')}} <small>(300x300)</small></label>
+                                    <div class="col-md-9">
+                                        <div class="input-group" data-toggle="aizuploader" data-type="image">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse')}}</div>
+                                            </div>
+                                            <div class="form-control file-amount">{{ translate('Choose File') }}</div>
+                                            <input type="hidden" name="thumbnail_hover_img" value="{{ $product->thumbnail_hover_img }}" class="selected-files">
+                                        </div>
+                                        <div class="file-preview box sm">
+                                        </div>
+                                        <small class="text-muted">{{translate('This image will be shown when hovering over the product card. Use 300x300 sizes image.')}}</small>
+                                    </div>
+                                </div>
                             </div>
                             <!-- Video Provider -->
                             <div class="form-group row">

@@ -675,6 +675,12 @@
 							<div class="bg-white p-3 p-sm-2rem">
 								<div class="w-100">
 									<label class="col-from-label fs-13 fw-500 mb-3">{{ translate('Banner & Links (Max 3)') }}</label>
+									<div class="alert alert-info mb-3" role="alert">
+										<strong>{{ translate('Tamaños recomendados:') }}</strong><br>
+										{{ translate('Primer Banner: 1000 x 250 px (Ancho: 28%)') }}<br>
+										{{ translate('Segundo Banner: 2500 x 250 px (Ancho: 72%)') }}<br>
+										{{ translate('Ambos banners se mostrarán con la misma altura de 250px') }}
+									</div>
 									
 									<!-- Images & links -->
 									<div class="home-banner3-target">
