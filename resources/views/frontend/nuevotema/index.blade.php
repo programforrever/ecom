@@ -1149,6 +1149,121 @@
                 min-height: 200px !important;
             }
         }
+
+        /* =============================================
+           FEATURED CATEGORIES - Modern Clean Design
+        ============================================= */
+        .featured-categories-section {
+            background: #fff;
+            padding: 0;
+        }
+
+        .featured-categories-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .featured-categories-header h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #222;
+            margin: 0;
+        }
+
+        .featured-categories-carousel {
+            padding: 20px;
+        }
+
+        .featured-category-item {
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .featured-category-item:hover {
+            transform: translateY(-4px);
+        }
+
+        .featured-category-image {
+            width: 100%;
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8f8f8;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 12px;
+            transition: background-color 0.3s ease;
+        }
+
+        .featured-category-item:hover .featured-category-image {
+            background: #f0f0f0;
+        }
+
+        .featured-category-image img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            display: block;
+        }
+
+        .featured-category-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+            margin: 8px 0 4px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .featured-category-count {
+            font-size: 12px;
+            color: #999;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .featured-categories-header {
+                padding: 16px 16px;
+            }
+
+            .featured-categories-carousel {
+                padding: 16px;
+            }
+
+            .featured-category-item {
+                padding: 8px;
+            }
+
+            .featured-category-image {
+                height: 120px;
+                margin-bottom: 10px;
+            }
+
+            .featured-category-name {
+                font-size: 12px;
+            }
+
+            .featured-category-count {
+                font-size: 11px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .featured-category-image {
+                height: 100px;
+            }
+
+            .featured-category-name {
+                font-size: 11px;
+            }
+        }
     </style>
 
     <!-- =============================================
@@ -1484,42 +1599,35 @@
                         <!-- New Products -->
                         <div id="section_newest" class="mb-2 mb-md-3"></div>
 
-                        <!-- Featured Categories Carousel -->
+                        <!-- Featured Categories - New Modern Design -->
                         @if (count($featured_categories) > 0)
-                            <div class="mb-2 mb-md-3">
-                                <div class="d-flex mb-2 mb-md-3 align-items-baseline justify-content-between">
-                                    <h3 class="fs-16 fs-md-20 fw-700 mb-2 mb-sm-0">
-                                        {{ translate('Featured Categories') }}
-                                    </h3>
-                                    <div class="d-flex">
-                                        <a class="text-blue fs-10 fs-md-12 fw-700 hov-text-primary animate-underline-primary"
-                                            href="{{ route('categories.all') }}">{{ translate('View All Categories') }}</a>
-                                    </div>
+                            <div class="mb-2 mb-md-3 featured-categories-section">
+                                <div class="featured-categories-header">
+                                    <h3>{{ translate('Featured Categories') }}</h3>
                                 </div>
-                                <div class="bg-white px-3">
-                                    <div class="aiz-carousel arrow-x-0 arrow-inactive-none" data-items="6" data-xxl-items="6"
-                                        data-xl-items="5" data-lg-items="4" data-md-items="3" data-sm-items="2" data-xs-items="1.5"
+                                <div class="featured-categories-carousel">
+                                    <div class="aiz-carousel arrow-x-15 arrow-inactive-none arrow-dark" 
+                                        data-items="7" data-xxl-items="7"
+                                        data-xl-items="6" data-lg-items="5" 
+                                        data-md-items="4" data-sm-items="3" data-xs-items="2"
                                         data-arrows="true" data-dots="false">
                                         @foreach ($featured_categories->take(12) as $category)
-                                            @php $category_name = $category->getTranslation('name'); @endphp
-                                            <div class="carousel-box text-center border-right border-bottom has-transition hov-shadow-out z-1">
-                                                <div class="p-3 p-md-4">
-                                                    <div class="mb-3 overflow-hidden hov-scale-img">
-                                                        <a href="{{ route('products.category', $category->slug) }}" class="d-block">
-                                                            <img src="{{ isset($category->bannerImage->file_name) ? my_asset($category->bannerImage->file_name) : static_asset('assets/img/placeholder.jpg') }}"
-                                                                class="lazyload w-100 h-auto"
-                                                                alt="{{ $category_name }}"
-                                                                onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
-                                                        </a>
+                                            @php 
+                                                $category_name = $category->getTranslation('name');
+                                                $product_count = $category->products()->count();
+                                            @endphp
+                                            <div class="featured-category-item">
+                                                <a href="{{ route('products.category', $category->slug) }}" class="text-reset text-decoration-none d-block h-100">
+                                                    <div class="featured-category-image">
+                                                        <img src="{{ static_asset('assets/img/placeholder.jpg') }}"
+                                                            data-src="{{ isset($category->bannerImage->file_name) ? my_asset($category->bannerImage->file_name) : static_asset('assets/img/placeholder.jpg') }}"
+                                                            alt="{{ $category_name }}"
+                                                            class="lazyload"
+                                                            onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
                                                     </div>
-                                                    <h6 class="text-dark mb-0 text-truncate-2">
-                                                        <a class="text-reset fw-700 fs-14 hov-text-primary"
-                                                            href="{{ route('products.category', $category->slug) }}"
-                                                            title="{{ $category_name }}">
-                                                            {{ $category_name }}
-                                                        </a>
-                                                    </h6>
-                                                </div>
+                                                    <div class="featured-category-name">{{ $category_name }}</div>
+                                                    <div class="featured-category-count">({{ $product_count }})</div>
+                                                </a>
                                             </div>
                                         @endforeach
                                     </div>
@@ -1573,8 +1681,8 @@
                         <!-- Today's Deal -->
                         <div id="todays_deal_bottom" class="mb-2 mb-md-3"></div>
 
-                        <!-- Best Selling -->
-                        <div id="section_best_selling" class="mb-2 mb-md-3"></div>
+                        <!-- Best Selling 
+                        <div id="section_best_selling" class="mb-2 mb-md-3"></div>-->
 
                         <!-- Top Brands -->
                         @if (get_setting('top_brands') != null)

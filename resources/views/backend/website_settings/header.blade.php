@@ -67,9 +67,263 @@
 						</div>
 					</div>
 					<div class="border-top pt-3">
-						<!-- Topbar Banner Large -->
+						<!-- Enable Marquee Banner -->
 						<div class="form-group row">
-		                    <label class="col-md-3 col-from-label">{{ translate('Topbar Banner Large') }}</label>
+							<label class="col-md-3 col-from-label">{{translate('Enable Marquee Banner?')}}</label>
+							<div class="col-md-8">
+								<label class="aiz-switch aiz-switch-success mb-0">
+									<input type="hidden" name="types[]" value="enable_marquee_banner">
+									<input type="checkbox" id="enable_marquee_banner" name="enable_marquee_banner" @if( get_setting('enable_marquee_banner') == 'on') checked @endif>
+									<span></span>
+								</label>
+							</div>
+						</div>
+
+						<!-- Marquee Text -->
+						<div class="form-group row">
+							<label class="col-md-3 col-from-label">{{translate('Marquee Text')}}</label>
+							<div class="col-md-8">
+								<div class="form-group">
+									<input type="hidden" name="types[]" value="marquee_text">
+									<textarea class="form-control" id="marquee_text_field" placeholder="{{ translate('Enter the marquee text') }}" name="marquee_text" rows="3">{{ get_setting('marquee_text') }}</textarea>
+									<small class="form-text text-muted">{{ translate('Usa la sintaxis [icon:nombre] para agregar iconos. Ejemplo: [icon:star] Oferta') }}</small>
+								</div>
+
+								<!-- Preview de iconos en tiempo real -->
+								<div class="mt-3 p-3" style="background: #f8f9fa; border-radius: 4px; border: 1px solid #ddd;">
+									<label><strong>{{ translate('Previsualización') }}</strong></label>
+									<div id="marquee_preview" style="font-size: 14px; padding: 10px; background: #e74c3c; color: white; border-radius: 4px; min-height: 40px; display: flex; align-items: center;">
+										{{ get_setting('marquee_text') ? get_setting('marquee_text') : 'El texto aparecerá aquí...' }}
+									</div>
+								</div>
+								
+								<!-- Icon Selector -->
+								<div class="mt-3">
+									<label class="d-block mb-2"><strong>{{ translate('Popular Icons - Click to insert') }}</strong></label>
+									<div class="icon-selector-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(45px, 1fr)); gap: 8px;">
+									<!-- Fire Icon -->
+									<button type="button" class="btn btn-sm btn-light icon-btn" data-icon="fire" title="Fire" style="border: 1px solid #ddd; padding: 10px; font-size: 18px; cursor: pointer; border-radius: 4px;">
+										<i class="la la-fire" style="color: #FF5722;"></i>
+									</button>
+									<!-- Star Icon -->
+									<button type="button" class="btn btn-sm btn-light icon-btn" data-icon="star" title="Star" style="border: 1px solid #ddd; padding: 10px; font-size: 18px; cursor: pointer; border-radius: 4px;">
+										<i class="la la-star" style="color: #FFD700;"></i>
+									</button>
+									<!-- Gift Icon -->
+									<button type="button" class="btn btn-sm btn-light icon-btn" data-icon="gift" title="Gift" style="border: 1px solid #ddd; padding: 10px; font-size: 18px; cursor: pointer; border-radius: 4px;">
+										<i class="la la-gift" style="color: #E91E63;"></i>
+									</button>
+									<!-- Truck Icon -->
+									<button type="button" class="btn btn-sm btn-light icon-btn" data-icon="truck" title="Truck" style="border: 1px solid #ddd; padding: 10px; font-size: 18px; cursor: pointer; border-radius: 4px;">
+										<i class="la la-truck" style="color: #2196F3;"></i>
+									</button>
+									<!-- Heart Icon -->
+									<button type="button" class="btn btn-sm btn-light icon-btn" data-icon="heart" title="Heart" style="border: 1px solid #ddd; padding: 10px; font-size: 18px; cursor: pointer; border-radius: 4px;">
+										<i class="la la-heart" style="color: #FF1744;"></i>
+									</button>
+									<!-- Bell Icon -->
+									<button type="button" class="btn btn-sm btn-light icon-btn" data-icon="bell" title="Bell" style="border: 1px solid #ddd; padding: 10px; font-size: 18px; cursor: pointer; border-radius: 4px;">
+										<i class="la la-bell" style="color: #FF9800;"></i>
+									</button>
+									<!-- Info Circle Icon -->
+									<button type="button" class="btn btn-sm btn-light icon-btn" data-icon="info-circle" title="Info Circle" style="border: 1px solid #ddd; padding: 10px; font-size: 18px; cursor: pointer; border-radius: 4px;">
+										<i class="la la-info-circle" style="color: #00BCD4;"></i>
+									</button>
+									<!-- Discount/Tag Icon -->
+									<button type="button" class="btn btn-sm btn-light icon-btn" data-icon="tag" title="Tag" style="border: 1px solid #ddd; padding: 10px; font-size: 18px; cursor: pointer; border-radius: 4px;">
+										<i class="la la-tag" style="color: #673AB7;"></i>
+									</button>
+									<!-- Phone Icon -->
+									<button type="button" class="btn btn-sm btn-light icon-btn" data-icon="phone" title="Phone" style="border: 1px solid #ddd; padding: 10px; font-size: 18px; cursor: pointer; border-radius: 4px;">
+										<i class="la la-phone" style="color: #4CAF50;"></i>
+									</button>
+									<!-- Clock Icon -->
+									<button type="button" class="btn btn-sm btn-light icon-btn" data-icon="clock" title="Clock" style="border: 1px solid #ddd; padding: 10px; font-size: 18px; cursor: pointer; border-radius: 4px;">
+										<i class="la la-clock" style="color: #9C27B0;"></i>
+									</button>
+									<!-- Check Icon -->
+									<button type="button" class="btn btn-sm btn-light icon-btn" data-icon="check-circle" title="Check" style="border: 1px solid #ddd; padding: 10px; font-size: 18px; cursor: pointer; border-radius: 4px;">
+										<i class="la la-check-circle" style="color: #8BC34A;"></i>
+									</button>
+									<!-- Rocket Icon -->
+									<button type="button" class="btn btn-sm btn-light icon-btn" data-icon="rocket" title="Rocket" style="border: 1px solid #ddd; padding: 10px; font-size: 18px; cursor: pointer; border-radius: 4px;">
+										<i class="la la-rocket" style="color: #F44336;"></i>
+									</button>
+									<!-- Smile Icon -->
+									<button type="button" class="btn btn-sm btn-light icon-btn" data-icon="smile" title="Smile" style="border: 1px solid #ddd; padding: 10px; font-size: 18px; cursor: pointer; border-radius: 4px;">
+										<i class="la la-smile" style="color: #FBC02D;"></i>
+									</button>
+									<!-- Thumbs Up Icon -->
+									<button type="button" class="btn btn-sm btn-light icon-btn" data-icon="thumbs-up" title="Thumbs Up" style="border: 1px solid #ddd; padding: 10px; font-size: 18px; cursor: pointer; border-radius: 4px;">
+										<i class="la la-thumbs-up" style="color: #03A9F4;"></i>
+									</button>
+									<!-- Exclamation Icon -->
+									<button type="button" class="btn btn-sm btn-light icon-btn" data-icon="exclamation-circle" title="Exclamation" style="border: 1px solid #ddd; padding: 10px; font-size: 18px; cursor: pointer; border-radius: 4px;">
+										<i class="la la-exclamation-circle" style="color: #FF5252;"></i>
+									</button>
+									<!-- Zap/Lightning Icon -->
+									<button type="button" class="btn btn-sm btn-light icon-btn" data-icon="bolt" title="Lightning" style="border: 1px solid #ddd; padding: 10px; font-size: 18px; cursor: pointer; border-radius: 4px;">
+										<i class="la la-bolt" style="color: #FFCA28;"></i>
+									</button>
+									</div>
+								</div>
+
+								<script>
+									document.addEventListener('DOMContentLoaded', function() {
+										const textarea = document.getElementById('marquee_text_field');
+										const preview = document.getElementById('marquee_preview');
+
+										function updatePreview() {
+											let text = textarea.value;
+											// Mapa de colores para cada icono
+											const iconColors = {
+												'fire': '#FF5722',
+												'star': '#FFD700',
+												'gift': '#E91E63',
+												'truck': '#2196F3',
+												'heart': '#FF1744',
+												'bell': '#FF9800',
+												'info-circle': '#00BCD4',
+												'tag': '#673AB7',
+												'phone': '#4CAF50',
+												'clock': '#9C27B0',
+												'check-circle': '#8BC34A',
+												'rocket': '#F44336',
+												'smile': '#FBC02D',
+												'thumbs-up': '#03A9F4',
+												'exclamation-circle': '#FF5252',
+												'bolt': '#FFCA28'
+											};
+											
+											// Reemplazar iconos con etiquetas de Line Awesome coloreadas
+											text = text.replace(/\[icon:([^\]]+)\]/g, function(match, iconName) {
+												const color = iconColors[iconName] || '#333';
+												return '<i class="la la-' + iconName + '" style="margin: 0 8px; color: ' + color + ';"></i>';
+											});
+											preview.innerHTML = text || 'El texto aparecerá aquí...';
+										}
+
+										// Actualizar previsualización en tiempo real
+										textarea.addEventListener('input', updatePreview);
+										
+										// Inicializar previsualización
+										updatePreview();
+
+										// Insertar iconos al hacer clic
+										document.querySelectorAll('.icon-btn').forEach(button => {
+											button.addEventListener('click', function(e) {
+												e.preventDefault();
+												const icon = this.getAttribute('data-icon');
+												const cursorPos = textarea.selectionStart;
+												const text = textarea.value;
+												const newText = text.slice(0, cursorPos) + ' [icon:' + icon + '] ' + text.slice(cursorPos);
+												textarea.value = newText;
+												textarea.focus();
+												textarea.setSelectionRange(cursorPos + 10 + icon.length, cursorPos + 10 + icon.length);
+												updatePreview();
+											});
+										});
+									});
+								</script>
+							</div>
+						</div>
+
+						<!-- Marquee Speed -->
+						<div class="form-group row">
+							<label class="col-md-3 col-from-label">{{translate('Marquee Speed')}}</label>
+							<div class="col-md-8">
+								<div class="form-group">
+									<input type="hidden" name="types[]" value="marquee_speed">
+									<input type="number" class="form-control" placeholder="5" name="marquee_speed" value="{{ get_setting('marquee_speed', '5') }}" min="0.1" max="500" step="0.1">
+									<small class="form-text text-muted">{{ translate('Sin restricciones. Valores menores = MAS LENTO. Ejemplo: 0.5=muy lento, 2=lento, 5=normal, 10=rápido, 20=muy rápido') }}</small>
+								</div>
+							</div>
+						</div>
+
+						<!-- Marquee Font Size -->
+						<div class="form-group row">
+							<label class="col-md-3 col-from-label">{{translate('Marquee Font Size')}}</label>
+							<div class="col-md-8">
+								<div class="form-group">
+									<input type="hidden" name="types[]" value="marquee_font_size">
+									<input type="number" class="form-control" placeholder="14" name="marquee_font_size" value="{{ get_setting('marquee_font_size', '14') }}" min="10" max="32">
+									<small class="form-text text-muted">{{ translate('In pixels') }}</small>
+								</div>
+							</div>
+						</div>
+
+						<!-- Marquee Font Weight -->
+						<div class="form-group row">
+							<label class="col-md-3 col-from-label">{{translate('Marquee Font Weight')}}</label>
+							<div class="col-md-8">
+								<div class="form-group">
+									<input type="hidden" name="types[]" value="marquee_font_weight">
+									<select class="form-control" name="marquee_font_weight">
+										<option value="normal" @if(get_setting('marquee_font_weight') == 'normal') selected @endif>{{ translate('Normal') }}</option>
+										<option value="500" @if(get_setting('marquee_font_weight') == '500') selected @endif>{{ translate('Medium') }}</option>
+										<option value="600" @if(get_setting('marquee_font_weight') == '600') selected @endif>{{ translate('Semi Bold') }}</option>
+										<option value="700" @if(get_setting('marquee_font_weight') == '700') selected @endif>{{ translate('Bold') }}</option>
+										<option value="800" @if(get_setting('marquee_font_weight') == '800') selected @endif>{{ translate('Extra Bold') }}</option>
+									</select>
+								</div>
+							</div>
+						</div>
+
+						<!-- Marquee Text Color -->
+						<div class="form-group row">
+							<label class="col-md-3 col-from-label">{{translate('Marquee Text Color')}}</label>
+							<div class="col-md-8">
+								<div class="form-group">
+									<input type="hidden" name="types[]" value="marquee_text_color">
+									<input type="color" class="form-control" style="height: 45px;" name="marquee_text_color" value="{{ get_setting('marquee_text_color', '#ffffff') }}">
+								</div>
+							</div>
+						</div>
+
+						<!-- Marquee Background Color -->
+						<div class="form-group row">
+							<label class="col-md-3 col-from-label">{{translate('Marquee Background Color')}}</label>
+							<div class="col-md-8">
+								<div class="form-group">
+									<input type="hidden" name="types[]" value="marquee_bg_color">
+									<input type="color" class="form-control" style="height: 45px;" name="marquee_bg_color" value="{{ get_setting('marquee_bg_color', '#e74c3c') }}">
+								</div>
+							</div>
+						</div>
+
+						<!-- Marquee Animation Type -->
+						<div class="form-group row">
+							<label class="col-md-3 col-from-label">{{translate('Animation Type')}}</label>
+							<div class="col-md-8">
+								<div class="form-group">
+									<input type="hidden" name="types[]" value="marquee_animation">
+									<select class="form-control" name="marquee_animation">
+										<option value="scroll" @if(get_setting('marquee_animation') == 'scroll') selected @endif>{{ translate('Scroll') }}</option>
+										<option value="slide" @if(get_setting('marquee_animation') == 'slide') selected @endif>{{ translate('Slide') }}</option>
+										<option value="bounce" @if(get_setting('marquee_animation') == 'bounce') selected @endif>{{ translate('Bounce') }}</option>
+										<option value="fade" @if(get_setting('marquee_animation') == 'fade') selected @endif>{{ translate('Fade') }}</option>
+									</select>
+								</div>
+							</div>
+						</div>
+
+						<!-- Marquee Padding -->
+						<div class="form-group row">
+							<label class="col-md-3 col-from-label">{{translate('Marquee Padding (Y)')}}</label>
+							<div class="col-md-8">
+								<div class="form-group">
+									<input type="hidden" name="types[]" value="marquee_padding">
+									<input type="number" class="form-control" placeholder="12" name="marquee_padding" value="{{ get_setting('marquee_padding', '12') }}" min="5" max="30">
+									<small class="form-text text-muted">{{ translate('Vertical padding in pixels') }}</small>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="border-top pt-3">
+						<!-- Topbar Banner Large (Legacy) -->
+						<div class="form-group row">
+		                    <label class="col-md-3 col-from-label">{{ translate('Topbar Banner Large (Legacy)') }}</label>
 							<div class="col-md-8">
 			                    <div class=" input-group " data-toggle="aizuploader" data-type="image">
 			                        <div class="input-group-prepend">
@@ -80,12 +334,12 @@
 			                        <input type="hidden" name="topbar_banner" class="selected-files" value="{{ get_setting('topbar_banner') }}">
 			                    </div>
 			                    <div class="file-preview"></div>
-                                <small>{{ translate('Will be shown in large device') }}</small>
+                                <small>{{ translate('Will be shown in large device (only if marquee is disabled)') }}</small>
 							</div>
 		                </div>
 						<!-- Topbar Banner Medium -->
 						<div class="form-group row">
-		                    <label class="col-md-3 col-from-label">{{ translate('Topbar Banner Medium') }}</label>
+		                    <label class="col-md-3 col-from-label">{{ translate('Topbar Banner Medium (Legacy)') }}</label>
 							<div class="col-md-8">
 			                    <div class=" input-group " data-toggle="aizuploader" data-type="image">
 			                        <div class="input-group-prepend">
@@ -96,12 +350,12 @@
 			                        <input type="hidden" name="topbar_banner_medium" class="selected-files" value="{{ get_setting('topbar_banner_medium') }}">
 			                    </div>
 			                    <div class="file-preview"></div>
-                                <small>{{ translate('Will be shown in medium device') }}</small>
+                                <small>{{ translate('Will be shown in medium device (only if marquee is disabled)') }}</small>
 							</div>
 		                </div>
 						<!-- Topbar Banner Small -->
 						<div class="form-group row">
-		                    <label class="col-md-3 col-from-label">{{ translate('Topbar Banner Small') }}</label>
+		                    <label class="col-md-3 col-from-label">{{ translate('Topbar Banner Small (Legacy)') }}</label>
 							<div class="col-md-8">
 			                    <div class=" input-group " data-toggle="aizuploader" data-type="image">
 			                        <div class="input-group-prepend">
@@ -112,7 +366,7 @@
 			                        <input type="hidden" name="topbar_banner_small" class="selected-files" value="{{ get_setting('topbar_banner_small') }}">
 			                    </div>
 			                    <div class="file-preview"></div>
-                                <small>{{ translate('Will be shown in small device') }}</small>
+                                <small>{{ translate('Will be shown in small device (only if marquee is disabled)') }}</small>
 							</div>
 		                </div>
 						<!-- Topbar Banner Link -->

@@ -19,11 +19,13 @@ class Language
      */
     public function handle($request, Closure $next)
     {
+        // Frontend siempre comienza en español si el usuario no ha seleccionado otro idioma
         if(Session::has('locale')){
             $locale = Session::get('locale');
         }
         else{
-            $locale = env('DEFAULT_LANGUAGE','en');
+            // Idioma por defecto del frontend: español
+            $locale = 'es';
         }
 
         App::setLocale($locale);

@@ -73,6 +73,12 @@
         flex-direction: column;
         align-items: center;
         padding: 10px;
+        cursor: pointer;
+        transition: opacity 0.3s ease;
+    }
+
+    .slider-track .slide:hover {
+        opacity: 0.85;
     }
 
     .slider-track .slide.active {
@@ -290,7 +296,7 @@
                             $prod = $product->product;
                             if (!$prod) continue;
                         @endphp
-                        <div class="slide {{ $key == 0 ? 'active' : '' }}">
+                        <a href="{{ route('product', $prod->slug) }}" class="slide {{ $key == 0 ? 'active' : '' }}" style="text-decoration: none; color: inherit;">
                             <div class="img-wrap">
                                 @php $discount = discount_in_percentage($prod); @endphp
                                 @if ($discount > 0)
@@ -321,7 +327,7 @@
                                     <span class="new-price">{{ home_discounted_base_price($prod) }}</span>
                                 </div>
                             </div>
-                        </div>
+                        </a>
                     @endforeach
                 @else
                     <div class="slide">
