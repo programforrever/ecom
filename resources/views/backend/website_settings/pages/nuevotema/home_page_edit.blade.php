@@ -470,8 +470,9 @@
 												<div class="p-3 p-md-4 mb-3 mb-md-2rem remove-parent" style="border: 1px dashed #e4e5eb;">
 													<div class="row gutters-5">
 														<!-- Image -->
-														<div class="col-md-5">
+														<div class="col-md-4">
 															<div class="form-group mb-md-0">
+																<label class="fs-12 mb-2">{{ translate('Image') }}</label>
 																<div class="input-group" data-toggle="aizuploader" data-type="image">
 																	<div class="input-group-prepend">
 																		<div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse')}}</div>
@@ -484,16 +485,42 @@
 																</div>
 															</div>
 														</div>
-														<!-- link -->
-														<div class="col-md">
+														<!-- Link -->
+														<div class="col-md-2">
 															<div class="form-group mb-md-0">
+																<label class="fs-12 mb-2">{{ translate('Link') }}</label>
 																<input type="hidden" name="types[]" value="home_banner1_links">
 																<input type="text" class="form-control" placeholder="http://" name="home_banner1_links[]" value="{{ json_decode(get_setting('home_banner1_links'), true)[$key] }}">
+															</div>
+														</div>
+														<!-- Title -->
+														<div class="col-md-2">
+															<div class="form-group mb-md-0">
+																<label class="fs-12 mb-2">{{ translate('Title') }}</label>
+																<input type="hidden" name="types[]" value="home_banner1_titles">
+																<input type="text" class="form-control" placeholder="{{ translate('Ex: Latest Wireless') }}" name="home_banner1_titles[]" value="{{ json_decode(get_setting('home_banner1_titles', null, $lang), true)[$key] ?? '' }}">
+															</div>
+														</div>
+														<!-- Description -->
+														<div class="col-md-3">
+															<div class="form-group mb-md-0">
+																<label class="fs-12 mb-2">{{ translate('Description') }}</label>
+																<input type="hidden" name="types[]" value="home_banner1_descriptions">
+																<input type="text" class="form-control" placeholder="{{ translate('Ex: UP TO 50% OFF') }}" name="home_banner1_descriptions[]" value="{{ json_decode(get_setting('home_banner1_descriptions', null, $lang), true)[$key] ?? '' }}">
+															</div>
+														</div>
+														<!-- Button Text -->
+														<div class="col-md-2">
+															<div class="form-group mb-md-0">
+																<label class="fs-12 mb-2">{{ translate('Button Text') }}</label>
+																<input type="hidden" name="types[]" value="home_banner1_btn_texts">
+																<input type="text" class="form-control" placeholder="{{ translate('Ex: Shop Now') }}" name="home_banner1_btn_texts[]" value="{{ json_decode(get_setting('home_banner1_btn_texts', null, $lang), true)[$key] ?? '' }}">
 															</div>
 														</div>
 														<!-- remove parent button -->
 														<div class="col-md-auto">
 															<div class="form-group mb-md-0">
+																<label class="fs-12 mb-2">&nbsp;</label>
 																<button type="button" class="mt-1 btn btn-icon btn-circle btn-sm btn-soft-danger" data-toggle="remove-parent" data-parent=".remove-parent">
 																	<i class="las la-times"></i>
 																</button>
@@ -515,8 +542,9 @@
 											<div class="p-3 p-md-4 mb-3 mb-md-2rem remove-parent" style="border: 1px dashed #e4e5eb;">
 												<div class="row gutters-5">
 													<!-- Image -->
-													<div class="col-md-5">
+													<div class="col-md-4">
 														<div class="form-group mb-md-0">
+															<label class="fs-12 mb-2">Image</label>
 															<div class="input-group" data-toggle="aizuploader" data-type="image">
 																<div class="input-group-prepend">
 																	<div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse')}}</div>
@@ -529,16 +557,42 @@
 															</div>
 														</div>
 													</div>
-													<!-- link -->
-													<div class="col-md">
-														<div class="form-group mb-md-0 mb-0">
+													<!-- Link -->
+													<div class="col-md-2">
+														<div class="form-group mb-md-0">
+															<label class="fs-12 mb-2">Link</label>
 															<input type="hidden" name="types[]" value="home_banner1_links">
 															<input type="text" class="form-control" placeholder="http://" name="home_banner1_links[]" value="">
+														</div>
+													</div>
+													<!-- Title -->
+													<div class="col-md-2">
+														<div class="form-group mb-md-0">
+															<label class="fs-12 mb-2">Title</label>
+															<input type="hidden" name="types[]" value="home_banner1_titles">
+															<input type="text" class="form-control" placeholder="Ex: Latest Wireless" name="home_banner1_titles[]" value="">
+														</div>
+													</div>
+													<!-- Description -->
+													<div class="col-md-3">
+														<div class="form-group mb-md-0">
+															<label class="fs-12 mb-2">Description</label>
+															<input type="hidden" name="types[]" value="home_banner1_descriptions">
+															<input type="text" class="form-control" placeholder="Ex: UP TO 50% OFF" name="home_banner1_descriptions[]" value="">
+														</div>
+													</div>
+													<!-- Button Text -->
+													<div class="col-md-2">
+														<div class="form-group mb-md-0">
+															<label class="fs-12 mb-2">Button Text</label>
+															<input type="hidden" name="types[]" value="home_banner1_btn_texts">
+															<input type="text" class="form-control" placeholder="Ex: Shop Now" name="home_banner1_btn_texts[]" value="">
 														</div>
 													</div>
 													<!-- remove parent button -->
 													<div class="col-md-auto">
 														<div class="form-group mb-md-0">
+															<label class="fs-12 mb-2">&nbsp;</label>
 															<button type="button" class="mt-1 btn btn-icon btn-circle btn-sm btn-soft-danger" data-toggle="remove-parent" data-parent=".remove-parent">
 																<i class="las la-times"></i>
 															</button>
@@ -577,8 +631,9 @@
 												<div class="p-3 p-md-4 mb-3 mb-md-2rem remove-parent" style="border: 1px dashed #e4e5eb;">
 													<div class="row gutters-5">
 														<!-- Image -->
-														<div class="col-md-5">
+														<div class="col-md-4">
 															<div class="form-group mb-md-0">
+																<label class="fs-12 mb-2">{{ translate('Image') }}</label>
 																<div class="input-group" data-toggle="aizuploader" data-type="image">
 																	<div class="input-group-prepend">
 																		<div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse')}}</div>
@@ -591,16 +646,42 @@
 																</div>
 															</div>
 														</div>
-														<!-- link -->
-														<div class="col-md">
+														<!-- Link -->
+														<div class="col-md-2">
 															<div class="form-group mb-md-0">
+																<label class="fs-12 mb-2">{{ translate('Link') }}</label>
 																<input type="hidden" name="types[]" value="home_banner2_links">
-																<input type="text" class="form-control" placeholder="http://" name="home_banner2_links[]" value="{{ json_decode(get_setting('home_banner2_links'), true)[$key] }}">
+																<input type="text" class="form-control" placeholder="http://" name="home_banner2_links[]" value="{{ json_decode(get_setting('home_banner2_links'), true)[$key] ?? '' }}">
+															</div>
+														</div>
+														<!-- Title -->
+														<div class="col-md-2">
+															<div class="form-group mb-md-0">
+																<label class="fs-12 mb-2">{{ translate('Title') }}</label>
+																<input type="hidden" name="types[]" value="home_banner2_titles">
+																<input type="text" class="form-control" placeholder="{{ translate('Ex: Latest Wireless') }}" name="home_banner2_titles[]" value="{{ json_decode(get_setting('home_banner2_titles', null, $lang), true)[$key] ?? '' }}">
+															</div>
+														</div>
+														<!-- Description -->
+														<div class="col-md-3">
+															<div class="form-group mb-md-0">
+																<label class="fs-12 mb-2">{{ translate('Description') }}</label>
+																<input type="hidden" name="types[]" value="home_banner2_descriptions">
+																<input type="text" class="form-control" placeholder="{{ translate('Ex: UP TO 50% OFF') }}" name="home_banner2_descriptions[]" value="{{ json_decode(get_setting('home_banner2_descriptions', null, $lang), true)[$key] ?? '' }}">
+															</div>
+														</div>
+														<!-- Button Text -->
+														<div class="col-md-2">
+															<div class="form-group mb-md-0">
+																<label class="fs-12 mb-2">{{ translate('Button Text') }}</label>
+																<input type="hidden" name="types[]" value="home_banner2_btn_texts">
+																<input type="text" class="form-control" placeholder="{{ translate('Ex: Shop Now') }}" name="home_banner2_btn_texts[]" value="{{ json_decode(get_setting('home_banner2_btn_texts', null, $lang), true)[$key] ?? '' }}">
 															</div>
 														</div>
 														<!-- remove parent button -->
 														<div class="col-md-auto">
 															<div class="form-group mb-md-0">
+																<label class="fs-12 mb-2">&nbsp;</label>
 																<button type="button" class="mt-1 btn btn-icon btn-circle btn-sm btn-soft-danger" data-toggle="remove-parent" data-parent=".remove-parent">
 																	<i class="las la-times"></i>
 																</button>
@@ -622,8 +703,9 @@
 											<div class="p-3 p-md-4 mb-3 mb-md-2rem remove-parent" style="border: 1px dashed #e4e5eb;">
 												<div class="row gutters-5">
 													<!-- Image -->
-													<div class="col-md-5">
+													<div class="col-md-4">
 														<div class="form-group mb-md-0">
+															<label class="fs-12 mb-2">Image</label>
 															<div class="input-group" data-toggle="aizuploader" data-type="image">
 																<div class="input-group-prepend">
 																	<div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse')}}</div>
@@ -636,16 +718,42 @@
 															</div>
 														</div>
 													</div>
-													<!-- link -->
-													<div class="col-md">
-														<div class="form-group mb-md-0 mb-0">
+													<!-- Link -->
+													<div class="col-md-2">
+														<div class="form-group mb-md-0">
+															<label class="fs-12 mb-2">Link</label>
 															<input type="hidden" name="types[]" value="home_banner2_links">
 															<input type="text" class="form-control" placeholder="http://" name="home_banner2_links[]" value="">
+														</div>
+													</div>
+													<!-- Title -->
+													<div class="col-md-2">
+														<div class="form-group mb-md-0">
+															<label class="fs-12 mb-2">Title</label>
+															<input type="hidden" name="types[]" value="home_banner2_titles">
+															<input type="text" class="form-control" placeholder="Ex: Latest Wireless" name="home_banner2_titles[]" value="">
+														</div>
+													</div>
+													<!-- Description -->
+													<div class="col-md-3">
+														<div class="form-group mb-md-0">
+															<label class="fs-12 mb-2">Description</label>
+															<input type="hidden" name="types[]" value="home_banner2_descriptions">
+															<input type="text" class="form-control" placeholder="Ex: UP TO 50% OFF" name="home_banner2_descriptions[]" value="">
+														</div>
+													</div>
+													<!-- Button Text -->
+													<div class="col-md-2">
+														<div class="form-group mb-md-0">
+															<label class="fs-12 mb-2">Button Text</label>
+															<input type="hidden" name="types[]" value="home_banner2_btn_texts">
+															<input type="text" class="form-control" placeholder="Ex: Shop Now" name="home_banner2_btn_texts[]" value="">
 														</div>
 													</div>
 													<!-- remove parent button -->
 													<div class="col-md-auto">
 														<div class="form-group mb-md-0">
+															<label class="fs-12 mb-2">&nbsp;</label>
 															<button type="button" class="mt-1 btn btn-icon btn-circle btn-sm btn-soft-danger" data-toggle="remove-parent" data-parent=".remove-parent">
 																<i class="las la-times"></i>
 															</button>
@@ -690,8 +798,9 @@
 												<div class="p-3 p-md-4 mb-3 mb-md-2rem remove-parent" style="border: 1px dashed #e4e5eb;">
 													<div class="row gutters-5">
 														<!-- Image -->
-														<div class="col-md-5">
+														<div class="col-md-4">
 															<div class="form-group mb-md-0">
+																<label class="fs-12 mb-2">{{ translate('Image') }}</label>
 																<div class="input-group" data-toggle="aizuploader" data-type="image">
 																	<div class="input-group-prepend">
 																		<div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse')}}</div>
@@ -704,16 +813,42 @@
 																</div>
 															</div>
 														</div>
-														<!-- link -->
-														<div class="col-md">
+														<!-- Link -->
+														<div class="col-md-2">
 															<div class="form-group mb-md-0">
+																<label class="fs-12 mb-2">{{ translate('Link') }}</label>
 																<input type="hidden" name="types[]" value="home_banner3_links">
-																<input type="text" class="form-control" placeholder="http://" name="home_banner3_links[]" value="{{ json_decode(get_setting('home_banner3_links'), true)[$key] }}">
+																<input type="text" class="form-control" placeholder="http://" name="home_banner3_links[]" value="{{ json_decode(get_setting('home_banner3_links'), true)[$key] ?? '' }}">
+															</div>
+														</div>
+														<!-- Title -->
+														<div class="col-md-2">
+															<div class="form-group mb-md-0">
+																<label class="fs-12 mb-2">{{ translate('Title') }}</label>
+																<input type="hidden" name="types[]" value="home_banner3_titles">
+																<input type="text" class="form-control" placeholder="{{ translate('Ex: Latest Wireless') }}" name="home_banner3_titles[]" value="{{ json_decode(get_setting('home_banner3_titles', null, $lang), true)[$key] ?? '' }}">
+															</div>
+														</div>
+														<!-- Description -->
+														<div class="col-md-3">
+															<div class="form-group mb-md-0">
+																<label class="fs-12 mb-2">{{ translate('Description') }}</label>
+																<input type="hidden" name="types[]" value="home_banner3_descriptions">
+																<input type="text" class="form-control" placeholder="{{ translate('Ex: UP TO 50% OFF') }}" name="home_banner3_descriptions[]" value="{{ json_decode(get_setting('home_banner3_descriptions', null, $lang), true)[$key] ?? '' }}">
+															</div>
+														</div>
+														<!-- Button Text -->
+														<div class="col-md-2">
+															<div class="form-group mb-md-0">
+																<label class="fs-12 mb-2">{{ translate('Button Text') }}</label>
+																<input type="hidden" name="types[]" value="home_banner3_btn_texts">
+																<input type="text" class="form-control" placeholder="{{ translate('Ex: Shop Now') }}" name="home_banner3_btn_texts[]" value="{{ json_decode(get_setting('home_banner3_btn_texts', null, $lang), true)[$key] ?? '' }}">
 															</div>
 														</div>
 														<!-- remove parent button -->
 														<div class="col-md-auto">
 															<div class="form-group mb-md-0">
+																<label class="fs-12 mb-2">&nbsp;</label>
 																<button type="button" class="mt-1 btn btn-icon btn-circle btn-sm btn-soft-danger" data-toggle="remove-parent" data-parent=".remove-parent">
 																	<i class="las la-times"></i>
 																</button>
@@ -735,8 +870,9 @@
 											<div class="p-3 p-md-4 mb-3 mb-md-2rem remove-parent" style="border: 1px dashed #e4e5eb;">
 												<div class="row gutters-5">
 													<!-- Image -->
-													<div class="col-md-5">
+													<div class="col-md-4">
 														<div class="form-group mb-md-0">
+															<label class="fs-12 mb-2">Image</label>
 															<div class="input-group" data-toggle="aizuploader" data-type="image">
 																<div class="input-group-prepend">
 																	<div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse')}}</div>
@@ -749,16 +885,42 @@
 															</div>
 														</div>
 													</div>
-													<!-- link -->
-													<div class="col-md">
-														<div class="form-group mb-md-0 mb-0">
+													<!-- Link -->
+													<div class="col-md-2">
+														<div class="form-group mb-md-0">
+															<label class="fs-12 mb-2">Link</label>
 															<input type="hidden" name="types[]" value="home_banner3_links">
 															<input type="text" class="form-control" placeholder="http://" name="home_banner3_links[]" value="">
+														</div>
+													</div>
+													<!-- Title -->
+													<div class="col-md-2">
+														<div class="form-group mb-md-0">
+															<label class="fs-12 mb-2">Title</label>
+															<input type="hidden" name="types[]" value="home_banner3_titles">
+															<input type="text" class="form-control" placeholder="Ex: Latest Wireless" name="home_banner3_titles[]" value="">
+														</div>
+													</div>
+													<!-- Description -->
+													<div class="col-md-3">
+														<div class="form-group mb-md-0">
+															<label class="fs-12 mb-2">Description</label>
+															<input type="hidden" name="types[]" value="home_banner3_descriptions">
+															<input type="text" class="form-control" placeholder="Ex: UP TO 50% OFF" name="home_banner3_descriptions[]" value="">
+														</div>
+													</div>
+													<!-- Button Text -->
+													<div class="col-md-2">
+														<div class="form-group mb-md-0">
+															<label class="fs-12 mb-2">Button Text</label>
+															<input type="hidden" name="types[]" value="home_banner3_btn_texts">
+															<input type="text" class="form-control" placeholder="Ex: Shop Now" name="home_banner3_btn_texts[]" value="">
 														</div>
 													</div>
 													<!-- remove parent button -->
 													<div class="col-md-auto">
 														<div class="form-group mb-md-0">
+															<label class="fs-12 mb-2">&nbsp;</label>
 															<button type="button" class="mt-1 btn btn-icon btn-circle btn-sm btn-soft-danger" data-toggle="remove-parent" data-parent=".remove-parent">
 																<i class="las la-times"></i>
 															</button>
@@ -767,6 +929,10 @@
 												</div>
 											</div>'
 											data-target=".home-banner3-target">
+											<i class="las la-2x text-success la-plus-circle"></i>
+											<span class="ml-2">{{ translate('Add New') }}</span>
+										</button>
+									</div>
 											<i class="las la-2x text-success la-plus-circle"></i>
 											<span class="ml-2">{{ translate('Add New') }}</span>
 										</button>

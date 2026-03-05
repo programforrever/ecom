@@ -308,11 +308,100 @@
             .banner-and-menu-wrapper,
             .home-slider-fullwidth,
             .slider-main,
-            .slides-container { min-height: 260px; }
+            .slides-container { min-height: 280px; }
+
+            .slide {
+                flex-direction: row;
+                align-items: stretch;
+            }
+
+            .slide-content {
+                width: 50%;
+                flex: 0 0 50%;
+                padding: 12px 10px;
+                justify-content: center;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .slide-image {
+                width: 50%;
+                flex: 0 0 50%;
+                min-height: auto;
+            }
+
+            .slide-tag {
+                font-size: 11px;
+                margin-bottom: 4px;
+            }
+
+            .slide-title { 
+                font-size: 16px;
+                margin-bottom: 6px;
+                line-height: 1.2;
+            }
+
+            .slide-prices {
+                margin-bottom: 8px;
+            }
+
+            .slide-old,
+            .slide-new {
+                font-size: 13px;
+            }
+
+            .slide-new { font-size: 13px; }
+
+            .slide-btn {
+                padding: 6px 12px;
+                font-size: 11px;
+            }
+
+            .arrow-btn {
+                padding: 8px 10px;
+                font-size: 14px;
+            }
 
             /* Banner 1 Left Sidebar - Stack on mobile */
             #section_featured {
                 margin-top: 0 !important;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .banner-and-menu-wrapper,
+            .home-slider-fullwidth,
+            .slider-main,
+            .slides-container { min-height: 220px; }
+
+            .slide-content {
+                width: 50%;
+                flex: 0 0 50%;
+                padding: 12px 10px;
+            }
+
+            .slide-image {
+                width: 50%;
+                flex: 0 0 50%;
+            }
+
+            .slide-tag {
+                font-size: 11px;
+                margin-bottom: 6px;
+            }
+
+            .slide-title { 
+                font-size: 16px;
+                margin-bottom: 6px;
+            }
+
+            .slide-old { font-size: 12px; }
+            .slide-new { font-size: 12px; }
+
+            .slide-btn {
+                padding: 6px 12px;
+                font-size: 10px;
             }
         }
 
@@ -328,11 +417,212 @@
             margin-bottom: 0 !important;
         }
 
+        .banner-1-left-sidebar .carousel-box {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .banner-1-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.15) 100%);
+            padding: 20px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            z-index: 5;
+            height: 100%;
+            justify-content: flex-start;
+        }
+
+        .banner-1-overlay-tag {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            color: #ffc107;
+            opacity: 0.9;
+        }
+
+        .banner-1-overlay-title {
+            font-size: 18px;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 8px;
+            color: white;
+        }
+
+        .banner-1-overlay-desc {
+            font-size: 13px;
+            margin-bottom: 12px;
+            color: rgba(255,255,255,0.9);
+            line-height: 1.3;
+        }
+
+        .banner-1-overlay-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0;
+            background: none;
+            color: var(--primary, #a90000);
+            text-decoration: none;
+            border-radius: 0;
+            font-weight: 600;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            width: fit-content;
+            border: none;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .banner-1-overlay-btn:hover {
+            color: var(--hov-primary, #8b0000);
+        }
+
+        
+        /* =============================================
+           BANNER 2 & 3 OVERLAY - Left Centered
+        ============================================= */
+
+        /* =============================================
+           BANNER 2 & 3 OVERLAY - Left Centered
+        ============================================= */
+        .banner-overlay-left {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.15) 100%);
+            padding: 30px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            z-index: 5;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .banner-overlay-title {
+            font-size: 22px;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 12px;
+            color: white;
+        }
+
+        .banner-overlay-desc {
+            font-size: 14px;
+            margin-bottom: 16px;
+            color: rgba(255,255,255,0.95);
+            line-height: 1.4;
+        }
+
+        .banner-overlay-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 0;
+            background: none;
+            color: var(--primary, #a90000);
+            text-decoration: none;
+            border-radius: 0;
+            font-weight: 600;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            width: fit-content;
+            border: none;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .banner-overlay-btn:hover {
+            color: var(--hov-primary, #8b0000);
+        }
+
+        @media (max-width: 768px) {
+            .banner-overlay-left {
+                width: 100%;
+                padding: 20px;
+            }
+
+            .banner-overlay-title {
+                font-size: 18px;
+                margin-bottom: 8px;
+            }
+
+            .banner-overlay-desc {
+                font-size: 12px;
+                margin-bottom: 12px;
+            }
+
+            .banner-overlay-btn {
+                font-size: 11px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .banner-overlay-left {
+                width: 100%;
+                padding: 16px;
+                top: 0;
+                transform: none;
+                background: linear-gradient(135deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.2) 100%);
+            }
+
+            .banner-overlay-title {
+                font-size: 16px;
+                margin-bottom: 6px;
+            }
+
+            .banner-overlay-desc {
+                font-size: 11px;
+                margin-bottom: 10px;
+            }
+        }
+
         .banner-1-left-sidebar img {
             width: 100%;
             height: auto;
             object-fit: cover;
             border-radius: 0;
+        }
+
+        @media (max-width: 768px) {
+            .banner-1-left-sidebar .aiz-carousel,
+            .banner-1-left-sidebar .carousel-box,
+            .banner-1-left-sidebar .carousel-box img {
+                height: 200px !important;
+                min-height: 200px !important;
+            }
+
+            .banner-1-left-sidebar .carousel-box img {
+                object-fit: cover;
+            }
+
+            .banner-1-overlay {
+                padding: 16px;
+                height: 100%;
+            }
+
+            .banner-1-overlay-title {
+                font-size: 16px;
+                margin-bottom: 6px;
+            }
+
+            .banner-1-overlay-desc {
+                font-size: 12px;
+                margin-bottom: 10px;
+            }
+
+            .banner-1-overlay-btn {
+                font-size: 11px;
+            }
         }
 
         @media (max-width: 991.98px) {
@@ -341,21 +631,22 @@
             }
 
             .slide {
-                flex-direction: column;
-                align-items: center;
+                flex-direction: row;
+                align-items: stretch;
                 padding-left: 0 !important;
             }
 
             .slide-content {
-                width: 100%;
-                flex: 0 0 auto;
-                padding: 20px 20px 10px;
+                width: 45%;
+                flex: 0 0 45%;
+                padding: 20px 15px;
+                justify-content: center;
             }
 
             .slide-image {
-                width: 100%;
-                flex: 1;
-                min-height: 120px;
+                width: 55%;
+                flex: 0 0 55%;
+                min-height: auto;
             }
 
             .slide-title { font-size: 24px; }
@@ -1095,22 +1386,37 @@
                     @if ($homeBanner1Images != null)
                         @php
                             $banner_1_imags = json_decode($homeBanner1Images);
+                            $banner_1_links = json_decode(get_setting('home_banner1_links'), true) ?? [];
+                            $banner_1_titles = json_decode(get_setting('home_banner1_titles', null, $lang), true) ?? [];
+                            $banner_1_descs = json_decode(get_setting('home_banner1_descriptions', null, $lang), true) ?? [];
+                            $banner_1_btn_texts = json_decode(get_setting('home_banner1_btn_texts', null, $lang), true) ?? [];
                         @endphp
-                        <div class="bg-white px-3 py-3 py-md-2rem mb-2 mb-md-3">
+                        <div class="bg-white px-3 py-3 py-md-2rem mb-2 mb-md-3 banner-1-left-sidebar">
                             <div class="aiz-carousel gutters-16 overflow-hidden arrow-inactive-none arrow-dark arrow-x-15"
                                 data-items="1" data-xxl-items="1"
                                 data-xl-items="1" data-lg-items="1"
                                 data-md-items="1" data-sm-items="1" data-xs-items="1" data-arrows="false"
                                 data-dots="false">
                                 @foreach ($banner_1_imags as $key => $value)
-                                    <div class="carousel-box overflow-hidden hov-scale-img">
-                                        <a href="{{ json_decode(get_setting('home_banner1_links'), true)[$key] }}"
-                                            class="d-block text-reset overflow-hidden">
-                                            <img src="{{ static_asset('assets/img/placeholder-rect.jpg') }}"
-                                                data-src="{{ uploaded_asset($value) }}" alt="{{ env('APP_NAME') }} promo"
-                                                class="img-fluid lazyload w-100 has-transition"
-                                                onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder-rect.jpg') }}';">
-                                        </a>
+                                    <div class="carousel-box overflow-hidden hov-scale-img position-relative">
+                                        <img src="{{ static_asset('assets/img/placeholder-rect.jpg') }}"
+                                            data-src="{{ uploaded_asset($value) }}" alt="{{ env('APP_NAME') }} promo"
+                                            class="img-fluid lazyload w-100 has-transition"
+                                            onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder-rect.jpg') }}';">
+                                        
+                                        @if (!empty($banner_1_titles[$key]) || !empty($banner_1_descs[$key]) || !empty($banner_1_btn_texts[$key]))
+                                            <a href="{{ $banner_1_links[$key] ?? '#' }}" class="banner-1-overlay text-reset">
+                                                @if (!empty($banner_1_titles[$key]))
+                                                    <div class="banner-1-overlay-title">{{ $banner_1_titles[$key] }}</div>
+                                                @endif
+                                                @if (!empty($banner_1_descs[$key]))
+                                                    <div class="banner-1-overlay-desc">{{ $banner_1_descs[$key] }}</div>
+                                                @endif
+                                                @if (!empty($banner_1_btn_texts[$key]))
+                                                    <div class="banner-1-overlay-btn">{{ $banner_1_btn_texts[$key] }}</div>
+                                                @endif
+                                            </a>
+                                        @endif
                                     </div>
                                 @endforeach
                             </div>
@@ -1138,6 +1444,10 @@
                             <div class="mb-2 mb-md-3 px-3">
                                 @php
                                     $banner_2_imags = json_decode($homeBanner2Images);
+                                    $banner_2_links = json_decode(get_setting('home_banner2_links'), true) ?? [];
+                                    $banner_2_titles = json_decode(get_setting('home_banner2_titles', null, $lang), true) ?? [];
+                                    $banner_2_descs = json_decode(get_setting('home_banner2_descriptions', null, $lang), true) ?? [];
+                                    $banner_2_btn_texts = json_decode(get_setting('home_banner2_btn_texts', null, $lang), true) ?? [];
                                     $data_md = count($banner_2_imags) >= 2 ? 2 : 1;
                                 @endphp
                                 <div class="aiz-carousel gutters-16 overflow-hidden arrow-inactive-none arrow-dark arrow-x-15"
@@ -1146,14 +1456,25 @@
                                     data-md-items="{{ $data_md }}" data-sm-items="1" data-xs-items="1" data-arrows="true"
                                     data-dots="false">
                                     @foreach ($banner_2_imags as $key => $value)
-                                        <div class="carousel-box overflow-hidden hov-scale-img">
-                                            <a href="{{ json_decode(get_setting('home_banner2_links'), true)[$key] }}"
-                                                class="d-block text-reset overflow-hidden">
-                                                <img src="{{ static_asset('assets/img/placeholder-rect.jpg') }}"
-                                                    data-src="{{ uploaded_asset($value) }}" alt="{{ env('APP_NAME') }} promo"
-                                                    class="img-fluid lazyload w-100 has-transition"
-                                                    onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder-rect.jpg') }}';">
-                                            </a>
+                                        <div class="carousel-box overflow-hidden hov-scale-img position-relative">
+                                            <img src="{{ static_asset('assets/img/placeholder-rect.jpg') }}"
+                                                data-src="{{ uploaded_asset($value) }}" alt="{{ env('APP_NAME') }} promo"
+                                                class="img-fluid lazyload w-100 has-transition"
+                                                onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder-rect.jpg') }}';">
+                                            
+                                            @if (!empty($banner_2_titles[$key]) || !empty($banner_2_descs[$key]) || !empty($banner_2_btn_texts[$key]))
+                                                <a href="{{ $banner_2_links[$key] ?? '#' }}" class="banner-overlay-left text-reset">
+                                                    @if (!empty($banner_2_titles[$key]))
+                                                        <div class="banner-overlay-title">{{ $banner_2_titles[$key] }}</div>
+                                                    @endif
+                                                    @if (!empty($banner_2_descs[$key]))
+                                                        <div class="banner-overlay-desc">{{ $banner_2_descs[$key] }}</div>
+                                                    @endif
+                                                    @if (!empty($banner_2_btn_texts[$key]))
+                                                        <div class="banner-overlay-btn">{{ $banner_2_btn_texts[$key] }}</div>
+                                                    @endif
+                                                </a>
+                                            @endif
                                         </div>
                                     @endforeach
                                 </div>
@@ -1212,6 +1533,10 @@
                             <div class="mb-2 mb-md-3 px-3">
                                 @php
                                     $banner_3_imags = json_decode($homeBanner3Images);
+                                    $banner_3_links = json_decode(get_setting('home_banner3_links'), true) ?? [];
+                                    $banner_3_titles = json_decode(get_setting('home_banner3_titles', null, $lang), true) ?? [];
+                                    $banner_3_descs = json_decode(get_setting('home_banner3_descriptions', null, $lang), true) ?? [];
+                                    $banner_3_btn_texts = json_decode(get_setting('home_banner3_btn_texts', null, $lang), true) ?? [];
                                     $data_md = count($banner_3_imags) >= 2 ? 2 : 1;
                                 @endphp
                                 <div class="banner-section-3 aiz-carousel gutters-16 overflow-hidden arrow-inactive-none arrow-dark arrow-x-15"
@@ -1220,14 +1545,25 @@
                                     data-md-items="{{ $data_md }}" data-sm-items="1" data-xs-items="1" data-arrows="true"
                                     data-dots="false">
                                     @foreach ($banner_3_imags as $key => $value)
-                                        <div class="carousel-box overflow-hidden hov-scale-img">
-                                            <a href="{{ json_decode(get_setting('home_banner3_links'), true)[$key] }}"
-                                                class="d-block text-reset overflow-hidden">
-                                                <img src="{{ static_asset('assets/img/placeholder-rect.jpg') }}"
-                                                    data-src="{{ uploaded_asset($value) }}" alt="{{ env('APP_NAME') }} promo"
-                                                    class="img-fluid lazyload w-100 has-transition"
-                                                    onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder-rect.jpg') }}';">
-                                            </a>
+                                        <div class="carousel-box overflow-hidden hov-scale-img position-relative">
+                                            <img src="{{ static_asset('assets/img/placeholder-rect.jpg') }}"
+                                                data-src="{{ uploaded_asset($value) }}" alt="{{ env('APP_NAME') }} promo"
+                                                class="img-fluid lazyload w-100 has-transition"
+                                                onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder-rect.jpg') }}';">
+                                            
+                                            @if (!empty($banner_3_titles[$key]) || !empty($banner_3_descs[$key]) || !empty($banner_3_btn_texts[$key]))
+                                                <a href="{{ $banner_3_links[$key] ?? '#' }}" class="banner-overlay-left text-reset">
+                                                    @if (!empty($banner_3_titles[$key]))
+                                                        <div class="banner-overlay-title">{{ $banner_3_titles[$key] }}</div>
+                                                    @endif
+                                                    @if (!empty($banner_3_descs[$key]))
+                                                        <div class="banner-overlay-desc">{{ $banner_3_descs[$key] }}</div>
+                                                    @endif
+                                                    @if (!empty($banner_3_btn_texts[$key]))
+                                                        <div class="banner-overlay-btn">{{ $banner_3_btn_texts[$key] }}</div>
+                                                    @endif
+                                                </a>
+                                            @endif
                                         </div>
                                     @endforeach
                                 </div>
