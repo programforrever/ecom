@@ -90,10 +90,97 @@
 								</div>
 
 								<!-- Preview de iconos en tiempo real -->
-								<div class="mt-3 p-3" style="background: #f8f9fa; border-radius: 4px; border: 1px solid #ddd;">
+								<div class="mt-3">
 									<label><strong>{{ translate('Previsualización') }}</strong></label>
-									<div id="marquee_preview" style="font-size: 14px; padding: 10px; background: #e74c3c; color: white; border-radius: 4px; min-height: 40px; display: flex; align-items: center;">
-										{{ get_setting('marquee_text') ? get_setting('marquee_text') : 'El texto aparecerá aquí...' }}
+									
+									<style>
+										.marquee-preview {
+											background: {{ get_setting('marquee_bg_color', '#e74c3c') }};
+											color: {{ get_setting('marquee_text_color', '#ffffff') }};
+											padding: {{ get_setting('marquee_padding', '12') }}px 0;
+											overflow: hidden;
+											width: 100%;
+											border-radius: 4px;
+											position: relative;
+											height: 50px;
+											display: flex;
+											align-items: center;
+											margin-top: 10px;
+										}
+										
+										.marquee-preview-container {
+											display: flex;
+											width: 100%;
+											overflow: hidden;
+											position: relative;
+										}
+										
+										.marquee-preview-content {
+											display: inline-flex;
+											align-items: center;
+											white-space: nowrap;
+											font-size: {{ get_setting('marquee_font_size', '14') }}px;
+											font-weight: {{ get_setting('marquee_font_weight', 'normal') }};
+											color: {{ get_setting('marquee_text_color', '#ffffff') }};
+											padding-right: 50px;
+											animation: marquee-preview-scroll {{ 100000 / floatval(get_setting('marquee_speed', '5')) }}ms linear infinite;
+										}
+										
+										.marquee-preview-icon {
+											margin: 0 8px;
+											display: inline-flex;
+											align-items: center;
+											justify-content: center;
+											font-size: inherit;
+										}
+										
+										.marquee-preview-icon.icon-fire { color: #FF5722; }
+										.marquee-preview-icon.icon-star { color: #FFD700; }
+										.marquee-preview-icon.icon-gift { color: #E91E63; }
+										.marquee-preview-icon.icon-truck { color: #2196F3; }
+										.marquee-preview-icon.icon-heart { color: #FF1744; }
+										.marquee-preview-icon.icon-bell { color: #FF9800; }
+										.marquee-preview-icon.icon-info-circle { color: #00BCD4; }
+										.marquee-preview-icon.icon-tag { color: #673AB7; }
+										.marquee-preview-icon.icon-phone { color: #4CAF50; }
+										.marquee-preview-icon.icon-clock { color: #9C27B0; }
+										.marquee-preview-icon.icon-check-circle { color: #8BC34A; }
+										.marquee-preview-icon.icon-rocket { color: #F44336; }
+										.marquee-preview-icon.icon-smile { color: #FBC02D; }
+										.marquee-preview-icon.icon-thumbs-up { color: #03A9F4; }
+										.marquee-preview-icon.icon-exclamation-circle { color: #FF5252; }
+										.marquee-preview-icon.icon-bolt { color: #FFCA28; }
+										
+										@keyframes marquee-preview-scroll {
+											0% { transform: translateX(100%); }
+											100% { transform: translateX(-100%); }
+										}
+										
+										@keyframes marquee-preview-slide {
+											0%, 100% { transform: translateX(100%); }
+											50% { transform: translateX(-100%); }
+										}
+										
+										@keyframes marquee-preview-bounce {
+											0% { transform: translateX(100%); }
+											50% { transform: translateX(-50%); }
+											100% { transform: translateX(-100%); }
+										}
+										
+										@keyframes marquee-preview-fade {
+											0% { opacity: 0; transform: translateX(100%); }
+											10% { opacity: 1; }
+											90% { opacity: 1; }
+											100% { opacity: 0; transform: translateX(-100%); }
+										}
+									</style>
+									
+									<div class="marquee-preview">
+										<div class="marquee-preview-container">
+											<div class="marquee-preview-content" id="marquee-preview-content-animated">
+												{{ get_setting('marquee_text') ? get_setting('marquee_text') : 'El texto aparecerá aquí...' }}
+											</div>
+										</div>
 									</div>
 								</div>
 								
@@ -171,44 +258,98 @@
 								<script>
 									document.addEventListener('DOMContentLoaded', function() {
 										const textarea = document.getElementById('marquee_text_field');
-										const preview = document.getElementById('marquee_preview');
+										const previewContent = document.getElementById('marquee-preview-content-animated');
+										const marqueePreview = document.querySelector('.marquee-preview');
 
-										function updatePreview() {
-											let text = textarea.value;
-											// Mapa de colores para cada icono
-											const iconColors = {
-												'fire': '#FF5722',
-												'star': '#FFD700',
-												'gift': '#E91E63',
-												'truck': '#2196F3',
-												'heart': '#FF1744',
-												'bell': '#FF9800',
-												'info-circle': '#00BCD4',
-												'tag': '#673AB7',
-												'phone': '#4CAF50',
-												'clock': '#9C27B0',
-												'check-circle': '#8BC34A',
-												'rocket': '#F44336',
-												'smile': '#FBC02D',
-												'thumbs-up': '#03A9F4',
-												'exclamation-circle': '#FF5252',
-												'bolt': '#FFCA28'
-											};
+										// Iconos con colores predefinidos
+										const iconColors = {
+											'fire': '#FF5722',
+											'star': '#FFD700',
+											'gift': '#E91E63',
+											'truck': '#2196F3',
+											'heart': '#FF1744',
+											'bell': '#FF9800',
+											'info-circle': '#00BCD4',
+											'tag': '#673AB7',
+											'phone': '#4CAF50',
+											'clock': '#9C27B0',
+											'check-circle': '#8BC34A',
+											'rocket': '#F44336',
+											'smile': '#FBC02D',
+											'thumbs-up': '#03A9F4',
+											'exclamation-circle': '#FF5252',
+											'bolt': '#FFCA28'
+										};
+
+										function updateMarqueePreview() {
+											let text = textarea.value || 'El texto aparecerá aquí...';
 											
 											// Reemplazar iconos con etiquetas de Line Awesome coloreadas
 											text = text.replace(/\[icon:([^\]]+)\]/g, function(match, iconName) {
 												const color = iconColors[iconName] || '#333';
-												return '<i class="la la-' + iconName + '" style="margin: 0 8px; color: ' + color + ';"></i>';
+												return '<span class="marquee-preview-icon" style="color: ' + color + ';"><i class="la la-' + iconName + '"></i></span>';
 											});
-											preview.innerHTML = text || 'El texto aparecerá aquí...';
+											
+											// Actualizar contenido y forzar reseteo de animación
+											previewContent.innerHTML = text;
+											
+											// Resetear animación
+											previewContent.style.animation = 'none';
+											setTimeout(() => {
+												const speed = parseFloat(document.querySelector('input[name="marquee_speed"]')?.value || 5);
+												const animationType = document.querySelector('select[name="marquee_animation"]')?.value || 'scroll';
+												const animationDuration = (100000 / speed) + 'ms';
+												
+												previewContent.style.animation = `marquee-preview-${animationType} ${animationDuration} linear infinite`;
+											}, 10);
 										}
 
-										// Actualizar previsualización en tiempo real
-										textarea.addEventListener('input', updatePreview);
+										// Rastrear cambios de texto
+										textarea.addEventListener('input', updateMarqueePreview);
 										
-										// Inicializar previsualización
-										updatePreview();
-
+										// Rastrear cambios en velocidad
+										const speedInput = document.querySelector('input[name="marquee_speed"]');
+										if (speedInput) {
+											speedInput.addEventListener('change', updateMarqueePreview);
+											speedInput.addEventListener('input', function() {
+												const speed = parseFloat(this.value || 5);
+												const animationType = document.querySelector('select[name="marquee_animation"]')?.value || 'scroll';
+												const animationDuration = (100000 / speed) + 'ms';
+												previewContent.style.animationDuration = animationDuration;
+											});
+										}
+										
+										// Rastrear cambios en tipo de animación
+										const animationSelect = document.querySelector('select[name="marquee_animation"]');
+										if (animationSelect) {
+											animationSelect.addEventListener('change', updateMarqueePreview);
+										}
+										
+										// Rastrear cambios en color de fondo
+										const bgColorInput = document.querySelector('input[name="marquee_bg_color"]');
+										if (bgColorInput) {
+											bgColorInput.addEventListener('change', function() {
+												marqueePreview.style.backgroundColor = this.value;
+											});
+										}
+										
+										// Rastrear cambios en color de texto
+										const textColorInput = document.querySelector('input[name="marquee_text_color"]');
+										if (textColorInput) {
+											textColorInput.addEventListener('change', function() {
+												marqueePreview.style.color = this.value;
+												previewContent.style.color = this.value;
+											});
+										}
+										
+										// Rastrear cambios en tamaño de fuente
+										const fontSizeInput = document.querySelector('input[name="marquee_font_size"]');
+										if (fontSizeInput) {
+											fontSizeInput.addEventListener('change', function() {
+												previewContent.style.fontSize = this.value + 'px';
+											});
+										}
+										
 										// Insertar iconos al hacer clic
 										document.querySelectorAll('.icon-btn').forEach(button => {
 											button.addEventListener('click', function(e) {
@@ -220,9 +361,12 @@
 												textarea.value = newText;
 												textarea.focus();
 												textarea.setSelectionRange(cursorPos + 10 + icon.length, cursorPos + 10 + icon.length);
-												updatePreview();
+												updateMarqueePreview();
 											});
 										});
+										
+										// Inicializar previsualización
+										updateMarqueePreview();
 									});
 								</script>
 							</div>
