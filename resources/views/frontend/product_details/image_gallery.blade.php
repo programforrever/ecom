@@ -1,4 +1,4 @@
-<div class="sticky-top z-3 row gutters-10">
+<div class="sticky-top row gutters-10" style="z-index: 1;">
     @php
         $photos = [];
     @endphp
