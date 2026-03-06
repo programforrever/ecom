@@ -910,4 +910,47 @@
 			});
 		});
 	</script>
+
+	<!-- ========================================
+	     FIX: Re-index array fields before form submission
+	     ======================================== -->
+	<script>
+		function reindexArrayFields(form) {
+			// Get all .remove-parent containers (rows)
+			const rows = form.querySelectorAll('.remove-parent');
+			
+			// For each row, collect the field names that have array brackets
+			const fieldNamesToReindex = new Set();
+			
+			rows.forEach(row => {
+				const inputs = row.querySelectorAll('input[name*="[]"], select[name*="[]"]');
+				inputs.forEach(input => {
+					const name = input.name;
+					if (name.endsWith('[]')) {
+						const baseName = name.slice(0, -2); // Remove the "[]"
+						fieldNamesToReindex.add(baseName);
+					}
+				});
+			});
+
+			// Re-index each field
+			fieldNamesToReindex.forEach(baseName => {
+				let index = 0;
+				rows.forEach(row => {
+					const inputs = row.querySelectorAll(`input[name="${baseName}[]"], select[name="${baseName}[]"]`);
+					inputs.forEach(input => {
+						input.name = `${baseName}[${index}]`;
+					});
+					index++;
+				});
+			});
+		}
+
+		// Hook into form submissions
+		document.querySelectorAll('form[action*="business_settings.update"]').forEach(form => {
+			form.addEventListener('submit', function(e) {
+				reindexArrayFields(this);
+			});
+		});
+	</script>
 @endsection

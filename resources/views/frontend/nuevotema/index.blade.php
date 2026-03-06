@@ -1292,39 +1292,57 @@
                                     $slider_new_prices = json_decode(get_setting('home_slider_new_prices', null, $lang), true) ?? [];
                                     $slider_btn_texts = json_decode(get_setting('home_slider_btn_texts', null, $lang), true) ?? [];
                                     $slider_anim_directions = json_decode(get_setting('home_slider_anim_direction', null, $lang), true) ?? [];
+                                    $slider_links = json_decode(get_setting('home_slider_links'), true) ?? [];
                                 @endphp
-                                @foreach ($sliders as $key => $slider)
-                                    <div class="slide {{ $key == 0 ? 'active' : '' }}">
-                                        <div class="slide-content">
-                                            <span class="slide-tag">{{ $slider_tags[$key] ?? translate('Special Offer') }}</span>
-                                            <h1 class="slide-title">{{ $slider_titles[$key] ?? translate('Amazing Product') }}</h1>
-                                            <div class="slide-prices">
-                                                <span class="slide-old">{{ $slider_old_prices[$key] ?? '$99.99' }}</span>
-                                                <span class="slide-new">{{ $slider_new_prices[$key] ?? '$49.99' }}</span>
+                                @if (count($sliders) > 0)
+                                    @foreach ($sliders as $key => $slider)
+                                        <div class="slide {{ $key == 0 ? 'active' : '' }}">
+                                            <div class="slide-content">
+                                                <span class="slide-tag">{{ $slider_tags[$key] ?? translate('Special Offer') }}</span>
+                                                <h1 class="slide-title">{{ $slider_titles[$key] ?? translate('Amazing Product') }}</h1>
+                                                <div class="slide-prices">
+                                                    <span class="slide-old">{{ $slider_old_prices[$key] ?? '$99.99' }}</span>
+                                                    <span class="slide-new">{{ $slider_new_prices[$key] ?? '$49.99' }}</span>
+                                                </div>
+                                                <a href="{{ $slider_links[$key] ?? '#' }}" class="slide-btn">{{ $slider_btn_texts[$key] ?? translate('Shop Now') }}</a>
                                             </div>
-                                            <a href="{{ json_decode(get_setting('home_slider_links'), true)[$key] ?? '#' }}" class="slide-btn">{{ $slider_btn_texts[$key] ?? translate('Shop Now') }}</a>
+                                            <div class="slide-image">
+                                                @php
+                                                    $anim_class = '';
+                                                    $direction = $slider_anim_directions[$key] ?? 'right-to-left';
+                                                    if ($direction == 'left-to-right') {
+                                                        $anim_class = 'anim-left-to-right';
+                                                    } elseif ($direction == 'bottom-to-top') {
+                                                        $anim_class = 'anim-bottom-to-top';
+                                                    } elseif ($direction == 'top-to-bottom') {
+                                                        $anim_class = 'anim-top-to-bottom';
+                                                    } else {
+                                                        $anim_class = 'anim-right-to-left';
+                                                    }
+                                                @endphp
+                                                <img src="{{ $slider ? my_asset($slider->file_name) : static_asset('assets/img/placeholder.jpg') }}"
+                                                    alt="{{ env('APP_NAME') }}"
+                                                    class="{{ $anim_class }}"
+                                                    onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder-rect.jpg') }}';">
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @else
+                                    <div class="slide active">
+                                        <div class="slide-content">
+                                            <span class="slide-tag">{{ translate('Special Offer') }}</span>
+                                            <h1 class="slide-title">{{ translate('Amazing Product') }}</h1>
+                                            <div class="slide-prices">
+                                                <span class="slide-old">$99.99</span>
+                                                <span class="slide-new">$49.99</span>
+                                            </div>
+                                            <a href="#" class="slide-btn">{{ translate('Shop Now') }}</a>
                                         </div>
                                         <div class="slide-image">
-                                            @php
-                                                $anim_class = '';
-                                                $direction = $slider_anim_directions[$key] ?? 'right-to-left';
-                                                if ($direction == 'left-to-right') {
-                                                    $anim_class = 'anim-left-to-right';
-                                                } elseif ($direction == 'bottom-to-top') {
-                                                    $anim_class = 'anim-bottom-to-top';
-                                                } elseif ($direction == 'top-to-bottom') {
-                                                    $anim_class = 'anim-top-to-bottom';
-                                                } else {
-                                                    $anim_class = 'anim-right-to-left';
-                                                }
-                                            @endphp
-                                            <img src="{{ $slider ? my_asset($slider->file_name) : static_asset('assets/img/placeholder.jpg') }}"
-                                                alt="{{ env('APP_NAME') }}"
-                                                class="{{ $anim_class }}"
-                                                onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder-rect.jpg') }}';">
+                                            <img src="{{ static_asset('assets/img/placeholder-rect.jpg') }}" alt="{{ env('APP_NAME') }}">
                                         </div>
                                     </div>
-                                @endforeach
+                                @endif
                             @endif
                         </div>
 
@@ -1721,7 +1739,7 @@
         <div id="auction_products" class="section-offset"></div>
     @endif
 
-    <!-- Cupon -->
+    <!-- Cupon 
     @if (get_setting('coupon_system') == 1)
         <div class="mb-2 mb-md-3 mt-2 mt-md-3 section-offset"
             style="background-color: {{ get_setting('cupon_background_color', '#292933') }}">
@@ -1796,7 +1814,7 @@
                 </div>
             </div>
         </div>
-    @endif
+    @endif-->
 
     <!-- Category wise Products -->
     <div id="section_home_categories" class="mb-2 mb-md-3 mt-2 mt-md-3 section-offset"></div>

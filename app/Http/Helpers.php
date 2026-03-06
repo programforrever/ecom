@@ -1540,9 +1540,23 @@ if (!function_exists('get_admin')) {
 if (!function_exists('get_slider_images')) {
     function get_slider_images($ids)
     {
+        if (!$ids || !is_array($ids) || count($ids) == 0) {
+            return [];
+        }
+        
         $slider_query = Upload::query();
         $sliders = $slider_query->whereIn('id', $ids)->get();
-        return $sliders;
+        
+        // Re-order results to match the order of $ids
+        $ordered_sliders = [];
+        foreach ($ids as $id) {
+            $slider = $sliders->firstWhere('id', intval($id));
+            if ($slider) {
+                $ordered_sliders[] = $slider;
+            }
+        }
+        
+        return $ordered_sliders;
     }
 }
 
