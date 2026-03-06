@@ -13,14 +13,6 @@
             <div class="col">
                 <h1 class="h3">{{ translate('Add New Product') }}</h1>
             </div>
-            {{-- <div class="col text-right">
-                <a class="btn has-transition btn-xs p-0 hov-svg-danger" href="{{ route('home') }}" 
-                    target="_blank" data-toggle="tooltip" data-placement="top" data-title="{{ translate('View Tutorial Video') }}">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="19.887" height="16" viewBox="0 0 19.887 16">
-                        <path id="_42fbab5a39cb8436403668a76e5a774b" data-name="42fbab5a39cb8436403668a76e5a774b" d="M18.723,8H5.5A3.333,3.333,0,0,0,2.17,11.333v9.333A3.333,3.333,0,0,0,5.5,24h13.22a3.333,3.333,0,0,0,3.333-3.333V11.333A3.333,3.333,0,0,0,18.723,8Zm-3.04,8.88-5.47,2.933a1,1,0,0,1-1.473-.88V13.067a1,1,0,0,1,1.473-.88l5.47,2.933a1,1,0,0,1,0,1.76Zm-5.61-3.257L14.5,16l-4.43,2.377Z" transform="translate(-2.17 -8)" fill="#9da3ae"/>
-                    </svg>
-                </a>
-            </div> --}}
         </div>
     </div>
 
@@ -71,7 +63,7 @@
             <!-- Error Meassages -->
             @if ($errors->any())
                 <div class="alert alert-danger">
-                    <ul>
+                    <ul class="mb-0">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
@@ -79,8 +71,10 @@
                 </div>
             @endif
             
-            <form action="{{route('products.store')}}" method="POST" enctype="multipart/form-data" enctype="multipart/form-data" id="choice_form">
+            <form action="{{route('products.store')}}" method="POST" enctype="multipart/form-data" id="choice_form">
                 @csrf
+                <input type="hidden" name="tab" id="tab">
+
                 <div class="tab-content">
                     <!-- General -->
                     <div class="tab-pane fade" id="general" role="tabpanel" aria-labelledby="general-tab">
@@ -94,7 +88,7 @@
                                         <div class="form-group row">
                                             <label class="col-xxl-3 col-from-label fs-13">{{translate('Product Name')}} <span class="text-danger">*</span></label>
                                             <div class="col-xxl-9">
-                                                <input type="text" class="form-control" name="name" value="{{ old('name') }}" placeholder="{{ translate('Product Name') }}" onchange="update_sku()">
+                                                <input type="text" class="form-control" name="name" value="{{ old('name') }}" placeholder="{{translate('Product Name')}}" onchange="update_sku()">
                                             </div>
                                         </div>
                                         <!-- Brand -->
@@ -104,7 +98,7 @@
                                                 <select class="form-control aiz-selectpicker" name="brand_id" id="brand_id" data-live-search="true">
                                                     <option value="">{{ translate('Select Brand') }}</option>
                                                     @foreach (\App\Models\Brand::all() as $brand)
-                                                    <option value="{{ $brand->id }}" @selected(old('brand_id') == $brand->id)>{{ $brand->getTranslation('name') }}</option>
+                                                    <option value="{{ $brand->id }}" @if(old('brand_id') == $brand->id) selected @endif>{{ $brand->getTranslation('name') }}</option>
                                                     @endforeach
                                                 </select>
                                                 <small class="text-muted">{{translate("You can choose a brand if you'd like to display your product by brand.")}}</small>
@@ -114,21 +108,21 @@
                                         <div class="form-group row">
                                             <label class="col-xxl-3 col-from-label fs-13">{{translate('Unit')}} <span class="text-danger">*</span></label>
                                             <div class="col-xxl-9">
-                                                <input type="text" class="form-control" name="unit" value="{{ old('unit') }}" placeholder="{{ translate('Unit (e.g. KG, Pc etc)') }}">
+                                                <input type="text" class="form-control" name="unit" placeholder="{{ translate('Unit (e.g. KG, Pc etc)') }}" value="{{old('unit')}}">
                                             </div>
                                         </div>
                                         <!-- Weight -->
                                         <div class="form-group row">
                                             <label class="col-xxl-3 col-from-label fs-13">{{translate('Weight')}} <small>({{ translate('In Kg') }})</small></label>
                                             <div class="col-xxl-9">
-                                                <input type="number" class="form-control" name="weight" step="0.01" value="0.00" placeholder="0.00">
+                                                <input type="number" class="form-control" name="weight" value="{{ old('weight', '0.00') }}" step="0.01" placeholder="0.00">
                                             </div>
                                         </div>
                                         <!-- Quantity -->
                                         <div class="form-group row">
                                             <label class="col-xxl-3 col-from-label fs-13">{{translate('Minimum Purchase Qty')}} <span class="text-danger">*</span></label>
                                             <div class="col-xxl-9">
-                                                <input type="number" lang="en" class="form-control" name="min_qty" value="1" min="1">
+                                                <input type="number" lang="en" class="form-control" name="min_qty" value="{{ old('min_qty', '1') }}" min="1">
                                                 <small class="text-muted">{{translate("The minimum quantity needs to be purchased by your customer.")}}</small>
                                             </div>
                                         </div>
@@ -136,7 +130,7 @@
                                         <div class="form-group row">
                                             <label class="col-xxl-3 col-from-label fs-13">{{translate('Tags')}} <span class="text-danger">*</span></label>
                                             <div class="col-xxl-9">
-                                                <input type="text" class="form-control aiz-tag-input" name="tags[]" placeholder="{{ translate('Type and hit enter to add a tag') }}">
+                                                <input type="text" class="form-control aiz-tag-input" name="tags[]" id="tags" value="{{ old('tags') }}" placeholder="{{ translate('Type to add a tag') }}" data-role="tagsinput">
                                                 <small class="text-muted">{{translate('This is used for search. Input those words by which cutomer can find this product.')}}</small>
                                             </div>
                                         </div>
@@ -146,7 +140,7 @@
                                         <div class="form-group row">
                                             <label class="col-xxl-3 col-from-label fs-13">{{translate('Barcode')}}</label>
                                             <div class="col-xxl-9">
-                                                <input type="text" class="form-control" name="barcode" value="{{ old('barcode') }}" placeholder="{{ translate('Barcode') }}">
+                                                <input type="text" class="form-control" name="barcode" placeholder="{{ translate('Barcode') }}" value="{{ old('barcode') }}">
                                             </div>
                                         </div>
                                         @endif
@@ -157,7 +151,7 @@
                                             <label class="col-xxl-3 col-from-label fs-13">{{translate('Refundable')}}</label>
                                             <div class="col-xxl-9">
                                                 <label class="aiz-switch aiz-switch-success mb-0">
-                                                    <input type="checkbox" name="refundable" checked value="1">
+                                                    <input type="checkbox" name="refundable" @if(old('refundable') == 1) checked @endif value="1">
                                                     <span></span>
                                                 </label>
                                             </div>
@@ -211,7 +205,7 @@
                                     <label class="col-md-3 col-from-label">{{translate('Featured')}}</label>
                                     <div class="col-md-9">
                                         <label class="aiz-switch aiz-switch-success mb-0 d-block">
-                                            <input type="checkbox" name="featured" value="1">
+                                            <input type="checkbox" name="featured" value="1" @if(old('featured') == 1) checked @endif>
                                             <span></span>
                                         </label>
                                         <small class="text-muted">{{ translate('If you enable this, this product will be granted as a featured product.') }}</small>
@@ -222,7 +216,7 @@
                                     <label class="col-md-3 col-from-label">{{translate('Todays Deal')}}</label>
                                     <div class="col-md-9">
                                         <label class="aiz-switch aiz-switch-success mb-0 d-block">
-                                            <input type="checkbox" name="todays_deal" value="1">
+                                            <input type="checkbox" name="todays_deal" value="1" @if(old('todays_deal') == 1) checked @endif>
                                             <span></span>
                                         </label>
                                         <small class="text-muted">{{ translate('If you enable this, this product will be granted as a todays deal product.') }}</small>
@@ -240,10 +234,10 @@
                                 <div class="form-group row">
                                     <label class="col-md-3 col-from-label">{{translate('Add To Flash')}}</label>
                                     <div class="col-xxl-9">
-                                        <select class="form-control aiz-selectpicker" name="flash_deal_id" id="flash_deal">
+                                        <select class="form-control aiz-selectpicker" name="flash_deal_id" id="video_provider">
                                             <option value="">{{ translate('Choose Flash Title') }}</option>
                                             @foreach(\App\Models\FlashDeal::where("status", 1)->get() as $flash_deal)
-                                                <option value="{{ $flash_deal->id}}">
+                                                <option value="{{ $flash_deal->id }}" @if(old('flash_deal_id') == $flash_deal->id) selected @endif>
                                                     {{ $flash_deal->title }}
                                                 </option>
                                             @endforeach
@@ -254,17 +248,21 @@
                                 <div class="form-group row">
                                     <label class="col-md-3 col-from-label">{{translate('Discount')}}</label>
                                     <div class="col-xxl-9">
-                                        <input type="number" name="flash_discount" value="0" min="0" step="0.01" class="form-control">
+                                        <input type="number" name="flash_discount" value="{{ old('flash_discount', '0') }}" min="0" step="0.01" class="form-control">
                                     </div>
                                 </div>
                                 <!-- Discount Type -->
                                 <div class="form-group row">
                                     <label class="col-md-3 col-from-label">{{translate('Discount Type')}}</label>
                                     <div class="col-xxl-9">
-                                        <select class="form-control aiz-selectpicker" name="flash_discount_type" id="flash_discount_type">
+                                        <select class="form-control aiz-selectpicker" name="flash_discount_type" id="">
                                             <option value="">{{ translate('Choose Discount Type') }}</option>
-                                            <option value="amount">{{translate('Flat')}}</option>
-                                            <option value="percent">{{translate('Percent')}}</option>
+                                            <option value="amount" @if(old('flash_discount_type') == 'amount') selected @endif>
+                                                {{translate('Flat')}}
+                                            </option>
+                                            <option value="percent" @if(old('flash_discount_type') == 'percent') selected @endif>
+                                                {{translate('Percent')}}
+                                            </option>
                                         </select>
                                     </div>
                                 </div>
@@ -281,12 +279,16 @@
 
                                     <div class="form-row">
                                         <div class="form-group col-md-6">
-                                            <input type="number" lang="en" min="0" value="0" step="0.01" placeholder="{{ translate('Tax') }}" name="tax[]" class="form-control">
+                                            <input type="number" lang="en" min="0" value="{{ old('tax.'.$loop->index, '0') }}" step="0.01" placeholder="{{ translate('Tax') }}" name="tax[]" class="form-control">
                                         </div>
                                         <div class="form-group col-md-6">
                                             <select class="form-control aiz-selectpicker" name="tax_type[]">
-                                                <option value="amount">{{translate('Flat')}}</option>
-                                                <option value="percent">{{translate('Percent')}}</option>
+                                                <option value="amount" @if(old('tax_type.'.$loop->index) == 'amount') selected @endif>
+                                                    {{translate('Flat')}}
+                                                </option>
+                                                <option value="percent" @if(old('tax_type.'.$loop->index) == 'percent') selected @endif>
+                                                    {{translate('Percent')}}
+                                                </option>
                                             </select>
                                         </div>
                                     </div>
@@ -333,16 +335,33 @@
                                         <small class="text-muted">{{translate('This image is visible in all product box. Use 300x300 sizes image. Keep some blank space around main object of your image as we had to crop some edge in different devices to make it responsive.')}}</small>
                                     </div>
                                 </div>
+                                
+                                <!-- Thumbnail Hover Image (Secondary) -->
+                                <div class="form-group row">
+                                    <label class="col-md-3 col-form-label">{{translate('Thumbnail Hover Image')}} <small>(300x300)</small></label>
+                                    <div class="col-md-9">
+                                        <div class="input-group" data-toggle="aizuploader" data-type="image">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse')}}</div>
+                                            </div>
+                                            <div class="form-control file-amount">{{ translate('Choose File') }}</div>
+                                            <input type="hidden" name="thumbnail_hover_img" class="selected-files">
+                                        </div>
+                                        <div class="file-preview box sm">
+                                        </div>
+                                        <small class="text-muted">{{translate('This image will be shown when hovering over the product card. Use 300x300 sizes image.')}}</small>
+                                    </div>
+                                </div>
                             </div>
                             <!-- Video Provider -->
                             <div class="form-group row">
                                 <label class="col-md-3 col-from-label">{{translate('Video Provider')}}</label>
                                 <div class="col-md-9">
                                     <select class="form-control aiz-selectpicker" name="video_provider" id="video_provider">
-                                        <option value="youtube" @selected(old('video_provider') == 'youtube')>{{translate('Youtube')}}</option>
-                                        <option value="dailymotion" @selected(old('video_provider') == 'dailymotion')>{{translate('Dailymotion')}}</option>
-                                        <option value="vimeo" @selected(old('video_provider') == 'vimeo')>{{translate('Vimeo')}}</option>
-                                    </select>
+                                    <option value="youtube" @if(old('video_provider') == 'youtube') selected @endif>{{translate('Youtube')}}</option>
+                                    <option value="dailymotion" @if(old('video_provider') == 'dailymotion') selected @endif>{{translate('Dailymotion')}}</option>
+                                    <option value="vimeo" @if(old('video_provider') == 'vimeo') selected @endif>{{translate('Vimeo')}}</option>
+                                </select>
                                 </div>
                             </div>
                             <!-- Video Link -->
@@ -383,9 +402,12 @@
                                         <input type="text" class="form-control" value="{{translate('Colors')}}" disabled>
                                     </div>
                                     <div class="col-md-8">
-                                        <select class="form-control aiz-selectpicker" data-live-search="true" data-selected-text-format="count" name="colors[]" id="colors" multiple disabled>
+                                        <select class="form-control aiz-selectpicker" data-live-search="true" data-selected-text-format="count" name="colors[]" id="colors" multiple>
                                             @foreach (\App\Models\Color::orderBy('name', 'asc')->get() as $key => $color)
-                                            <option  value="{{ $color->code }}" data-content="<span><span class='size-15px d-inline-block mr-2 rounded border' style='background:{{ $color->code }}'></span><span>{{ $color->name }}</span></span>"></option>
+                                            <option
+                                                value="{{ $color->code }}"
+                                                data-content="<span><span class='size-15px d-inline-block mr-2 rounded border' style='background:{{ $color->code }}'></span><span>{{ $color->name }}</span></span>"
+                                                ></option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -402,7 +424,7 @@
                                         <input type="text" class="form-control" value="{{translate('Attributes')}}" disabled>
                                     </div>
                                     <div class="col-md-8">
-                                        <select name="choice_attributes[]" id="choice_attributes" class="form-control aiz-selectpicker" data-selected-text-format="count" data-live-search="true" multiple data-placeholder="{{ translate('Choose Attributes') }}">
+                                        <select name="choice_attributes[]" id="choice_attributes" data-selected-text-format="count" data-live-search="true" class="form-control aiz-selectpicker" multiple data-placeholder="{{ translate('Choose Attributes') }}">
                                             @foreach (\App\Models\Attribute::all() as $key => $attribute)
                                             <option value="{{ $attribute->id }}">{{ $attribute->getTranslation('name') }}</option>
                                             @endforeach
@@ -415,34 +437,34 @@
                                 </div>
         
                                 <!-- choice options -->
-                                <div class="customer_choice_options mb-4" id="customer_choice_options">
-        
+                                <div class="customer_choice_options" id="customer_choice_options">
                                 </div>
 
                                 <!-- Unit price -->
                                 <div class="form-group row">
                                     <label class="col-md-3 col-from-label">{{translate('Unit price')}} <span class="text-danger">*</span></label>
                                     <div class="col-md-6">
-                                        <input type="number" lang="en" min="0" value="0" step="0.01" placeholder="{{ translate('Unit price') }}" name="unit_price" class="form-control">
+                                        <input type="text" placeholder="{{translate('Unit price')}}" name="unit_price" class="form-control" value="{{ old('unit_price') }}">
                                     </div>
                                 </div>
+
                                 <!-- Discount Date Range -->
                                 <div class="form-group row">
                                     <label class="col-sm-3 control-label" for="start_date">{{translate('Discount Date Range')}}</label>
                                     <div class="col-sm-9">
-                                      <input type="text" class="form-control aiz-date-range" name="date_range" placeholder="{{translate('Select Date')}}" data-time-picker="true" data-format="DD-MM-Y HH:mm:ss" data-separator=" to " autocomplete="off">
+                                      <input type="text" class="form-control aiz-date-range" value="{{ old('date_range') }}" name="date_range" placeholder="{{translate('Select Date')}}" data-time-picker="true" data-format="DD-MM-Y HH:mm:ss" data-separator=" to " autocomplete="off">
                                     </div>
                                 </div>
                                 <!-- Discount -->
                                 <div class="form-group row">
                                     <label class="col-md-3 col-from-label">{{translate('Discount')}} <span class="text-danger">*</span></label>
                                     <div class="col-md-6">
-                                        <input type="number" lang="en" min="0" value="0" step="0.01" placeholder="{{ translate('Discount') }}" name="discount" class="form-control">
+                                        <input type="number" lang="en" min="0" step="0.01" placeholder="{{translate('Discount')}}" name="discount" class="form-control" value="{{ old('discount', '0') }}">
                                     </div>
                                     <div class="col-md-3">
                                         <select class="form-control aiz-selectpicker" name="discount_type">
-                                            <option value="amount" @selected(old('discount_type') == 'amount')>{{translate('Flat')}}</option>
-                                            <option value="percent" @selected(old('discount_type') == 'percent')>{{translate('Percent')}}</option>
+                                            <option value="amount" @if(old('discount_type') == 'amount') selected @endif>{{translate('Flat')}}</option>
+                                            <option value="percent" @if(old('discount_type') == 'percent') selected @endif>{{translate('Percent')}}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -454,17 +476,17 @@
                                             {{translate('Set Point')}}
                                         </label>
                                         <div class="col-md-6">
-                                            <input type="number" lang="en" min="0" value="0" step="1" placeholder="{{ translate('1') }}" name="earn_point" class="form-control">
+                                            <input type="number" lang="en" min="0" value="{{ old('earn_point', '0') }}" step="0.01" placeholder="{{ translate('1') }}" name="earn_point" class="form-control">
                                         </div>
                                     </div>
                                 @endif
                                     
                                 <div id="show-hide-div">
                                     <!-- Quantity -->
-                                    <div class="form-group row">
+                                    <div class="form-group row" id="quantity">
                                         <label class="col-md-3 col-from-label">{{translate('Quantity')}} <span class="text-danger">*</span></label>
                                         <div class="col-md-6">
-                                            <input type="number" lang="en" min="0" value="0" step="1" placeholder="{{ translate('Quantity') }}" name="current_stock" class="form-control">
+                                            <input type="number" lang="en" value="{{ old('current_stock') }}" step="1" placeholder="{{translate('Quantity')}}" name="current_stock" class="form-control">
                                         </div>
                                     </div>
                                     <!-- SKU -->
@@ -473,7 +495,7 @@
                                             {{translate('SKU')}}
                                         </label>
                                         <div class="col-md-6">
-                                            <input type="text" placeholder="{{ translate('SKU') }}" name="sku" value="{{ old('sku') }}" class="form-control">
+                                            <input type="text" placeholder="{{ translate('SKU') }}" value="{{ old('sku') }}" name="sku" class="form-control">
                                         </div>
                                     </div>
                                 </div>
@@ -483,7 +505,7 @@
                                         {{translate('External link')}}
                                     </label>
                                     <div class="col-md-9">
-                                        <input type="text" placeholder="{{ translate('External link') }}" value="{{ old('external_link') }}" name="external_link" class="form-control">
+                                        <input type="text" placeholder="{{ translate('External link') }}" name="external_link" value="{{ old('external_link') }}" class="form-control">
                                         <small class="text-muted">{{translate('Leave it blank if you do not use external site link')}}</small>
                                     </div>
                                 </div>
@@ -512,7 +534,7 @@
                                         {{translate('Quantity')}}
                                     </label>
                                     <div class="col-md-9">
-                                        <input type="number" name="low_stock_quantity" value="1" min="0" step="1" class="form-control">
+                                        <input type="number" name="low_stock_quantity" value="{{ old('low_stock_quantity', '0') }}" min="0" step="1" class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -525,7 +547,7 @@
                                     <label class="col-md-3 col-from-label">{{translate('Show Stock Quantity')}}</label>
                                     <div class="col-md-9">
                                         <label class="aiz-switch aiz-switch-success mb-0">
-                                            <input type="radio" name="stock_visibility_state" value="quantity" checked>
+                                            <input type="radio" name="stock_visibility_state" value="quantity" @if(old('stock_visibility_state', 'quantity') == 'quantity') checked @endif>
                                             <span></span>
                                         </label>
                                     </div>
@@ -535,7 +557,7 @@
                                     <label class="col-md-3 col-from-label">{{translate('Show Stock With Text Only')}}</label>
                                     <div class="col-md-9">
                                         <label class="aiz-switch aiz-switch-success mb-0">
-                                            <input type="radio" name="stock_visibility_state" value="text">
+                                            <input type="radio" name="stock_visibility_state" value="text" @if(old('stock_visibility_state') == 'text') checked @endif>
                                             <span></span>
                                         </label>
                                     </div>
@@ -545,7 +567,7 @@
                                     <label class="col-md-3 col-from-label">{{translate('Hide Stock')}}</label>
                                     <div class="col-md-9">
                                         <label class="aiz-switch aiz-switch-success mb-0">
-                                            <input type="radio" name="stock_visibility_state" value="hide">
+                                            <input type="radio" name="stock_visibility_state" value="hide" @if(old('stock_visibility_state') == 'hide') checked @endif>
                                             <span></span>
                                         </label>
                                     </div>
@@ -564,7 +586,7 @@
                                 <div class="form-group row">
                                     <label class="col-md-3 col-from-label">{{translate('Meta Title')}}</label>
                                     <div class="col-md-9">
-                                        <input type="text" class="form-control" name="meta_title" value="{{ old('meta_title') }}" placeholder="{{ translate('Meta Title') }}">
+                                        <input type="text" class="form-control" name="meta_title" value="{{ old('meta_title') }}" placeholder="{{translate('Meta Title')}}">
                                     </div>
                                 </div>
                                 <!-- Description -->
@@ -574,7 +596,7 @@
                                         <textarea name="meta_description" rows="8" class="form-control">{{ old('meta_description') }}</textarea>
                                     </div>
                                 </div>
-                                <!--Meta Image -->
+                                <!-- Meta Image -->
                                 <div class="form-group row">
                                     <label class="col-md-3 col-form-label" for="signinSrEmail">{{ translate('Meta Image') }}</label>
                                     <div class="col-md-9">
@@ -587,6 +609,13 @@
                                         </div>
                                         <div class="file-preview box sm">
                                         </div>
+                                    </div>
+                                </div>
+                                <!-- Slug -->
+                                <div class="form-group row">
+                                    <label class="col-md-3 col-form-label">{{translate('Slug')}}</label>
+                                    <div class="col-md-8">
+                                        <input type="text" placeholder="{{translate('Slug')}}" id="slug" name="slug" value="{{ old('slug') }}" class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -605,7 +634,7 @@
                                         <label class="col-md-3 col-from-label">{{translate('Cash On Delivery')}}</label>
                                         <div class="col-md-9">
                                             <label class="aiz-switch aiz-switch-success mb-0">
-                                                <input type="checkbox" name="cash_on_delivery" value="1" checked="">
+                                                <input type="checkbox" name="cash_on_delivery" value="1" @if(old('cash_on_delivery') == 1) checked @endif>
                                                 <span></span>
                                             </label>
                                         </div>
@@ -625,7 +654,7 @@
                                     <label class="col-md-3 col-from-label">{{translate('Free Shipping')}}</label>
                                     <div class="col-md-9">
                                         <label class="aiz-switch aiz-switch-success mb-0">
-                                            <input type="radio" name="shipping_type" value="free" checked>
+                                            <input type="radio" name="shipping_type" value="free" @if(old('shipping_type', 'free') == 'free') checked @endif>
                                             <span></span>
                                         </label>
                                     </div>
@@ -635,7 +664,7 @@
                                     <label class="col-md-3 col-from-label">{{translate('Flat Rate')}}</label>
                                     <div class="col-md-9">
                                         <label class="aiz-switch aiz-switch-success mb-0">
-                                            <input type="radio" name="shipping_type" value="flat_rate">
+                                            <input type="radio" name="shipping_type" value="flat_rate" @if(old('shipping_type') == 'flat_rate') checked @endif>
                                             <span></span>
                                         </label>
                                     </div>
@@ -645,7 +674,7 @@
                                     <div class="form-group row">
                                         <label class="col-md-3 col-from-label">{{translate('Shipping cost')}}</label>
                                         <div class="col-md-9">
-                                            <input type="number" lang="en" min="0" value="0" step="0.01" placeholder="{{ translate('Shipping cost') }}" name="flat_shipping_cost" class="form-control">
+                                            <input type="number" lang="en" min="0" value="{{ old('flat_shipping_cost', '0') }}" step="0.01" placeholder="{{ translate('Shipping cost') }}" name="flat_shipping_cost" class="form-control">
                                         </div>
                                     </div>
                                 </div>
@@ -654,7 +683,7 @@
                                     <label class="col-md-3 col-from-label">{{translate('Is Product Quantity Mulitiply')}}</label>
                                     <div class="col-md-9">
                                         <label class="aiz-switch aiz-switch-success mb-0">
-                                            <input type="checkbox" name="is_quantity_multiplied" value="1">
+                                            <input type="checkbox" name="is_quantity_multiplied" value="1" @if(old('is_quantity_multiplied') == 1) checked @endif>
                                             <span></span>
                                         </label>
                                     </div>
@@ -676,7 +705,7 @@
                                     <label class="col-md-3 col-from-label">{{translate('Shipping Days')}}</label>
                                     <div class="col-md-9">
                                         <div class="input-group">
-                                            <input type="number" class="form-control" name="est_shipping_days" min="1" step="1" placeholder="{{translate('Shipping Days')}}">
+                                            <input type="number" class="form-control" name="est_shipping_days" value="{{ old('est_shipping_days', '1') }}" min="1" step="1" placeholder="{{translate('Shipping Days')}}">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text" id="inputGroupPrepend">{{translate('Days')}}</span>
                                             </div>
@@ -687,10 +716,9 @@
                         </div>
                     </div>
 
-                    <!-- Save Button -->
+                    <!-- Submit Button -->
                     <div class="mt-4 text-right">
-                        <button type="submit" name="button" value="unpublish" class="mx-2 btn btn-light w-230px btn-md rounded-2 fs-14 fw-700 shadow-secondary border-soft-secondary action-btn">{{ translate('Save & Unpublish') }}</button>
-                        <button type="submit" name="button" value="publish" class="mx-2 btn btn-success w-230px btn-md rounded-2 fs-14 fw-700 shadow-success action-btn">{{ translate('Save & Publish') }}</button>
+                        <button type="button" onclick="submitFormWithTab()" name="button" class="mx-2 btn btn-success w-230px btn-md rounded-2 fs-14 fw-700 shadow-success action-btn">{{ translate('Create') }}</button>
                     </div>
 
                 </div>
@@ -702,60 +730,26 @@
 @endsection
 
 @section('script')
-
 <!-- Treeview js -->
 <script src="{{ static_asset('assets/js/hummingbird-treeview.js') }}"></script>
 
 <script type="text/javascript">
-
-    $(document).ready(function() {
+    $(document).ready(function (){
+        show_hide_shipping_div();
         $("#treeview").hummingbird();
-
-        var main_id = '{{ old("category_id") }}';
-        var selected_ids = [];
-        @if(old("category_ids"))
-            selected_ids = @json(old("category_ids"));
-        @endif
-        for (let i = 0; i < selected_ids.length; i++) {
-            const element = selected_ids[i];
-            $('#treeview input:checkbox#'+element).prop('checked',true);
-            $('#treeview input:checkbox#'+element).parents( "ul" ).css( "display", "block" );
-            $('#treeview input:checkbox#'+element).parents( "li" ).children('.las').removeClass( "la-plus" ).addClass('la-minus');
-        }
-        if(main_id){
-            $('#treeview input:radio[value='+main_id+']').prop('checked',true);
-        }
     });
 
-    $('form').bind('submit', function (e) {
-		if ( $(".action-btn").attr('attempted') == 'true' ) {
-			//stop submitting the form because we have already clicked submit.
-			e.preventDefault();
-		}
-		else {
-			$(".action-btn").attr("attempted", 'true');
-		}
-        // Disable the submit button while evaluating if the form should be submitted
-        // $("button[type='submit']").prop('disabled', true);
-        
-        // var valid = true;
-
-        // if (!valid) {
-            // e.preventDefault();
-            
-            ////Reactivate the button if the form was not submitted
-            // $("button[type='submit']").button.prop('disabled', false);
-        // }
-    });
-    
     $("[name=shipping_type]").on("change", function (){
-        $(".flat_rate_shipping_div").hide();
+        show_hide_shipping_div();
+    });
 
-        if($(this).val() == 'flat_rate'){
+    function show_hide_shipping_div() {
+        var shipping_val = $("[name=shipping_type]:checked").val();
+        $(".flat_rate_shipping_div").hide();
+        if(shipping_val == 'flat_rate'){
             $(".flat_rate_shipping_div").show();
         }
-
-    });
+    }
 
     function add_more_customer_choice_option(i, name){
         $.ajax({
@@ -784,16 +778,14 @@
                 AIZ.plugins.bootstrapSelect('refresh');
            }
        });
-
-
     }
 
     $('input[name="colors_active"]').on('change', function() {
-        if(!$('input[name="colors_active"]').is(':checked')) {
+        if(!$('input[name="colors_active"]').is(':checked')){
             $('#colors').prop('disabled', true);
             AIZ.plugins.bootstrapSelect('refresh');
         }
-        else {
+        else{
             $('#colors').prop('disabled', false);
             AIZ.plugins.bootstrapSelect('refresh');
         }
@@ -808,16 +800,8 @@
         update_sku();
     });
 
-    $('input[name="unit_price"]').on('keyup', function() {
-        update_sku();
-    });
-
-    $('input[name="name"]').on('keyup', function() {
-        update_sku();
-    });
-
     function delete_row(em){
-        $(em).closest('.form-group row').remove();
+        $(em).closest('.form-group').remove();
         update_sku();
     }
 
@@ -830,26 +814,43 @@
            type:"POST",
            url:'{{ route('products.sku_combination') }}',
            data:$('#choice_form').serialize(),
-           success: function(data) {
+           success: function(data){
                 $('#sku_combination').html(data);
-                AIZ.uploader.previewGenerate();
+                setTimeout(() => {
+                        AIZ.uploader.previewGenerate();
+                }, "2000");
                 AIZ.plugins.fooTable();
                 if (data.trim().length > 1) {
-                   $('#show-hide-div').hide();
+                    $('#show-hide-div').hide();
                 }
                 else {
                     $('#show-hide-div').show();
                 }
            }
-       });
+        });
     }
 
-    $('#choice_attributes').on('change', function() {
-        $('#customer_choice_options').html(null);
-        $.each($("#choice_attributes option:selected"), function(){
-            add_more_customer_choice_option($(this).val(), $(this).text());
-        });
+    AIZ.plugins.tagify();
 
+    $(document).ready(function(){
+        update_sku();
+        $('.remove-files').on('click', function(){
+            $(this).parents(".col-md-4").remove();
+        });
+    });
+
+    $('#choice_attributes').on('change', function() {
+        $.each($("#choice_attributes option:selected"), function(j, attribute){
+            flag = false;
+            $('input[name="choice_no[]"]').each(function(i, choice_no) {
+                if($(attribute).val() == $(choice_no).val()){
+                    flag = true;
+                }
+            });
+            if(!flag){
+                add_more_customer_choice_option($(attribute).val(), $(attribute).text());
+            }
+        });
         update_sku();
     });
 
@@ -859,8 +860,10 @@
         var hash = document.location.hash;
         if (hash) {
             $('.nav-tabs a[href="'+hash+'"]').tab('show');
+            $('#tab').val(location.hash.substr(1));
         }else{
             $('.nav-tabs a[href="#general"]').tab('show');
+            $('#tab').val('general');
         }
         
         // Change hash for page-reload
@@ -868,5 +871,16 @@
             window.location.hash = e.target.hash;
         });
     });
+    
+    function submitFormWithTab(){
+        var hash = document.location.hash;
+        if (hash) {
+            $('#tab').val(location.hash.substr(1));
+        }else{
+            $('#tab').val('');
+        }
+        $('#choice_form').submit();
+    }
 </script>
+
 @endsection

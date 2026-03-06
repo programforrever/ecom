@@ -182,7 +182,7 @@ class ProductController extends Controller
             ->with('childrenCategories')
             ->get();
 
-        return view('backend.product.products.create_wizard', compact('categories'));
+        return view('backend.product.products.create', compact('categories'));
     }
 
     public function add_more_choice_option(Request $request)
