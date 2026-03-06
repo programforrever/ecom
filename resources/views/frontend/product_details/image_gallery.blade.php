@@ -10,7 +10,12 @@
     <!-- Gallery Images -->
     <div class="col-12">
         <div class="aiz-carousel product-gallery arrow-inactive-transparent arrow-lg-none"
-            data-nav-for='.product-gallery-thumb' data-fade='true' data-auto-height='true' data-arrows='true'>
+            data-nav-for='.product-gallery-thumb'
+            data-fade='true'
+            data-auto-height='true'
+            data-arrows='true'
+            data-autoplay='true'
+            data-autoplay-timeout='3000'>
             @if ($detailedProduct->digital == 0)
                 @foreach ($detailedProduct->stocks as $key => $stock)
                     @if ($stock->image != null)
@@ -62,6 +67,5 @@
 
         </div>
     </div>
-
 
 </div>

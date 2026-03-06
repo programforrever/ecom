@@ -1,3 +1,424 @@
+<style>
+    /* ── Neumorfismo: Reseñas ── */
+    .neu-reviews {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #e8ecef;
+        border-radius: 20px;
+        box-shadow: 5px 5px 10px #c5c9cc, -5px -5px 10px #ffffff;
+        padding: 5px 14px;
+    }
+
+    /* ── Neumorfismo: Guía de tallas ── */
+    .neu-size-guide {
+        background: #e8ecef !important;
+        border: none !important;
+        border-radius: 10px !important;
+        box-shadow: 5px 5px 10px #c5c9cc, -5px -5px 10px #ffffff !important;
+        padding: 6px 14px !important;
+        font-size: 13px !important;
+        font-weight: 700 !important;
+        color: #f6a623 !important;
+        text-decoration: none !important;
+        transition: box-shadow 0.15s ease, transform 0.1s ease !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 5px !important;
+    }
+    .neu-size-guide:hover {
+        box-shadow: 3px 3px 6px #c5c9cc, -3px -3px 6px #ffffff !important;
+        color: #f6a623 !important;
+    }
+    .neu-size-guide:active {
+        box-shadow: inset 4px 4px 8px #c5c9cc, inset -4px -4px 8px #ffffff !important;
+        transform: scale(0.97) !important;
+    }
+
+    /* ── Neumorfismo: Badge disponible ── */
+    .neu-stock-badge {
+        background: #e8ecef;
+        border-radius: 20px;
+        box-shadow: 4px 4px 8px #c5c9cc, -4px -4px 8px #ffffff;
+        padding: 4px 12px;
+        font-size: 13px;
+        font-weight: 700;
+        color: #4caf7d;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .neu-stock-badge::before {
+        content: '';
+        width: 7px;
+        height: 7px;
+        background: #4caf7d;
+        border-radius: 50%;
+        display: inline-block;
+        box-shadow: 0 0 5px #4caf7d88;
+    }
+
+    /* ── Neumorfismo: Botón Añadir a la cesta ── */
+    .neu-btn-cart {
+        background: #ffc519 !important;
+        border: none !important;
+        border-radius: 12px !important;
+        box-shadow: 6px 6px 12px rgba(255,197,25,0.35), -2px -2px 6px rgba(255,255,255,0.5) !important;
+        padding: 11px 22px !important;
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        color: #ffffff !important;
+        transition: box-shadow 0.15s ease, transform 0.1s ease !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 7px !important;
+        cursor: pointer !important;
+        min-width: 150px !important;
+        justify-content: center !important;
+    }
+    .neu-btn-cart:hover {
+        box-shadow: 3px 3px 8px rgba(255,197,25,0.45), -2px -2px 5px rgba(255,255,255,0.4) !important;
+        color: #ffffff !important;
+        opacity: 0.92 !important;
+    }
+    .neu-btn-cart:active {
+        box-shadow: inset 3px 3px 8px rgba(0,0,0,0.15), inset -2px -2px 5px rgba(255,255,255,0.2) !important;
+        transform: scale(0.97) !important;
+    }
+
+    /* ── Neumorfismo: Botón Comprar ahora ── */
+    .neu-btn-buy {
+        background: #f6a623 !important;
+        border: none !important;
+        border-radius: 12px !important;
+        box-shadow: 6px 6px 12px rgba(246,166,35,0.35), -2px -2px 6px rgba(255,255,255,0.5) !important;
+        padding: 11px 22px !important;
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        color: #ffffff !important;
+        transition: box-shadow 0.15s ease, transform 0.1s ease !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 7px !important;
+        cursor: pointer !important;
+        min-width: 150px !important;
+        justify-content: center !important;
+    }
+    .neu-btn-buy:hover {
+        box-shadow: 3px 3px 8px rgba(246,166,35,0.45), -2px -2px 5px rgba(255,255,255,0.4) !important;
+        color: #ffffff !important;
+        opacity: 0.92 !important;
+    }
+    .neu-btn-buy:active {
+        box-shadow: inset 3px 3px 8px rgba(0,0,0,0.15), inset -2px -2px 5px rgba(255,255,255,0.2) !important;
+        transform: scale(0.97) !important;
+    }
+
+    /* ── Neumorfismo: Botón WhatsApp ── */
+    .neu-btn-whatsapp {
+        background: #25d366 !important;
+        border: none !important;
+        border-radius: 12px !important;
+        box-shadow: 6px 6px 12px rgba(37,211,102,0.35), -2px -2px 6px rgba(255,255,255,0.5) !important;
+        padding: 11px 22px !important;
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        color: #ffffff !important;
+        transition: box-shadow 0.15s ease, transform 0.1s ease !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        cursor: pointer !important;
+        white-space: nowrap !important;
+        text-decoration: none !important;
+        justify-content: center !important;
+    }
+    .neu-btn-whatsapp:hover {
+        box-shadow: 3px 3px 8px rgba(37,211,102,0.45), -2px -2px 5px rgba(255,255,255,0.4) !important;
+        color: #ffffff !important;
+        opacity: 0.92 !important;
+        text-decoration: none !important;
+    }
+    .neu-btn-whatsapp:active {
+        box-shadow: inset 3px 3px 8px rgba(0,0,0,0.15), inset -2px -2px 5px rgba(255,255,255,0.2) !important;
+        transform: scale(0.97) !important;
+    }
+
+    /* ── Bloque Precio / Cantidad / Total — diseño elegante ── */
+    .neu-info-block {
+        background: #ffffff;
+        border-radius: 14px;
+        border: 1.5px solid #f0f0f0;
+        padding: 4px 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+    }
+    .neu-info-block .row.no-gutters {
+        margin-bottom: 0 !important;
+        padding: 13px 0;
+        border-bottom: 1px dashed #ebebeb;
+        align-items: center;
+    }
+    .neu-info-block .row.no-gutters:last-child {
+        border-bottom: none;
+    }
+    .neu-info-block .col-sm-2 .text-secondary {
+        font-size: 12px !important;
+        font-weight: 600 !important;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #aab0bb !important;
+    }
+    .neu-info-block #chosen_price,
+    .neu-info-block .text-primary {
+        font-size: 1.15rem !important;
+        font-weight: 800 !important;
+    }
+
+    /* ── Bloque visual: precio + cantidad + total juntos ── */
+    .price-qty-block {
+        background: #ffffff;
+        border-radius: 14px;
+        border: 1.5px solid #f0f0f0;
+        box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+        padding: 0 20px;
+        margin-bottom: 20px;
+        overflow: hidden;
+        max-width: 480px;
+    }
+    .price-qty-block .pqb-row {
+        display: flex;
+        align-items: center;
+        padding: 13px 0;
+        border-bottom: 1px dashed #ebebeb;
+        gap: 12px;
+    }
+    .price-qty-block .pqb-row:last-child {
+        border-bottom: none;
+    }
+    .price-qty-block .pqb-label {
+        min-width: 100px;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        color: #b0b8c4;
+    }
+    .price-qty-block .pqb-value {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+    .price-qty-block .price-main {
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: #f6a623;
+    }
+    .price-qty-block .price-old {
+        font-size: 0.85rem;
+        color: #b0b8c4;
+        text-decoration: line-through;
+    }
+    .price-qty-block .price-unit {
+        font-size: 0.78rem;
+        color: #b0b8c4;
+    }
+    .price-qty-block .price-badge {
+        background: #e05c5c;
+        color: white;
+        font-size: 0.68rem;
+        font-weight: 800;
+        padding: 2px 7px;
+        border-radius: 5px;
+    }
+    .price-qty-block .total-main {
+        font-size: 1.2rem;
+        font-weight: 800;
+        color: #f6a623;
+    }
+
+    /* ── Badge personas viendo ── */
+    .neu-watching-badge {
+        background: #e8ecef;
+        border-radius: 20px;
+        box-shadow: 4px 4px 8px #c5c9cc, -4px -4px 8px #ffffff;
+        padding: 5px 14px;
+        font-size: 12px;
+        font-weight: 700;
+        color: rgb(14, 134, 204);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 10px;
+    }
+    .neu-watching-badge .watch-dot {
+        width: 7px;
+        height: 7px;
+        background: #258bc7;
+        border-radius: 50%;
+        display: inline-block;
+        box-shadow: 0 0 5px #e05c5c88;
+        animation: watchPulse 1.5s infinite;
+        flex-shrink: 0;
+    }
+    @keyframes watchPulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.5; transform: scale(1.4); }
+    }
+    .shipping-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        background: linear-gradient(135deg, #fff8ee 0%, #fff3e0 100%);
+        border: 1.5px solid #fde8c0;
+        border-radius: 30px;
+        padding: 5px 14px 5px 10px;
+        margin-top: 8px;
+    }
+    .shipping-pill .ship-icon {
+        width: 26px;
+        height: 26px;
+        background: #f6a623;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    .shipping-pill .ship-icon svg { display: block; }
+    .shipping-pill .ship-text {
+        font-size: 12px;
+        color: #a07020;
+        font-weight: 600;
+    }
+    .shipping-pill .ship-days {
+        font-size: 13px;
+        font-weight: 800;
+        color: #f6a623;
+    }
+
+    /* ── Wishlist elegante ── */
+    .wishlist-fancy {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #fff5f5;
+        border: 1.5px solid #fdd8d8;
+        border-radius: 30px;
+        padding: 5px 14px 5px 10px;
+        font-size: 13px;
+        font-weight: 700;
+        color: #e05c5c;
+        text-decoration: none !important;
+        transition: background 0.15s, border-color 0.15s, transform 0.1s;
+        cursor: pointer;
+    }
+    .wishlist-fancy:hover {
+        background: #ffe8e8;
+        border-color: #e05c5c;
+        color: #e05c5c !important;
+        transform: translateY(-1px);
+        text-decoration: none !important;
+    }
+    .wishlist-fancy .heart-icon {
+        width: 26px;
+        height: 26px;
+        background: #e05c5c;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        transition: transform 0.15s;
+    }
+    .wishlist-fancy:hover .heart-icon {
+        transform: scale(1.15);
+    }
+    .wishlist-fancy .heart-icon svg { display: block; }
+
+    /* ── Sección Compartir elegante ── */
+    .share-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-top: 20px;
+        padding: 14px 18px;
+        background: #f9fafb;
+        border-radius: 12px;
+        border: 1.5px solid #f0f0f0;
+        width: fit-content;
+    }
+    .share-wrapper .share-label {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        color: #b0b8c4;
+        white-space: nowrap;
+    }
+    /* Íconos del aiz-share */
+    .aiz-share a {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 36px !important;
+        height: 36px !important;
+        border-radius: 10px !important;
+        background: #e8ecef !important;
+        box-shadow: 4px 4px 8px #c5c9cc, -4px -4px 8px #ffffff !important;
+        margin-right: 8px !important;
+        transition: transform 0.15s, box-shadow 0.15s !important;
+        text-decoration: none !important;
+    }
+    .aiz-share a:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 3px 3px 6px #c5c9cc, -3px -3px 6px #ffffff !important;
+    }
+    .aiz-share a:active {
+        box-shadow: inset 3px 3px 6px #c5c9cc, inset -3px -3px 6px #ffffff !important;
+        transform: scale(0.95) !important;
+    }
+    .aiz-share a i, .aiz-share a svg {
+        font-size: 16px !important;
+    }
+    /* Color Facebook */
+    .aiz-share a[href*="facebook"],
+    .aiz-share a[title*="Facebook"],
+    .aiz-share a.facebook {
+        background: #1877f2 !important;
+        box-shadow: 4px 4px 8px rgba(24,119,242,0.3), -4px -4px 8px #ffffff !important;
+    }
+    .aiz-share a[href*="facebook"] i,
+    .aiz-share a[title*="Facebook"] i,
+    .aiz-share a.facebook i { color: #ffffff !important; }
+
+    /* Color WhatsApp */
+    .aiz-share a[href*="whatsapp"],
+    .aiz-share a[title*="WhatsApp"],
+    .aiz-share a.whatsapp {
+        background: #25d366 !important;
+        box-shadow: 4px 4px 8px rgba(37,211,102,0.3), -4px -4px 8px #ffffff !important;
+    }
+    .aiz-share a[href*="whatsapp"] i,
+    .aiz-share a[title*="WhatsApp"] i,
+    .aiz-share a.whatsapp i { color: #ffffff !important; }
+
+    /* ── Ocultar íconos de share excepto FB y WA ── */
+    .aiz-share a[href*="twitter"],
+    .aiz-share a[href*="linkedin"],
+    .aiz-share a[href*="mailto"],
+    .aiz-share a[title*="Twitter"],
+    .aiz-share a[title*="LinkedIn"],
+    .aiz-share a[title*="Email"],
+    .aiz-share a[title*="Mail"],
+    .aiz-share .twitter,
+    .aiz-share .linkedin,
+    .aiz-share .email {
+        display: none !important;
+    }
+</style>
+
 <div class="text-left">
     <!-- Product Name -->
     <h2 class="mb-4 fs-16 fw-700 text-dark">
@@ -5,25 +426,34 @@
     </h2>
 
     <div class="row align-items-center mb-3">
-        <!-- Review -->
+        <!-- Review con neumorfismo -->
         @if ($detailedProduct->auction_product != 1)
             <div class="col-12">
                 @php
                     $total = 0;
                     $total += $detailedProduct->reviews->count();
                 @endphp
-                <span class="rating rating-mr-1">
-                    {{ renderStarRating($detailedProduct->rating) }}
+                <span class="neu-reviews">
+                    <span class="rating rating-mr-1">
+                        {{ renderStarRating($detailedProduct->rating) }}
+                    </span>
+                    <span class="opacity-50 fs-14">({{ $total }}
+                        {{ translate('reviews') }})</span>
                 </span>
-                <span class="ml-1 opacity-50 fs-14">({{ $total }}
-                    {{ translate('reviews') }})</span>
             </div>
         @endif
         <!-- Estimate Shipping Time -->
         @if ($detailedProduct->est_shipping_days)
-            <div class="col-auto fs-14 mt-1">
-                <small class="mr-1 opacity-50 fs-14">{{ translate('Estimate Shipping Time') }}:</small>
-                <span class="fw-500">{{ $detailedProduct->est_shipping_days }} {{ translate('Days') }}</span>
+            <div class="col-auto mt-2">
+                <span class="shipping-pill">
+                    <span class="ship-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v4h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+                        </svg>
+                    </span>
+                    <span class="ship-text">{{ translate('Estimate Shipping Time') }}:</span>
+                    <span class="ship-days">{{ $detailedProduct->est_shipping_days }} {{ translate('Days') }}</span>
+                </span>
             </div>
         @endif
         <!-- In stock -->
@@ -59,19 +489,17 @@
         @endif
         <div class="col mb-3">
             @if ($detailedProduct->auction_product != 1)
-                <div class="d-flex">
-                    <!-- Add to wishlist button -->
-                    <a href="javascript:void(0)" onclick="addToWishList({{ $detailedProduct->id }})"
-                        class="mr-3 fs-14 text-dark opacity-60 has-transitiuon hov-opacity-100">
-                        <i class="la la-heart-o mr-1"></i>
+                <div class="d-flex align-items-center flex-wrap" style="gap:10px;">
+                    <!-- Add to wishlist button elegante -->
+                    <a href="javascript:void(0)" onclick="addToWishList({{ $detailedProduct->id }})" class="wishlist-fancy">
+                        <span class="heart-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="white" stroke="white" stroke-width="1.5">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                            </svg>
+                        </span>
                         {{ translate('Add to Wishlist') }}
                     </a>
-                    <!-- Add to compare button -->
-                    <a href="javascript:void(0)" onclick="addToCompare({{ $detailedProduct->id }})"
-                        class="fs-14 text-dark opacity-60 has-transitiuon hov-opacity-100">
-                        <i class="las la-sync mr-1"></i>
-                        {{ translate('Add to Compare') }}
-                    </a>
+                    {{-- Add to Compare ELIMINADO --}}
                 </div>
             @endif
         </div>
@@ -126,13 +554,16 @@
                 </button>
             </div>
         @endif
-        <!-- Size guide -->
+        <!-- Size guide con neumorfismo -->
         @php
             $sizeChartId = ($detailedProduct->main_category && $detailedProduct->main_category->sizeChart) ? $detailedProduct->main_category->sizeChart->id : 0;
             $sizeChartName = ($detailedProduct->main_category && $detailedProduct->main_category->sizeChart) ? $detailedProduct->main_category->sizeChart->name : null;
         @endphp
-        <div class=" ml-4">
-            <a href="javascript:void(1);" onclick="showSizeChartDetail({{ $sizeChartId }}, '{{ $sizeChartName }}')" class="animate-underline-primary">{{ translate('Show size guide') }}</a>
+        <div class="ml-4">
+            <a href="javascript:void(1);" onclick="showSizeChartDetail({{ $sizeChartId }}, '{{ $sizeChartName }}')" class="neu-size-guide">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+                {{ translate('Show size guide') }}
+            </a>
         </div>
     </div>
 
@@ -220,109 +651,47 @@
                 </tbody>
             </table>
         @else
-            <!-- Without Wholesale -->
-            @if (home_price($detailedProduct) != home_discounted_price($detailedProduct))
-                <div class="row no-gutters mb-3">
-                    <div class="col-sm-2">
-                        <div class="text-secondary fs-14 fw-400">{{ translate('Price') }}</div>
-                    </div>
-                    <div class="col-sm-10">
-                        <div class="d-flex align-items-center">
-                            <!-- Discount Price -->
-                            <strong class="fs-16 fw-700 text-primary">
-                                {{ home_discounted_price($detailedProduct) }}
-                            </strong>
-                            <!-- Home Price -->
-                            <del class="fs-14 opacity-60 ml-2">
-                                {{ home_price($detailedProduct) }}
-                            </del>
-                            <!-- Unit -->
+            <!-- Without Wholesale — Bloque precio/cantidad/total elegante -->
+            {{-- INICIO del bloque unificado — se cierra dentro del form --}}
+            <div class="price-qty-block">
+
+                {{-- Fila Precio --}}
+                <div class="pqb-row">
+                    <span class="pqb-label">{{ translate('Price') }}</span>
+                    <div class="pqb-value">
+                        @if (home_price($detailedProduct) != home_discounted_price($detailedProduct))
+                            <span class="price-main">{{ home_discounted_price($detailedProduct) }}</span>
+                            <span class="price-old">{{ home_price($detailedProduct) }}</span>
                             @if ($detailedProduct->unit != null)
-                                <span class="opacity-70 ml-1">/{{ $detailedProduct->getTranslation('unit') }}</span>
+                                <span class="price-unit">/{{ $detailedProduct->getTranslation('unit') }}</span>
                             @endif
-                            <!-- Discount percentage -->
                             @if (discount_in_percentage($detailedProduct) > 0)
-                                <span class="bg-primary ml-2 fs-11 fw-700 text-white w-35px text-center p-1"
-                                    style="padding-top:2px;padding-bottom:2px;">-{{ discount_in_percentage($detailedProduct) }}%</span>
+                                <span class="price-badge">-{{ discount_in_percentage($detailedProduct) }}%</span>
                             @endif
-                            <!-- Club Point -->
-                            @if (addon_is_activated('club_point') && $detailedProduct->earn_point > 0)
-                                <div class="ml-2 bg-secondary-base d-flex justify-content-center align-items-center px-3 py-1"
-                                    style="width: fit-content;">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"
-                                        viewBox="0 0 12 12">
-                                        <g id="Group_23922" data-name="Group 23922" transform="translate(-973 -633)">
-                                            <circle id="Ellipse_39" data-name="Ellipse 39" cx="6"
-                                                cy="6" r="6" transform="translate(973 633)"
-                                                fill="#fff" />
-                                            <g id="Group_23920" data-name="Group 23920"
-                                                transform="translate(973 633)">
-                                                <path id="Path_28698" data-name="Path 28698"
-                                                    d="M7.667,3H4.333L3,5,6,9,9,5Z" transform="translate(0 0)"
-                                                    fill="#f3af3d" />
-                                                <path id="Path_28699" data-name="Path 28699"
-                                                    d="M5.33,3h-1L3,5,6,9,4.331,5Z" transform="translate(0 0)"
-                                                    fill="#f3af3d" opacity="0.5" />
-                                                <path id="Path_28700" data-name="Path 28700"
-                                                    d="M12.666,3h1L15,5,12,9l1.664-4Z" transform="translate(-5.995 0)"
-                                                    fill="#f3af3d" />
-                                            </g>
-                                        </g>
-                                    </svg>
-                                    <small class="fs-11 fw-500 text-white ml-2">{{ translate('Club Point') }}:
-                                        {{ $detailedProduct->earn_point }}</small>
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-            @else
-                <div class="row no-gutters mb-3">
-                    <div class="col-sm-2">
-                        <div class="text-secondary fs-14 fw-400">{{ translate('Price') }}</div>
-                    </div>
-                    <div class="col-sm-10">
-                        <div class="d-flex align-items-center">
-                            <!-- Discount Price -->
-                            <strong class="fs-16 fw-700 text-primary">
-                                {{ home_discounted_price($detailedProduct) }}
-                            </strong>
-                            <!-- Unit -->
+                        @else
+                            <span class="price-main">{{ home_discounted_price($detailedProduct) }}</span>
                             @if ($detailedProduct->unit != null)
-                                <span class="opacity-70">/{{ $detailedProduct->getTranslation('unit') }}</span>
+                                <span class="price-unit">/{{ $detailedProduct->getTranslation('unit') }}</span>
                             @endif
-                            <!-- Club Point -->
-                            @if (addon_is_activated('club_point') && $detailedProduct->earn_point > 0)
-                                <div class="ml-2 bg-secondary-base d-flex justify-content-center align-items-center px-3 py-1"
-                                    style="width: fit-content;">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"
-                                        viewBox="0 0 12 12">
-                                        <g id="Group_23922" data-name="Group 23922" transform="translate(-973 -633)">
-                                            <circle id="Ellipse_39" data-name="Ellipse 39" cx="6"
-                                                cy="6" r="6" transform="translate(973 633)"
-                                                fill="#fff" />
-                                            <g id="Group_23920" data-name="Group 23920"
-                                                transform="translate(973 633)">
-                                                <path id="Path_28698" data-name="Path 28698"
-                                                    d="M7.667,3H4.333L3,5,6,9,9,5Z" transform="translate(0 0)"
-                                                    fill="#f3af3d" />
-                                                <path id="Path_28699" data-name="Path 28699"
-                                                    d="M5.33,3h-1L3,5,6,9,4.331,5Z" transform="translate(0 0)"
-                                                    fill="#f3af3d" opacity="0.5" />
-                                                <path id="Path_28700" data-name="Path 28700"
-                                                    d="M12.666,3h1L15,5,12,9l1.664-4Z" transform="translate(-5.995 0)"
-                                                    fill="#f3af3d" />
-                                            </g>
+                        @endif
+                        @if (addon_is_activated('club_point') && $detailedProduct->earn_point > 0)
+                            <div class="ml-1 bg-secondary-base d-flex justify-content-center align-items-center px-3 py-1" style="width:fit-content;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12">
+                                    <g transform="translate(-973 -633)">
+                                        <circle cx="6" cy="6" r="6" transform="translate(973 633)" fill="#fff"/>
+                                        <g transform="translate(973 633)">
+                                            <path d="M7.667,3H4.333L3,5,6,9,9,5Z" fill="#f3af3d"/>
+                                            <path d="M5.30,3h-1L3,5,6,9,4.331,5Z" fill="#f3af3d" opacity="0.5"/>
+                                            <path d="M12.666,3h1L15,5,12,9l1.664-4Z" transform="translate(-5.995 0)" fill="#f3af3d"/>
                                         </g>
-                                    </svg>
-                                    <small class="fs-11 fw-500 text-white ml-2">{{ translate('Club Point') }}:
-                                        {{ $detailedProduct->earn_point }}</small>
-                                </div>
-                            @endif
-                        </div>
+                                    </g>
+                                </svg>
+                                <small class="fs-11 fw-500 text-white ml-2">{{ translate('Club Point') }}: {{ $detailedProduct->earn_point }}</small>
+                            </div>
+                        @endif
                     </div>
                 </div>
-            @endif
+
         @endif
     @endif
 
@@ -348,8 +717,7 @@
                                             <input type="radio" name="attribute_id_{{ $choice->attribute_id }}"
                                                 value="{{ $value }}"
                                                 @if ($key == 0) checked @endif>
-                                            <span
-                                                class="aiz-megabox-elem rounded-0 d-flex align-items-center justify-content-center py-1 px-3">
+                                            <span class="aiz-megabox-elem rounded-0 d-flex align-items-center justify-content-center py-1 px-3">
                                                 {{ $value }}
                                             </span>
                                         </label>
@@ -374,10 +742,8 @@
                                         <input type="radio" name="color"
                                             value="{{ get_single_color_name($color) }}"
                                             @if ($key == 0) checked @endif>
-                                        <span
-                                            class="aiz-megabox-elem rounded-0 d-flex align-items-center justify-content-center p-1">
-                                            <span class="size-25px d-inline-block rounded"
-                                                style="background: {{ $color }};"></span>
+                                        <span class="aiz-megabox-elem rounded-0 d-flex align-items-center justify-content-center p-1">
+                                            <span class="size-25px d-inline-block rounded" style="background: {{ $color }};"></span>
                                         </span>
                                     </label>
                                 @endforeach
@@ -386,62 +752,83 @@
                     </div>
                 @endif
 
-                <!-- Quantity + Add to cart -->
-                <div class="row no-gutters mb-3">
-                    <div class="col-sm-2">
-                        <div class="text-secondary fs-14 fw-400 mt-2">{{ translate('Quantity') }}</div>
-                    </div>
-                    <div class="col-sm-10">
-                        <div class="product-quantity d-flex align-items-center">
-                            <div class="row no-gutters align-items-center aiz-plus-minus mr-3" style="width: 130px;">
-                                <button class="btn col-auto btn-icon btn-sm btn-light rounded-0" type="button"
-                                    data-type="minus" data-field="quantity" disabled="">
-                                    <i class="las la-minus"></i>
-                                </button>
-                                <input type="number" name="quantity"
-                                    class="col border-0 text-center flex-grow-1 fs-16 input-number" placeholder="1"
-                                    value="{{ $detailedProduct->min_qty }}" min="{{ $detailedProduct->min_qty }}"
-                                    max="10" lang="en">
-                                <button class="btn col-auto btn-icon btn-sm btn-light rounded-0" type="button"
-                                    data-type="plus" data-field="quantity">
-                                    <i class="las la-plus"></i>
-                                </button>
-                            </div>
-                            @php
-                                $qty = 0;
-                                foreach ($detailedProduct->stocks as $key => $stock) {
-                                    $qty += $stock->qty;
-                                }
-                            @endphp
-                            <div class="avialable-amount opacity-60">
-                                @if ($detailedProduct->stock_visibility_state == 'quantity')
-                                    (<span id="available-quantity">{{ $qty }}</span>
-                                    {{ translate('available') }})
-                                @elseif($detailedProduct->stock_visibility_state == 'text' && $qty >= 1)
-                                    (<span id="available-quantity">{{ translate('In Stock') }}</span>)
-                                @endif
-                            </div>
+                {{-- Fila Cantidad (continúa el price-qty-block abierto arriba) --}}
+                <div class="pqb-row">
+                    <span class="pqb-label">{{ translate('Quantity') }}</span>
+                    <div class="pqb-value">
+                        <div class="row no-gutters align-items-center aiz-plus-minus" style="width:130px;">
+                            <button class="btn col-auto btn-icon btn-sm btn-light rounded-0" type="button" data-type="minus" data-field="quantity" disabled="">
+                                <i class="las la-minus"></i>
+                            </button>
+                            <input type="number" name="quantity"
+                                class="col border-0 text-center flex-grow-1 fs-16 input-number" placeholder="1"
+                                value="{{ $detailedProduct->min_qty }}" min="{{ $detailedProduct->min_qty }}" max="10" lang="en">
+                            <button class="btn col-auto btn-icon btn-sm btn-light rounded-0" type="button" data-type="plus" data-field="quantity">
+                                <i class="las la-plus"></i>
+                            </button>
                         </div>
+                        @php
+                            $qty = 0;
+                            foreach ($detailedProduct->stocks as $key => $stock) {
+                                $qty += $stock->qty;
+                            }
+                        @endphp
+                        @if ($detailedProduct->stock_visibility_state == 'quantity')
+                            <span class="neu-stock-badge ml-2">
+                                <span id="available-quantity">{{ $qty }}</span> {{ translate('available') }}
+                            </span>
+                        @elseif($detailedProduct->stock_visibility_state == 'text' && $qty >= 1)
+                            <span class="neu-stock-badge ml-2">
+                                <span id="available-quantity">{{ translate('In Stock') }}</span>
+                            </span>
+                        @endif
                     </div>
                 </div>
+
+                {{-- Fila Precio Total --}}
+                <div class="pqb-row d-none" id="chosen_price_div">
+                    <span class="pqb-label">{{ translate('Total Price') }}</span>
+                    <div class="pqb-value">
+                        <span id="chosen_price" class="total-main"></span>
+                    </div>
+                </div>
+
+            </div>{{-- /price-qty-block --}}
+
+            {{-- Badge personas viendo --}}
+            <div>
+                <span class="neu-watching-badge">
+                    <span class="watch-dot"></span>
+                    <span id="watching-count">27</span> {{ translate('personas estan viendo este producto') }}
+                </span>
+            </div>
+
+            <script>
+                (function() {
+                    var base = [23, 25, 27, 28, 30, 32, 34, 35, 37, 38, 40, 42];
+                    var el = document.getElementById('watching-count');
+                    if (!el) return;
+                    el.textContent = base[Math.floor(Math.random() * base.length)];
+
+                    function scheduleNext() {
+                        var delay = (Math.floor(Math.random() * 6) + 2) * 1000; // 2 a 7 seg aleatorio
+                        setTimeout(function() {
+                            var current = parseInt(el.textContent);
+                            var change = Math.random() > 0.5 ? 1 : -1;
+                            var next = current + change;
+                            if (next < 18) next = 20;
+                            if (next > 45) next = 42;
+                            el.textContent = next;
+                            scheduleNext();
+                        }, delay);
+                    }
+                    scheduleNext();
+                })();
+            </script>
+
             @else
-                <!-- Quantity -->
                 <input type="hidden" name="quantity" value="1">
             @endif
-
-            <!-- Total Price -->
-            <div class="row no-gutters pb-3 d-none" id="chosen_price_div">
-                <div class="col-sm-2">
-                    <div class="text-secondary fs-14 fw-400 mt-1">{{ translate('Total Price') }}</div>
-                </div>
-                <div class="col-sm-10">
-                    <div class="product-price">
-                        <strong id="chosen_price" class="fs-20 fw-700 text-primary">
-
-                        </strong>
-                    </div>
-                </div>
-            </div>
 
         </form>
     @endif
@@ -471,21 +858,21 @@
             </div>
         @endif
     @else
-        <!-- Add to cart & Buy now Buttons -->
-        <div class="mt-3">
+        <!-- Add to cart & Buy now Buttons con neumorfismo -->
+        <div class="mt-3 d-flex flex-wrap" style="gap:12px;">
             @if ($detailedProduct->digital == 0)
                 @if ($detailedProduct->external_link != null)
-                    <a type="button" class="btn btn-primary buy-now fw-600 add-to-cart px-4 rounded-0"
+                    <a type="button" class="neu-btn-cart add-to-cart"
                         href="{{ $detailedProduct->external_link }}">
                         <i class="la la-share"></i> {{ translate($detailedProduct->external_link_btn) }}
                     </a>
                 @else
                     <button type="button"
-                        class="btn btn-secondary-base mr-2 add-to-cart fw-600 min-w-150px rounded-0 text-white"
+                        class="neu-btn-cart add-to-cart"
                         @if (Auth::check()) onclick="addToCart()" @else onclick="showLoginModal()" @endif>
                         <i class="las la-shopping-bag"></i> {{ translate('Add to cart') }}
                     </button>
-                    <button type="button" class="btn btn-primary buy-now fw-600 add-to-cart min-w-150px rounded-0"
+                    <button type="button" class="neu-btn-buy buy-now add-to-cart"
                         @if (Auth::check()) onclick="buyNow()" @else onclick="showLoginModal()" @endif>
                         <i class="la la-shopping-cart"></i> {{ translate('Buy Now') }}
                     </button>
@@ -495,11 +882,11 @@
                 </button>
             @elseif ($detailedProduct->digital == 1)
                 <button type="button"
-                    class="btn btn-secondary-base mr-2 add-to-cart fw-600 min-w-150px rounded-0 text-white"
+                    class="neu-btn-cart add-to-cart"
                     @if (Auth::check()) onclick="addToCart()" @else onclick="showLoginModal()" @endif>
                     <i class="las la-shopping-bag"></i> {{ translate('Add to cart') }}
                 </button>
-                <button type="button" class="btn btn-primary buy-now fw-600 add-to-cart min-w-150px rounded-0"
+                <button type="button" class="neu-btn-buy buy-now add-to-cart"
                     @if (Auth::check()) onclick="buyNow()" @else onclick="showLoginModal()" @endif>
                     <i class="la la-shopping-cart"></i> {{ translate('Buy Now') }}
                 </button>
@@ -507,10 +894,11 @@
         </div>
 
         @if (get_setting('vendor_system_activation') != 1)
-            <div class="mt-2">
-                <a href="https://api.whatsapp.com/send/?phone={{ get_setting('helpline_number') }}&text={{ translate('Hello! I want more product information')}} {{ url()->current() }}" target="_blank" class="btn btn-success rounded-0 px-4 text-white d-flex align-items-center justify-content-center col-md-6 col-lg-6 col-sm-12" style="white-space: nowrap;">
-                    <i class="lab la-whatsapp" style="font-size:20px;"></i> <span>{{ translate('Send Product Details to WhatsApp') }}</span>
-                </a>            
+            <div class="mt-3">
+                <a href="https://api.whatsapp.com/send/?phone={{ get_setting('helpline_number') }}&text={{ translate('Hello! I want more product information')}} {{ url()->current() }}" target="_blank" class="neu-btn-whatsapp col-md-6 col-lg-6 col-sm-12">
+                    <i class="lab la-whatsapp" style="font-size:20px;"></i>
+                    <span>{{ translate('Send Product Details to WhatsApp') }}</span>
+                </a>
             </div>
         @endif
 
@@ -587,13 +975,9 @@
         @endif
     @endif
 
-    <!-- Share -->
-    <div class="row no-gutters mt-4">
-        <div class="col-sm-2">
-            <div class="text-secondary fs-14 fw-400 mt-2">{{ translate('Share') }}</div>
-        </div>
-        <div class="col-sm-10">
-            <div class="aiz-share"></div>
-        </div>
+    <!-- Share — solo FB y WA via CSS oculta el resto -->
+    <div class="share-wrapper mt-4">
+        <span class="share-label">{{ translate('Share') }}</span>
+        <div class="aiz-share"></div>
     </div>
 </div>
