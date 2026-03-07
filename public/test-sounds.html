@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba de Sonidos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 800px;
+            width: 100%;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .sounds-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .sound-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .sound-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+        .sound-button:active {
+            transform: translateY(0);
+        }
+        .sound-icon {
+            font-size: 24px;
+        }
+        .sound-name {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .control-section {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+        .control-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .volume-control input[type="range"] {
+            flex: 1;
+            height: 6px;
+            border-radius: 3px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        .volume-control input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .volume-control input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .volume-value {
+            min-width: 45px;
+            text-align: right;
+            font-weight: 600;
+            color: #667eea;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 14px;
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            color: #0c5460;
+        }
+        .status.playing {
+            background: #d4edda;
+            border-left-color: #28a745;
+            color: #155724;
+        }
+        .info-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 13px;
+            color: #856404;
+        }
+        .console {
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 20px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔊 Prueba de Sonidos</h1>
+        <p class="subtitle">Haz clic en los botones para escuchar cada sonido</p>
+        
+        <div class="sounds-grid" id="sounds-grid">
+            <!-- Los botones se generarán con JavaScript -->
+        </div>
+
+        <div class="control-section">
+            <h3>⚙️ Controles</h3>
+            <div class="volume-control">
+                <label for="volume">Volumen:</label>
+                <input type="range" id="volume" min="0" max="100" value="70">
+                <span class="volume-value" id="volume-value">70%</span>
+            </div>
+            <div class="status" id="status">Listo para reproducir</div>
+        </div>
+
+        <div class="info-box">
+            ℹ️ Los sonidos se generan en tiempo real usando Web Audio API. No requieren archivos MP3.
+            Todos los sonidos funcionarán en cualquier navegador moderno.
+        </div>
+
+        <div class="console" id="console"></div>
+    </div>
+
+    <script src="{{ asset('assets/audio/sound-generator.js') }}"></script>
+    <script>
+        const sounds = [
+            { name: 'Ding', icon: '🔔', fn: 'ding', description: 'Campana clásica' },
+            { name: 'Chime', icon: '🎵', fn: 'chime', description: 'Suave y melódico' },
+            { name: 'Bell', icon: '🔊', fn: 'bell', description: 'Alto y resonante' },
+            { name: 'Ping', icon: '📱', fn: 'ping', description: 'Corto y agudo' },
+            { name: 'Alert', icon: '⚠️', fn: 'alert', description: 'Alerta urgente' }
+        ];
+
+        const consoleEl = document.getElementById('console');
+        const statusEl = document.getElementById('status');
+        const volumeSlider = document.getElementById('volume');
+        const volumeValue = document.getElementById('volume-value');
+
+        function log(message) {
+            const time = new Date().toLocaleTimeString();
+            consoleEl.innerHTML += `[${time}] ${message}\n`;
+            consoleEl.scrollTop = consoleEl.scrollHeight;
+        }
+
+        // Crear botones
+        sounds.forEach(sound => {
+            const btn = document.createElement('button');
+            btn.className = 'sound-button';
+            btn.innerHTML = `
+                <span class="sound-icon">${sound.icon}</span>
+                <span class="sound-name">${sound.name}</span>
+            `;
+            btn.title = sound.description;
+            btn.onclick = () => {
+                const volume = volumeSlider.value / 100;
+                log(`▶️ Reproduciendo: ${sound.name} (Volumen: ${volume.toFixed(2)})`);
+                statusEl.textContent = `🔊 Reproduciendo ${sound.name}...`;
+                statusEl.classList.add('playing');
+                
+                SoundGenerator.play(sound.fn, volume);
+                
+                setTimeout(() => {
+                    statusEl.textContent = 'Listo para reproducir';
+                    statusEl.classList.remove('playing');
+                }, 1500);
+            };
+            document.getElementById('sounds-grid').appendChild(btn);
+        });
+
+        // Control de volumen
+        volumeSlider.addEventListener('input', function() {
+            volumeValue.textContent = this.value + '%';
+            log(`🔉 Volumen ajustado a: ${this.value}%`);
+        });
+
+        // Log inicial
+        window.addEventListener('load', () => {
+            log('🚀 Página de prueba cargada');
+            log('✅ SoundGenerator disponible: ' + (typeof SoundGenerator !== 'undefined' ? 'Sí' : 'No'));
+            log('');
+            log('💡 Haz clic en los botones para reproducir los sonidos');
+        });
+
+        // Inicializar SoundGenerator
+        if (typeof SoundGenerator !== 'undefined') {
+            SoundGenerator.init();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnóstico de Sonido de Notificaciones</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #333;
+            margin-top: 0;
+            text-align: center;
+        }
+        .section {
+            margin: 25px 0;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        .section h2 {
+            margin-top: 0;
+            color: #333;
+            font-size: 18px;
+        }
+        .status {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        .status-icon {
+            font-size: 24px;
+            margin-right: 10px;
+            min-width: 30px;
+        }
+        .status.ok .status-icon { color: #28a745; }
+        .status.error .status-icon { color: #dc3545; }
+        .status.warning .status-icon { color: #ffc107; }
+        
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #764ba2;
+        }
+        button.danger {
+            background: #dc3545;
+        }
+        button.danger:hover {
+            background: #c82333;
+        }
+        
+        .info-box {
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+            color: #0c5460;
+        }
+        
+        .code {
+            background: #272822;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            font-size: 14px;
+            margin: 10px 0;
+        }
+        
+        .test-log {
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 10px 0;
+        }
+        
+        audio {
+            width: 100%;
+            margin: 10px 0;
+            max-width: 500px;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        @media (max-width: 600px) {
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔔 Diagnóstico de Sonido de Notificaciones</h1>
+        
+        <div class="section">
+            <h2>ℹ️ Información</h2>
+            <p>Esta página te ayuda a diagnosticar y probar el sistema de sonido de notificaciones. Asegúrate de estar logueado en el sitio.</p>
+        </div>
+
+        <div class="section">
+            <h2>1️⃣ Verificación de Configuración</h2>
+            <div id="config-status"></div>
+            <button onclick="checkConfiguration()">Verificar Configuración</button>
+        </div>
+
+        <div class="section">
+            <h2>2️⃣ Prueba de Sonidos Predeterminados</h2>
+            <div class="grid">
+                <div>
+                    <h3>🔊 Ding (Campana)</h3>
+                    <button onclick="testPresetSound('ding')">Probar Ding</button>
+                </div>
+                <div>
+                    <h3>🎵 Chime (Suave)</h3>
+                    <button onclick="testPresetSound('chime')">Probar Chime</button>
+                </div>
+                <div>
+                    <h3>🔔 Bell (Alto)</h3>
+                    <button onclick="testPresetSound('bell')">Probar Bell</button>
+                </div>
+                <div>
+                    <h3>📱 Ping (Corto)</h3>
+                    <button onclick="testPresetSound('ping')">Probar Ping</button>
+                </div>
+                <div>
+                    <h3>⚠️ Alert (Alerta)</h3>
+                    <button onclick="testPresetSound('alert')">Probar Alert</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>3️⃣ Prueba de Sonido Personalizado</h2>
+            <div id="custom-sound-status"></div>
+            <button onclick="testCustomSound()">Probar Sonido Personalizado</button>
+        </div>
+
+        <div class="section">
+            <h2>4️⃣ Prueba de Notificación en Tiempo Real</h2>
+            <div class="info-box">
+                Si estás logueado, al hacer clic aquí se creará una notificación de prueba. Deberías verla llegar en unos segundos y escuchar el sonido.
+            </div>
+            <button onclick="createTestNotification()">Crear Notificación de Prueba</button>
+            <div id="test-result"></div>
+        </div>
+
+        <div class="section">
+            <h2>5️⃣ Log de Diagnóstico</h2>
+            <div class="test-log" id="test-log">Esperando pruebas...</div>
+        </div>
+
+        <div class="info-box" style="margin-top: 30px;">
+            <strong>💡 Tip:</strong> Si los sonidos predeterminados funcionan pero el sonido personalizado no, verifica que:/br
+            • El archivo fue cargado correctamente en la configuración de admin
+            • El formato es compatible (MP3, WAV, OGG, WEBM)
+            • El archivo no está corrupto
+        </div>
+    </div>
+
+    <script>
+        function log(message) {
+            const logElement = document.getElementById('test-log');
+            const timestamp = new Date().toLocaleTimeString();
+            logElement.innerHTML += `[${timestamp}] ${message}\n`;
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+
+        function clearLog() {
+            document.getElementById('test-log').innerHTML = '';
+        }
+
+        async function checkConfiguration() {
+            clearLog();
+            log('🔍 Verificando configuración...');
+            
+            try {
+                const response = await fetch('/api/notification-sound-settings');
+                if (response.status === 401) {
+                    log('❌ No estás logueado. Por favor inicia sesión primero.');
+                    return;
+                }
+                
+                const config = await response.json();
+                log('✅ Configuración obtenida del servidor');
+                log('');
+                log(`Habilitado: ${config.enabled === 'on' ? '✅ Sí' : '❌ No'}`);
+                log(`Tipo: ${config.type === 'custom' ? 'Personalizado' : 'Predeterminado'}`);
+                log(`Volumen: ${config.volume}%`);
+                log(`Sonido predeterminado: ${config.preset_sound}`);
+                log(`URL sonido personalizado: ${config.custom_sound_url || 'Ninguno'}`);
+                log(`Tipos: ${JSON.stringify(config.sound_on_types)}`);
+                
+                document.getElementById('config-status').innerHTML = `
+                    <div class="status ok">
+                        <span class="status-icon">✅</span>
+                        <span>Configuración cargada correctamente</span>
+                    </div>
+                `;
+            } catch (error) {
+                log('❌ Error: ' + error.message);
+            }
+        }
+
+        function testPresetSound(soundName) {
+            log(`🔊 Probando sonido: ${soundName}`);
+            try {
+                if (typeof NotificationSoundManager !== 'undefined') {
+                    log('✅ NotificationSoundManager está disponible');
+                    // Crear audio element temporalmente
+                    const audio = document.createElement('audio');
+                    audio.volume = 0.7;
+                    audio.src = `/assets/audio/preset-sounds/${soundName}.mp3`;
+                    audio.play().then(() => {
+                        log(`✅ Reproduciendo: ${soundName}.mp3`);
+                    }).catch(err => {
+                        log(`❌ Error reproduciendo: ${err.message}`);
+                    });
+                } else {
+                    log('❌ NotificationSoundManager no está cargado');
+                }
+            } catch (error) {
+                log('❌ Error: ' + error.message);
+            }
+        }
+
+        async function testCustomSound() {
+            clearLog();
+            log('🎵 Probando sonido personalizado...');
+            
+            try {
+                const config = await (await fetch('/api/notification-sound-settings')).json();
+                
+                if (!config.custom_sound_url) {
+                    log('❌ No hay sonido personalizado configurado');
+                    return;
+                }
+                
+                log(`Intentando reproducir: ${config.custom_sound_url}`);
+                const audio = new Audio();
+                audio.volume = config.volume / 100;
+                audio.src = config.custom_sound_url;
+                
+                audio.onloadstart = () => log('⏳ Iniciando carga...');
+                audio.oncanplay = () => log('✅ Audio cargado, reproduciendo...');
+                audio.play().catch(err => log('❌ Error: ' + err.message));
+                
+                audio.onerror = () => {
+                    log('❌ Error al cargar el archivo de audio');
+                    log(`URL intentada: ${config.custom_sound_url}`);
+                };
+            } catch (error) {
+                log('❌ Error: ' + error.message);
+            }
+        }
+
+        async function createTestNotification() {
+            clearLog();
+            log('🧪 Creando notificación de prueba...');
+            
+            try {
+                const token = document.querySelector('meta[name="csrf-token"]');
+                
+                const response = await fetch('/api/test-notification', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': token ? token.getAttribute('content') : '',
+                        'Accept': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({})
+                });
+
+                const data = await response.json();
+                
+                if (response.status === 401) {
+                    log('❌ No estás autenticado. Por favor inicia sesión.');
+                    return;
+                }
+
+                if (data.success) {
+                    log('✅ Notificación creada');
+                    log(`Notificaciones no leídas: ${data.unread_count}`);
+                    log('⏳ El listener debería detectarla en 5 segundos...');
+                    log('');
+                    log('🔊 Escucha el sonido...');
+                } else {
+                    log('❌ Error: ' + data.message);
+                }
+            } catch (error) {
+                log('❌ Error: ' + error.message);
+                log('Asegúrate de estar en una página con el listener activo (notificaciones)');
+            }
+        }
+
+        // Cargar configuración al abrir
+        window.addEventListener('load', () => {
+            log('🚀 Página de diagnóstico cargada');
+            log('Haz clic en los botones para realizar pruebas');
+        });
+    </script>
+</body>
+</html>

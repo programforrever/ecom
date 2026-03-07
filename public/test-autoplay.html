@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Auto-Play Notificaciones - Sistema de Sonido</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+            border: 1px solid #eee;
+            padding: 20px;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+        
+        .section h2 {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background: #f0f0f0;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ccc;
+            transition: all 0.3s ease;
+        }
+        
+        .status-dot.active {
+            background: #4CAF50;
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+        }
+        
+        .console-box {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            height: 250px;
+            overflow-y: auto;
+            margin-top: 15px;
+            line-height: 1.5;
+            border: 1px solid #333;
+        }
+        
+        .console-line {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 8px;
+            word-break: break-all;
+        }
+        
+        .console-time {
+            color: #858585;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        
+        .console-log { color: #d4d4d4; }
+        .console-warn { color: #ce9178; }
+        .console-error { color: #f48771; }
+        .console-info { color: #4ec9b0; }
+        
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+        
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+        
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #1565c0;
+            margin-top: 15px;
+            line-height: 1.6;
+        }
+        
+        .success {
+            background: #c8e6c9;
+            border-left-color: #4CAF50;
+            color: #2e7d32;
+        }
+        
+        .warning {
+            background: #fff3e0;
+            border-left-color: #ff9800;
+            color: #e65100;
+        }
+        
+        .error {
+            background: #ffebee;
+            border-left-color: #f44336;
+            color: #c62828;
+        }
+        
+        .pre-settings {
+            background: #f5f5f5;
+            padding: 12px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            max-height: 150px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+        
+        .timer {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔔 Test Auto-Play Notificaciones</h1>
+        <p class="subtitle">
+            Verifica que el sistema de sonido de notificaciones funciona correctamente. 
+            Abre la consola del navegador (F12) para ver los logs en tiempo real.
+        </p>
+        
+        <!-- Status Section -->
+        <div class="section">
+            <h2>📊 Estado del Sistema</h2>
+            <div class="status">
+                <div class="status-dot" id="listenerStatus"></div>
+                <span id="listenerStatusText">Estado: Inicializando...</span>
+            </div>
+            <div class="status">
+                <div class="status-dot" id="managerStatus"></div>
+                <span id="managerStatusText">SoundManager: Inicializando...</span>
+            </div>
+            <div class="status">
+                <div class="status-dot" id="generatorStatus"></div>
+                <span id="generatorStatusText">SoundGenerator: Inicializando...</span>
+            </div>
+        </div>
+        
+        <!-- Console Output -->
+        <div class="section">
+            <h2>📝 Console Output (En Vivo)</h2>
+            <div class="console-box" id="consoleBox"></div>
+            <button class="btn-secondary" style="margin-top: 10px; width: 100%;" onclick="clearConsole()">
+                Limpiar Console
+            </button>
+        </div>
+        
+        <!-- Test Actions -->
+        <div class="section">
+            <h2>🧪 Pruebas Rápidas</h2>
+            <div class="buttons">
+                <button class="btn-primary" onclick="testAutoPlay()">
+                    ▶️ Crear Notificación
+                </button>
+                <button class="btn-secondary" onclick="testSoundPreview()">
+                    🔊 Preview Sonido
+                </button>
+            </div>
+            <div class="info-box warning" style="margin-top: 15px;">
+                <strong>💡 Nota:</strong> Crea una notificación de prueba. El sonido debe sonar automáticamente en los próximos 3 segundos sin necesidad de hacer clic en nada.
+            </div>
+        </div>
+        
+        <!-- Settings Info -->
+        <div class="section">
+            <h2>⚙️ Configuración Actual</h2>
+            <div id="settingsInfo" class="pre-settings">
+                <em>Cargando configuración...</em>
+            </div>
+        </div>
+        
+        <!-- Debug Info -->
+        <div class="section">
+            <h2>🐛 Información de Debug</h2>
+            <div class="buttons">
+                <button class="btn-secondary" style="flex: 1;" onclick="showDebugInfo()">
+                    Ver Información de Debug
+                </button>
+                <button class="btn-secondary" style="flex: 1;" onclick="checkConnectivity()">
+                    Verificar Conectividad
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/assets/audio/sound-generator.js"></script>
+    <script src="/assets/audio/notification.js"></script>
+    <script src="/assets/js/notification-listener.js"></script>
+
+    <script>
+        // Interceptar console.log para mostrar en la página
+        const originalLog = console.log;
+        const originalWarn = console.warn;
+        const originalError = console.error;
+        
+        function addToConsole(message, type = 'log') {
+            const consoleBox = document.getElementById('consoleBox');
+            const time = new Date().toLocaleTimeString('es-ES');
+            const line = document.createElement('div');
+            line.className = 'console-line';
+            
+            const timeSpan = document.createElement('span');
+            timeSpan.className = 'console-time';
+            timeSpan.textContent = `[${time}]`;
+            
+            const msgSpan = document.createElement('span');
+            msgSpan.className = `console-${type}`;
+            msgSpan.textContent = String(message);
+            
+            line.appendChild(timeSpan);
+            line.appendChild(msgSpan);
+            consoleBox.appendChild(line);
+            consoleBox.scrollTop = consoleBox.scrollHeight;
+        }
+        
+        console.log = function(...args) {
+            originalLog(...args);
+            addToConsole(args.map(a => typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a)).join(' '), 'log');
+        };
+        
+        console.warn = function(...args) {
+            originalWarn(...args);
+            addToConsole(args.map(a => typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a)).join(' '), 'warn');
+        };
+        
+        console.error = function(...args) {
+            originalError(...args);
+            addToConsole(args.map(a => typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a)).join(' '), 'error');
+        };
+        
+        // Cargar configuración
+        async function loadSettings() {
+            try {
+                const response = await fetch('/api/notification-sound-settings');
+                const settings = await response.json();
+                
+                const settingsInfo = document.getElementById('settingsInfo');
+                settingsInfo.innerHTML = `<pre>${JSON.stringify(settings, null, 2)}</pre>`;
+                
+                console.log('Settings loaded:', settings);
+            } catch (error) {
+                console.error('Error loading settings:', error);
+            }
+        }
+        
+        // Check status
+        function checkStatus() {
+            const listenerStatus = typeof NotificationListener !== 'undefined' && NotificationListener.isRunning;
+            const managerStatus = typeof NotificationSoundManager !== 'undefined';
+            const generatorStatus = typeof SoundGenerator !== 'undefined';
+            
+            document.getElementById('listenerStatus').classList.toggle('active', listenerStatus);
+            document.getElementById('listenerStatusText').textContent = `Listener: ${listenerStatus ? '✅ Activo' : '❌ Inactivo'}`;
+            
+            document.getElementById('managerStatus').classList.toggle('active', managerStatus);
+            document.getElementById('managerStatusText').textContent = `SoundManager: ${managerStatus ? '✅ Cargado' : '❌ No cargado'}`;
+            
+            document.getElementById('generatorStatus').classList.toggle('active', generatorStatus);
+            document.getElementById('generatorStatusText').textContent = `SoundGenerator: ${generatorStatus ? '✅ Cargado' : '❌ No cargado'}`;
+        }
+        
+        function testAutoPlay() {
+            console.log('🧪 Iniciando prueba de auto-play...');
+            if (NotificationListener && typeof NotificationListener.testNotification === 'function') {
+                NotificationListener.testNotification();
+                console.log('⏳ Espera 3 segundos para que el listener detecte la notificación...');
+            } else {
+                console.error('❌ NotificationListener no está disponible');
+            }
+        }
+        
+        function testSoundPreview() {
+            console.log('🔊 Reproduciendo preview del sonido...');
+            if (NotificationSoundManager && typeof NotificationSoundManager.play === 'function') {
+                NotificationSoundManager.play();
+                console.log('✅ Sonido iniciado');
+            } else {
+                console.error('❌ NotificationSoundManager no disponible');
+            }
+        }
+        
+        function clearConsole() {
+            document.getElementById('consoleBox').innerHTML = '';
+            console.log('✅ Console limpiada');
+        }
+        
+        function showDebugInfo() {
+            console.log('=== DEBUG INFO ===');
+            console.log('LastUnreadCount:', NotificationListener.lastUnreadCount);
+            console.log('IsRunning:', NotificationListener.isRunning);
+            console.log('CheckInterval:', NotificationListener.checkInterval);
+            console.log('SoundSettings:', NotificationListener.soundSettings);
+            console.log('==================');
+        }
+        
+        async function checkConnectivity() {
+            console.log('🔗 Verificando conectividad con el servidor...');
+            try {
+                const response = await fetch('/api/unread-notifications');
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('✅ Servidor accesible. Notificaciones no leídas:', data.unread_count);
+                } else {
+                    console.error('❌ Error del servidor:', response.status);
+                }
+            } catch (error) {
+                console.error('❌ Error de conectividad:', error.message);
+            }
+        }
+        
+        // Inicializar cuando el DOM esté listo
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                setTimeout(() => {
+                    checkStatus();
+                    loadSettings();
+                }, 1000);
+            });
+        } else {
+            setTimeout(() => {
+                checkStatus();
+                loadSettings();
+            }, 1000);
+        }
+        
+        // Verificar estado cada 2 segundos
+        setInterval(checkStatus, 2000);
+    </script>
+</body>
+</html>

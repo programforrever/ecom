@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Sonido de Notificaciones</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f0f2f5;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .section {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .section h2 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        button.danger {
+            background: #dc3545;
+        }
+        button.danger:hover {
+            background: #c82333;
+        }
+        button.success {
+            background: #28a745;
+        }
+        button.success:hover {
+            background: #218838;
+        }
+        .json-display {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .file-list {
+            list-style: none;
+        }
+        .file-list li {
+            background: #f8f9fa;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 5px;
+            border-left: 4px solid #007bff;
+        }
+        .file-list li strong {
+            color: #007bff;
+        }
+        .status-good {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .status-bad {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .alert {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        .alert-info {
+            background: #d1ecf1;
+            border-left: 4px solid #0c5460;
+            color: #0c5460;
+        }
+        .alert-danger {
+            background: #f8d7da;
+            border-left: 4px solid #721c24;
+            color: #721c24;
+        }
+        .alert-success {
+            background: #d4edda;
+            border-left: 4px solid #155724;
+            color: #155724;
+        }
+        .test-log {
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+        audio {
+            width: 100%;
+            max-width: 400px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Debug Sonido de Notificaciones</h1>
+        
+        <div class="section">
+            <h2>1. Verificar Configuración en BD</h2>
+            <div class="button-group">
+                <button class="success" onclick="debugSettings()">📊 Ver Configuración</button>
+                <button onclick="clearLog()">🗑️ Limpiar Log</button>
+            </div>
+            <div class="test-log" id="test-log">Esperando acciones...</div>
+            <div class="json-display" id="config-debug"></div>
+        </div>
+
+        <div class="section">
+            <h2>2. Archivos en Storage</h2>
+            <div id="files-info"></div>
+        </div>
+
+        <div class="section">
+            <h2>3. Reproducir Archivo Guardado</h2>
+            <button class="success" onclick="playCurrentSound()">▶️ Reproducir Sonido Guardado</button>
+            <div id="current-sound-player"></div>
+        </div>
+
+        <div class="section">
+            <h2>4. Eliminar Sonido</h2>
+            <button class="danger" onclick="removeCustomSound()">🗑️ Eliminar Sonido Personalizado</button>
+            <div id="remove-result"></div>
+        </div>
+
+        <div class="section">
+            <h2>5. Crear Sonido de Prueba</h2>
+            <p style="margin-bottom: 15px; color: #666;">
+                Sube un archivo .ogg, .mp3 o cualquier formato de audio desde el admin.
+            </p>
+            <button class="success" onclick="checkAfterUpload()">🔄 Actualizar Después de Subir</button>
+        </div>
+    </div>
+
+    <script>
+        function log(message) {
+            const logEl = document.getElementById('test-log');
+            const time = new Date().toLocaleTimeString();
+            logEl.innerHTML += `[${time}] ${message}\n`;
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+
+        function clearLog() {
+            document.getElementById('test-log').innerHTML = '';
+        }
+
+        async function debugSettings() {
+            clearLog();
+            log('🔍 Obteniendo configuración...');
+            
+            try {
+                const response = await fetch('/api/debug/sound-settings');
+                if (!response.ok) {
+                    log('❌ Error: ' + response.status);
+                    return;
+                }
+                
+                const data = await response.json();
+                document.getElementById('config-debug').textContent = JSON.stringify(data, null, 2);
+                
+                log('✅ Configuración obtenida');
+                log('');
+                
+                // Análisis
+                if (data.custom_notification_sound) {
+                    log('📁 Sonido personalizado guardado: ' + data.custom_notification_sound.value);
+                    log('Existe en BD: ' + (data.custom_notification_sound.exists ? '✅' : '❌'));
+                    log('Existe en storage: ' + (data.custom_notification_sound.file_exists ? '✅' : '❌'));
+                    log('URL: ' + data.custom_notification_sound.url);
+                } else {
+                    log('⚠️ No hay sonido personalizado en BD');
+                }
+                
+                log('');
+                log('📁 Directorio: ' + data.directory_info.path);
+                log('Existe: ' + (data.directory_info.exists ? '✅' : '❌'));
+                log('Archivos encontrados: ' + data.directory_info.files.length);
+                
+                data.directory_info.files.forEach(file => {
+                    log('  - ' + file.name + ' (' + (file.size / 1024).toFixed(2) + ' KB)');
+                });
+                
+            } catch (error) {
+                log('❌ Error: ' + error.message);
+            }
+        }
+
+        async function playCurrentSound() {
+            log('▶️ Intentando reproducir sonido...');
+            
+            try {
+                const response = await fetch('/api/debug/sound-settings');
+                const data = await response.json();
+                
+                if (!data.custom_notification_sound || !data.custom_notification_sound.value) {
+                    log('❌ No hay sonido guardado');
+                    return;
+                }
+                
+                const url = data.custom_notification_sound.url;
+                log('🎵 URL: ' + url);
+                
+                if (url.includes('NO EXISTE')) {
+                    log('❌ El archivo NO existe en storage');
+                    return;
+                }
+                
+                const ext = url.split('.').pop().toLowerCase();
+                const mimeTypes = {
+                    'mp3': 'audio/mpeg',
+                    'wav': 'audio/wav',
+                    'ogg': 'audio/ogg',
+                    'webm': 'audio/webm',
+                    'aac': 'audio/aac',
+                    'flac': 'audio/flac',
+                    'm4a': 'audio/mp4',
+                    'mp4': 'audio/mp4'
+                };
+                
+                const mimeType = mimeTypes[ext] || 'audio/mpeg';
+                log('🎵 Tipo MIME: ' + mimeType);
+                
+                const html = `
+                    <audio controls style="width: 100%; max-width: 400px;">
+                        <source src="${url}" type="${mimeType}">
+                        Tu navegador no soporta audio
+                    </audio>
+                `;
+                document.getElementById('current-sound-player').innerHTML = html;
+                
+                // Intentar reproducir
+                const audio = document.querySelector('audio');
+                audio.play().then(() => {
+                    log('✅ Reproduciendo!');
+                }).catch(err => {
+                    log('⚠️ Auto-play bloqueado: ' + err.message);
+                    log('Haz clic en reproducir manualmente');
+                });
+                
+            } catch (error) {
+                log('❌ Error: ' + error.message);
+            }
+        }
+
+        async function removeCustomSound() {
+            if (!confirm('¿Estás seguro de que quieres eliminar el sonido personalizado?')) {
+                return;
+            }
+            
+            log('🗑️ Eliminando sonido...');
+            
+            try {
+                const response = await fetch('/api/debug/remove-custom-sound', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': getCsrfToken()
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    log('✅ ' + data.message);
+                    document.getElementById('remove-result').innerHTML = `
+                        <div class="alert alert-success">
+                            ✅ ${data.message}
+                        </div>
+                    `;
+                } else {
+                    log('❌ ' + data.message);
+                    document.getElementById('remove-result').innerHTML = `
+                        <div class="alert alert-danger">
+                            ❌ ${data.message}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                log('❌ Error: ' + error.message);
+            }
+        }
+
+        function checkAfterUpload() {
+            log('🔄 Actualizando configuración...');
+            setTimeout(() => {
+                debugSettings();
+            }, 500);
+        }
+
+        function getCsrfToken() {
+            return document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+        }
+
+        // Cargar info al abrir
+        window.addEventListener('load', () => {
+            log('🚀 Página de debug cargada');
+            debugSettings();
+        });
+    </script>
+</body>
+</html>

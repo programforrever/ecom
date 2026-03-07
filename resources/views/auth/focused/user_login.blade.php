@@ -27,6 +27,20 @@
                             </div>
                             <!-- Login form -->
                             <div class="pt-3 pt-lg-4">
+                                <!-- Error Messages -->
+                                @if ($errors->any())
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        <strong>{{ translate('Login Failed!') }}</strong>
+                                        <ul class="mb-0 mt-2">
+                                            @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                @endif
                                 <div class="">
                                     <form class="form-default" role="form" action="{{ route('login') }}" method="POST">
                                         @csrf
@@ -69,9 +83,14 @@
                                         <div class="form-group">
                                             <label for="password" class="fs-12 fw-700 text-soft-dark">{{  translate('Password') }}</label>
                                             <div class="position-relative">
-                                                <input type="password" class="form-control rounded-0 {{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="{{ translate('Password')}}" name="password" id="password">
+                                                <input type="password" class="form-control rounded-0 {{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="{{ translate('Password')}}" name="password" id="password" required>
                                                 <i class="password-toggle las la-2x la-eye"></i>
                                             </div>
+                                            @if ($errors->has('password'))
+                                                <span class="invalid-feedback d-block" role="alert">
+                                                    <strong>{{ $errors->first('password') }}</strong>
+                                                </span>
+                                            @endif
                                         </div>
 
                                         <div class="row mb-2">
@@ -156,9 +175,9 @@
                                     <a href="{{ route('user.registration') }}" class="ml-2 fs-14 fw-700 animate-underline-primary">{{ translate('Register Now')}}</a>
                                 </p>
                                 <!-- Go Back -->
-                                <a href="{{ url()->previous() }}" class="mt-3 fs-14 fw-700 d-flex align-items-center text-primary" style="max-width: fit-content;">
+                                <a href="{{ route('home') }}" class="mt-3 fs-14 fw-700 d-flex align-items-center text-primary" style="max-width: fit-content;">
                                     <i class="las la-arrow-left fs-20 mr-1"></i>
-                                    {{ translate('Back to Previous Page')}}
+                                    {{ translate('Back to Home')}}
                                 </a>
                             </div>
                         </div>

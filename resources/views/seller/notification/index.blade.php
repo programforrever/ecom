@@ -24,5 +24,11 @@
 
 @endsection
 
+@section('script')
+    <script src="{{ asset('assets/audio/sound-generator.js?v=' . time()) }}"></script>
+    <script src="{{ asset('assets/audio/notification.js?v=' . time()) }}"></script>
+    <script src="{{ asset('assets/js/notification-listener.js?v=' . time()) }}"></script>
+@endsection
+
 
 

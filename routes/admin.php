@@ -49,6 +49,7 @@ use App\Http\Controllers\TaxController;
 use App\Http\Controllers\UpdateController;
 use App\Http\Controllers\WebsiteController;
 use App\Http\Controllers\ZoneController;
+use App\Http\Controllers\NotificationSoundSettingsController;
 
 /*
   |--------------------------------------------------------------------------
@@ -497,6 +498,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
     });
     
     Route::get('/all-notification', [NotificationController::class, 'index'])->name('admin.all-notification');
+    
+    // Notification Sound Settings
+    Route::controller(NotificationSoundSettingsController::class)->group(function () {
+        Route::get('/notification-sound-settings', 'index')->name('notification_sound_settings.index');
+        Route::post('/notification-sound-settings/update', 'update')->name('notification.sound.settings.update');
+    });
 
     Route::get('/clear-cache', [AdminController::class, 'clearCache'])->name('cache.clear');
 

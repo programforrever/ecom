@@ -1078,7 +1078,7 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                 });
             });
         },
-        notify: function (type = "dark", message = "") {
+        notify: function (type = "dark", message = "", soundUrl = null) {
             $.notify(
                 {
                     // options
@@ -1108,6 +1108,10 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                         "</div>",
                 }
             );
+            // Reproducir sonido de notificación
+            if (typeof NotificationSoundManager !== 'undefined') {
+                NotificationSoundManager.play(soundUrl);
+            }
         },
         aizUppy: function () {
             if ($("#aiz-upload-files").length > 0) {

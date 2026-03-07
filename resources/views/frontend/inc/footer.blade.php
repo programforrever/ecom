@@ -146,23 +146,6 @@
                     </ul>
                 @endif
 
-                <!-- Apps link -->
-                @if((get_setting('play_store_link') != null) || (get_setting('app_store_link') != null))
-                    <h5 class="fs-14 fw-700 text-secondary text-uppercase mt-3">{{ translate('Mobile Apps') }}</h5>
-                    <div class="d-flex mt-3">
-                        <div class="">
-                            <a href="{{ get_setting('play_store_link') }}" target="_blank" class="mr-2 mb-2 overflow-hidden hov-scale-img">
-                                <img class="lazyload has-transition" src="{{ static_asset('assets/img/placeholder-rect.jpg') }}" data-src="{{ static_asset('assets/img/play.gif') }}" alt="{{ env('APP_NAME') }}" height="44">
-                            </a>
-                        </div>
-                        <div class="">
-                            <a href="{{ get_setting('app_store_link') }}" target="_blank" class="overflow-hidden hov-scale-img">
-                                <img class="lazyload has-transition" src="{{ static_asset('assets/img/placeholder-rect.jpg') }}" data-src="{{ static_asset('assets/img/app.gif') }}" alt="{{ env('APP_NAME') }}" height="44">
-                            </a>
-                        </div>
-                    </div>
-                @endif
-
             </div>
         </div>
     </div>

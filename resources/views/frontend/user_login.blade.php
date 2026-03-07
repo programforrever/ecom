@@ -17,6 +17,20 @@
                                     </div>
                                     <!-- Login form -->
                                     <div class="pt-3 pt-lg-4">
+                                        <!-- Error Messages -->
+                                        @if ($errors->any())
+                                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                <strong>{{ translate('Login Failed!') }}</strong>
+                                                <ul class="mb-0 mt-2">
+                                                    @foreach ($errors->all() as $error)
+                                                        <li>{{ $error }}</li>
+                                                    @endforeach
+                                                </ul>
+                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                        @endif
                                         <div class="">
                                             <form class="form-default" role="form" action="{{ route('login') }}" method="POST">
                                                 @csrf
@@ -58,7 +72,12 @@
                                                 <!-- password -->
                                                 <div class="form-group">
                                                     <label for="password" class="fs-12 fw-700 text-soft-dark">{{  translate('Password') }}</label>
-                                                    <input type="password" class="form-control rounded-0 {{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="{{ translate('Password')}}" name="password" id="password">
+                                                    <input type="password" class="form-control rounded-0 {{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="{{ translate('Password')}}" name="password" id="password" required>
+                                                    @if ($errors->has('password'))
+                                                        <span class="invalid-feedback d-block" role="alert">
+                                                            <strong>{{ $errors->first('password') }}</strong>
+                                                        </span>
+                                                    @endif
                                                 </div>
 
                                                 <div class="row mb-2">

@@ -962,11 +962,13 @@
             font-size: 12px;
             margin-bottom: 8px;
             line-height: 1.2;
+            opacity: 1 !important;
         }
         
         .product-card .text-warning i {
             display: inline-block;
             margin: 0 1px;
+            opacity: 1 !important;
         }
 
         /* PRICES */

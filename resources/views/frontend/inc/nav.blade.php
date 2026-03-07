@@ -588,7 +588,7 @@
                     </div>
                 </div>
                 <!-- Cart -->
-                <div class="d-none d-xl-block align-self-stretch mr-0 has-transition bg-black-10" style="width: 170px;">
+                <div class="d-block align-self-stretch mr-0 has-transition bg-black-10" style="width: 170px;">
                     <a class="fw-700 fs-16 text-white mr-3" href="{{ route('orders.track') }}">
                         {{ translate('Track Order') }}
                     </a>

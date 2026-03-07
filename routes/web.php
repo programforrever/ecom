@@ -254,6 +254,11 @@ Route::group(['middleware' => ['user', 'verified', 'unbanned']], function () {
     });
 
     Route::get('/all-notifications', [NotificationController::class, 'index'])->name('all-notifications');
+    Route::get('/api/unread-notifications', [NotificationController::class, 'getUnreadNotifications'])->name('api.unread-notifications');
+    Route::get('/api/notification-sound-settings', [NotificationController::class, 'getNotificationSoundSettings'])->name('api.notification-sound-settings');
+    Route::post('/api/test-notification', [NotificationController::class, 'testCreateNotification'])->name('api.test-notification');
+    Route::get('/api/debug/sound-settings', [NotificationController::class, 'debugSoundSettings'])->name('api.debug.sound-settings');
+    Route::post('/api/debug/remove-custom-sound', [NotificationController::class, 'debugRemoveCustomSound'])->name('api.debug.remove-custom-sound');
 });
 
 Route::group(['middleware' => ['customer', 'verified', 'unbanned']], function () {

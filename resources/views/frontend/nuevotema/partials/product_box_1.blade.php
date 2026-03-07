@@ -93,14 +93,14 @@
                 $rating = $product->rating ?? 0;
             @endphp
             <div class="d-flex justify-content-center align-items-center">
-                <span class="fs-11 fw-700 text-warning">
+                <span class="fs-11 fw-700 text-warning" style="opacity: 1;">
                     @for ($i = 0; $i < 5; $i++)
                         @if ($i < floor($rating))
                             <i class="las la-star"></i>
                         @elseif ($i < $rating)
                             <i class="las la-star-half-alt"></i>
                         @else
-                            <i class="las la-star" style="opacity: 0.3;"></i>
+                            <i class="las la-star" style="opacity: 0.6;"></i>
                         @endif
                     @endfor
                 </span>
