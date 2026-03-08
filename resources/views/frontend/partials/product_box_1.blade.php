@@ -59,7 +59,7 @@
                 href="javascript:void(0)"
                 @if (Auth::check()) onclick="showAddToCartModal({{ $product->id }})" @else onclick="showLoginModal()" @endif>
                 <span class="cart-btn-text">
-                    {{ translate('Add to Cart') }}
+                    {{ translate('Añadir al carrito') }}
                 </span>
                 <br>
                 <span><i class="las la-2x la-shopping-cart"></i></span>

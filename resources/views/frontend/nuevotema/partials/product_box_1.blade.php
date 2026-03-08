@@ -135,7 +135,7 @@
         <a class="cart-btn w-100 h-40px text-white fs-13 fw-700 d-flex flex-column justify-content-center align-items-center @if (in_array($product->id, $cart_added)) active @endif"
             href="javascript:void(0)"
             @if (Auth::check()) onclick="showAddToCartModal({{ $product->id }})" @else onclick="showLoginModal()" @endif>
-            <span class="cart-btn-text">{{ translate('Add to Cart') }}</span>
+            <span class="cart-btn-text">{{ translate('Añadir al carrito') }}</span>
             <span><i class="las la-shopping-cart"></i></span>
         </a>
     @endif
