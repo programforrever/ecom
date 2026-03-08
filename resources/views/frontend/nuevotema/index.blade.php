@@ -91,7 +91,7 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            padding: 40px 80px 40px 60px;
+            padding: 40px 40px 40px 300px;
             min-width: 0;
         }
 
@@ -315,10 +315,10 @@
                 align-items: stretch;
             }
 
-            .slide-content {
+         .slide-content {
                 width: 50%;
                 flex: 0 0 50%;
-                padding: 12px 10px;
+                padding: 12px 10px 12px 55px;
                 justify-content: center;
                 display: flex;
                 flex-direction: column;
@@ -375,12 +375,11 @@
             .slider-main,
             .slides-container { min-height: 220px; }
 
-            .slide-content {
-                width: 50%;
-                flex: 0 0 50%;
-                padding: 12px 10px;
-            }
-
+         .slide-content {
+    width: 50%;
+    flex: 0 0 50%;
+    padding: 12px 10px 12px 55px;
+}
             .slide-image {
                 width: 50%;
                 flex: 0 0 50%;
@@ -1385,12 +1384,11 @@
             const prevBtn = document.getElementById('sliderPrevBtn');
             const dotsEl = document.getElementById('hero-dots-container');
             
-            // Solo obtener los slides del hero, no todos
+            // Solo obtener los slides del hero, no todos celular
             const slideContents = heroContainer ? Array.from(heroContainer.querySelectorAll('.slide-content')) : [];
 
             if (!menuEl || window.getComputedStyle(menuEl).display === 'none') {
-                slideContents.forEach(s => s.style.paddingLeft = '60px');
-                if (prevBtn) prevBtn.style.left = '10px';
+slideContents.forEach(s => s.style.paddingLeft = window.innerWidth < 768 ? '55px' : '255px');                if (prevBtn) prevBtn.style.left = '10px';
                 if (dotsEl) {
                     dotsEl.style.left = '50%';
                     dotsEl.style.transform = 'translateX(-50%)';
@@ -1402,7 +1400,7 @@
 
             // Ajustar padding de slide-content basado en el ancho del menú
             slideContents.forEach(s => {
-                s.style.paddingLeft = (totalPadding + 40) + 'px';
+                s.style.paddingLeft = (totalPadding + 100) + 'px';
             });
 
             if (prevBtn) {
