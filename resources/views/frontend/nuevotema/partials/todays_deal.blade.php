@@ -1,26 +1,8 @@
 @if(count($todays_deal_products) > 0)
     <section class="">
         <div class="container">
-            @php
-                $lang = get_system_language()->code;
-                $todays_deal_banner = get_setting('todays_deal_banner', null, $lang);
-                $todays_deal_banner_small = get_setting('todays_deal_banner_small', null, $lang);
-            @endphp
-            <!-- Banner -->
-            @if ($todays_deal_banner != null || $todays_deal_banner_small != null)
-                <div class="overflow-hidden d-none d-md-block">
-                    <img src="{{ static_asset('assets/img/placeholder-rect.jpg') }}" 
-                        data-src="{{ uploaded_asset($todays_deal_banner) }}" 
-                        alt="{{ env('APP_NAME') }} promo" class="lazyload img-fit h-100 has-transition" 
-                        onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder-rect.jpg') }}';">
-                </div>
-                <div class="overflow-hidden d-md-none">
-                    <img src="{{ static_asset('assets/img/placeholder-rect.jpg') }}" 
-                        data-src="{{ $todays_deal_banner_small != null ? uploaded_asset($todays_deal_banner_small) : uploaded_asset($todays_deal_banner) }}" 
-                        alt="{{ env('APP_NAME') }} promo" class="lazyload img-fit h-100 has-transition" 
-                        onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder-rect.jpg') }}';">
-                </div>
-            @endif
+            <!-- Title -->
+            <h3 class="fs-16 fs-md-20 fw-700 mb-3">{{ translate('Productos en oferta hoy') }}</h3>
             <!-- Products -->
             @php
                 $todays_deal_banner_text_color =  ((get_setting('todays_deal_banner_text_color') == 'light') ||  (get_setting('todays_deal_banner_text_color') == null)) ? 'text-white' : 'text-dark';
@@ -31,12 +13,12 @@
                 </div>
                 <div class="c-scrollbar-light overflow-hidden px-4 px-md-5 pb-3 pt-3 pt-md-3 pb-md-5">
                     <div class="h-100 d-flex flex-column justify-content-center">
-                        <div class="todays-deal aiz-carousel" data-items="7" data-xxl-items="7" data-xl-items="6" data-lg-items="5" data-md-items="4" data-sm-items="3" data-xs-items="2" data-arrows="true" data-dots="false" data-autoplay="true" data-infinite="true">
+                        <div class="todays-deal aiz-carousel" data-items="4" data-xxl-items="4" data-xl-items="4" data-lg-items="4" data-md-items="4" data-sm-items="2" data-xs-items="1" data-arrows="true" data-dots="false" data-autoplay="true" data-infinite="true">
                             @foreach ($todays_deal_products as $key => $product)
                                 <div class="carousel-box h-100 px-3 px-lg-0">
                                     <a href="{{ route('product', $product->slug) }}" class="h-100 overflow-hidden hov-scale-img mx-auto" title="{{  $product->getTranslation('name')  }}">
                                         <!-- Image -->
-                                        <div class="img h-80px w-80px rounded-content overflow-hidden mx-auto">
+                                        <div class="img h-180px w-180px rounded-2 overflow-hidden mx-auto">
                                             <img class="lazyload img-fit m-auto has-transition"
                                                 src="{{ static_asset('assets/img/placeholder.jpg') }}"
                                                 data-src="{{ get_image($product->thumbnail) }}"
