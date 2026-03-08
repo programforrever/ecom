@@ -1216,8 +1216,10 @@ if (!function_exists('static_asset')) {
 if (!function_exists('getBaseURL')) {
     function getBaseURL()
     {
-        $root = '//' . $_SERVER['HTTP_HOST'];
-        $root .= str_replace(basename($_SERVER['SCRIPT_NAME']), '', $_SERVER['SCRIPT_NAME']);
+        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+        $root = '//' . $host;
+        $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
+        $root .= str_replace(basename($scriptName), '', $scriptName);
 
         return $root;
     }

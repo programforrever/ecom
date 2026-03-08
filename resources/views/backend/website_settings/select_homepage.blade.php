@@ -25,7 +25,7 @@
 				<input type="hidden" name="types[]" value="homepage_select">
 				<div class="row">
 					<!-- Home Classic -->
-					<div class="col-xxl-3 col-lg-4 col-sm-6 my-3">
+					{{-- <div class="col-xxl-3 col-lg-4 col-sm-6 my-3">
 						<label class="aiz-megabox d-block mb-3">
 							<input value="classic" type="radio" name="homepage_select" @if((get_setting('homepage_select') == null) || (get_setting('homepage_select') == 'classic')) checked @endif>
 							<span class="d-block aiz-megabox-elem rounded-0 img-overlay">
@@ -41,9 +41,9 @@
 									onclick="imageShowOverlay('{{ static_asset('assets/img/pages/home-classic.png') }}')">{{ translate('View') }}</a>
 							</span>
 						</div>
-					</div>
+					</div> --}}
 					<!-- Home Metro -->
-					<div class="col-xxl-3 col-lg-4 col-sm-6 my-3">
+					{{-- <div class="col-xxl-3 col-lg-4 col-sm-6 my-3">
 						<label class="aiz-megabox d-block mb-3">
 							<input value="metro" type="radio" name="homepage_select" @if(get_setting('homepage_select') == 'metro') checked @endif>
 							<span class="d-block aiz-megabox-elem rounded-0 img-overlay">
@@ -59,9 +59,9 @@
 									onclick="imageShowOverlay('{{ static_asset('assets/img/pages/home-metro.png') }}')">{{ translate('View') }}</a>
 							</span>
 						</div>
-					</div>
+					</div> --}}
 					<!-- Home Minima -->
-					<div class="col-xxl-3 col-lg-4 col-sm-6 my-3">
+					{{-- <div class="col-xxl-3 col-lg-4 col-sm-6 my-3">
 						<label class="aiz-megabox d-block mb-3">
 							<input value="minima" type="radio" name="homepage_select" @if(get_setting('homepage_select') == 'minima') checked @endif>
 							<span class="d-block aiz-megabox-elem rounded-0 img-overlay">
@@ -77,7 +77,7 @@
 									onclick="imageShowOverlay('{{ static_asset('assets/img/pages/home-minima.png') }}')">{{ translate('View') }}</a>
 							</span>
 						</div>
-					</div>
+					</div> --}}
 				<!-- Home Nuevo Tema -->
 					<div class="col-xxl-3 col-lg-4 col-sm-6 my-3">
 						<label class="aiz-megabox d-block mb-3">
