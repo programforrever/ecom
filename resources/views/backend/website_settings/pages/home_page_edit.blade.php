@@ -538,38 +538,6 @@
 		</div>
 		@endif
 
-		{{-- Coupon system --}}
-		@if(get_setting('coupon_system') == 1)
-		<div class="card">
-			<div class="card-header">
-				<h6 class="mb-0">{{ translate('Coupon Section') }}</h6>
-			</div>
-			<div class="card-body">
-				<form action="{{ route('business_settings.update') }}" method="POST" enctype="multipart/form-data">
-					@csrf
-					<div class="form-group">
-						<label>{{ translate('Background Color') }}</label>
-						<input type="hidden" name="types[]" value="cupon_background_color">
-						<input type="text" class="form-control" placeholder="#292933" name="cupon_background_color" value="{{ get_setting('cupon_background_color') }}">
-					</div>
-					<div class="form-group">
-						<label>{{ translate('Title') }}</label>
-						<input type="hidden" name="types[]" value="cupon_title">
-						<input type="text" class="form-control" placeholder="{{ translate('Title') }}" name="cupon_title" value="{{ get_setting('cupon_title') }}">
-					</div>
-					<div class="form-group">
-						<label>{{ translate('Subtitle') }}</label>
-						<input type="hidden" name="types[]" value="cupon_subtitle">
-						<input type="text" class="form-control" placeholder="{{ translate('Subtitle') }}" name="cupon_subtitle" value="{{ get_setting('cupon_subtitle') }}">
-					</div>
-					<div class="text-right">
-						<button type="submit" class="btn btn-primary">{{ translate('Update') }}</button>
-					</div>
-				</form>
-			</div>
-		</div>
-		@endif
-
 		{{-- Home categories--}}
 		<div class="card">
 			<div class="card-header">

@@ -296,7 +296,7 @@
                             <div class="mt-3">
                                 <button type="button" class="btn btn-secondary-base mr-2 add-to-cart fw-600 w-150px rounded-0 text-white" onclick="addToCart()">
                                     <i class="las la-shopping-bag"></i>
-                                    <span class="d-none d-md-inline-block"> {{ translate('Add to cart')}}</span>
+                                    <span class="d-none d-md-inline-block"> {{ translate('Añadir al carrito')}}</span>
                                 </button>
                                 <button type="button" class="btn btn-primary buy-now fw-600 add-to-cart w-150px rounded-0" onclick="buyNow()">
                                     <i class="la la-shopping-cart"></i> {{ translate('Buy Now')}}

@@ -240,7 +240,7 @@
                     @if ($product->digital == 1)
                         <button type="button" class="btn btn-primary rounded-0 buy-now fw-600 add-to-cart" onclick="addToCart()">
                             <i class="la la-shopping-cart"></i>
-                            <span class="d-none d-md-inline-block">{{ translate('Add to cart')}}</span>
+                            <span class="d-none d-md-inline-block">{{ translate('Añadir al carrito')}}</span>
                         </button>
                     @elseif($qty > 0)
                         @if ($product->external_link != null)
@@ -251,7 +251,7 @@
                         @else
                             <button type="button" class="btn btn-primary rounded-0 buy-now fw-600 add-to-cart" onclick="addToCart()">
                                 <i class="la la-shopping-cart"></i>
-                                <span class="d-none d-md-inline-block">{{ translate('Add to cart')}}</span>
+                                <span class="d-none d-md-inline-block">{{ translate('Añadir al carrito')}}</span>
                             </button>
                         @endif
                     @endif

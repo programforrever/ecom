@@ -870,7 +870,7 @@
                     <button type="button"
                         class="neu-btn-cart add-to-cart"
                         @if (Auth::check()) onclick="addToCart()" @else onclick="showLoginModal()" @endif>
-                        <i class="las la-shopping-bag"></i> {{ translate('Add to cart') }}
+                        <i class="las la-shopping-bag"></i> {{ translate('Añadir al carrito') }}
                     </button>
                     <button type="button" class="neu-btn-buy buy-now add-to-cart"
                         @if (Auth::check()) onclick="buyNow()" @else onclick="showLoginModal()" @endif>
@@ -884,7 +884,7 @@
                 <button type="button"
                     class="neu-btn-cart add-to-cart"
                     @if (Auth::check()) onclick="addToCart()" @else onclick="showLoginModal()" @endif>
-                    <i class="las la-shopping-bag"></i> {{ translate('Add to cart') }}
+                    <i class="las la-shopping-bag"></i> {{ translate('Añadir al carrito') }}
                 </button>
                 <button type="button" class="neu-btn-buy buy-now add-to-cart"
                     @if (Auth::check()) onclick="buyNow()" @else onclick="showLoginModal()" @endif>

@@ -2029,10 +2029,13 @@ if(products.links.next == null){
                                     }
                                 </div>
                             </div>
-                            <div class="add-plus absolute-full rounded overflow-hidden hov-box ${(data.data[i].digital == 0 && data.data[i].qty <= 0) ? 'c-not-allowed' : '' }" data-stock-id="${data.data[i].stock_id}">
+                            <div class="add-plus absolute-full rounded overflow-hidden hov-box ${(data.data[i].digital == 0 && data.data[i].qty <= 0) ? 'c-not-allowed' : '' }" data-stock-id="${data.data[i].stock_id}" title="Añadir al carrito">
                                 <div class="absolute-full bg-dark opacity-50">
                                 </div>
-                                <i class="las la-plus absolute-center la-6x text-white"></i>
+                                <div class="absolute-center text-center">
+                                    <i class="las la-plus la-3x text-white d-block mb-2"></i>
+                                    <span class="text-white fs-12 fw-600">{{ translate('Añadir al carrito') }}</span>
+                                </div>
                             </div>
                         </div>
                     </div>`
