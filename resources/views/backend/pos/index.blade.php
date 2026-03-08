@@ -2170,22 +2170,73 @@ if(products.links.next == null){
             $('#sales-list-content').html('<div class="text-center py-5"><i class="las la-spinner la-spin la-3x"></i></div>');
             $('#pos-sales-list').modal('show');
             
-            $.post('{{ route('pos.getSalesList') }}',{_token:AIZ.data.csrf, page:1}, function(data){
+            loadSalesWithFilters(1);
+        }
+
+        // Load sales with current filters
+        function loadSalesWithFilters(page) {
+            var customerSearch = $('#customer-search').val() || '';
+            var dateSearch = $('#date-search').val() || '';
+            
+            var params = {
+                _token: AIZ.data.csrf,
+                page: page,
+                customer: customerSearch,
+                date: dateSearch
+            };
+            
+            $.post('{{ route('pos.getSalesList') }}', params, function(data){
                 $('#sales-list-content').html(data);
+                attachSalesSearchListeners();
             }).fail(function(error) {
                 $('#sales-list-content').html('<div class="alert alert-danger">{{ translate("Error loading sales list") }}</div>');
             });
         }
 
+        // Debounce utility function
+        var searchTimeout;
+        function debounceSearch() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(function() {
+                loadSalesWithFilters(1);
+            }, 300);
+        }
+
+        // Attach search listeners after content loads
+        function attachSalesSearchListeners() {
+            var customerSearch = document.getElementById('customer-search');
+            var dateSearch = document.getElementById('date-search');
+            var clearBtn = document.getElementById('clear-filters');
+            
+            // Remove old listeners if any
+            if (customerSearch) {
+                var newCustomerSearch = customerSearch.cloneNode(true);
+                customerSearch.parentNode.replaceChild(newCustomerSearch, customerSearch);
+                document.getElementById('customer-search').addEventListener('keyup', debounceSearch);
+            }
+            
+            if (dateSearch) {
+                var newDateSearch = dateSearch.cloneNode(true);
+                dateSearch.parentNode.replaceChild(newDateSearch, dateSearch);
+                document.getElementById('date-search').addEventListener('change', function() {
+                    loadSalesWithFilters(1);
+                });
+            }
+            
+            if (clearBtn) {
+                var newClearBtn = clearBtn.cloneNode(true);
+                clearBtn.parentNode.replaceChild(newClearBtn, clearBtn);
+                document.getElementById('clear-filters').addEventListener('click', function() {
+                    document.getElementById('customer-search').value = '';
+                    document.getElementById('date-search').value = '';
+                    loadSalesWithFilters(1);
+                });
+            }
+        }
+
         // Load page for sales list pagination
         function loadPageSalesList(page) {
-            $('#sales-list-content').html('<div class="text-center py-5"><i class="las la-spinner la-spin la-3x"></i></div>');
-            
-            $.post('{{ route('pos.getSalesList') }}',{_token:AIZ.data.csrf, page:page}, function(data){
-                $('#sales-list-content').html(data);
-            }).fail(function(error) {
-                $('#sales-list-content').html('<div class="alert alert-danger">{{ translate("Error loading sales list") }}</div>');
-            });
+            loadSalesWithFilters(page);
         }
 
 

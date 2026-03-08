@@ -1,3 +1,41 @@
+<!-- Search Filters -->
+<div class="mb-3 p-3 bg-light rounded">
+    <div class="row">
+        <div class="col-md-6 mb-2">
+            <label class="form-label fs-14 mb-2">{{translate('Buscar por Cliente')}}</label>
+            <div class="input-group input-group-sm">
+                <span class="input-group-text" style="background-color: #f5f5f5; border: 1px solid #ddd;">
+                    <i class="las la-search"></i>
+                </span>
+                <input type="text" id="customer-search" class="form-control sales-search-input" placeholder="{{translate('Nombre del cliente')}}" style="border: 1px solid #ddd;">
+            </div>
+        </div>
+        <div class="col-md-6 mb-2">
+            <label class="form-label fs-14 mb-2">{{translate('Buscar por Fecha')}}</label>
+            <div class="input-group input-group-sm">
+                <span class="input-group-text" style="background-color: #f5f5f5; border: 1px solid #ddd;">
+                    <i class="las la-calendar"></i>
+                </span>
+                <input type="date" id="date-search" class="form-control sales-search-input" style="border: 1px solid #ddd;">
+            </div>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-12">
+            <button type="button" class="btn btn-sm btn-secondary" id="clear-filters" style="padding: 4px 12px; font-size: 12px;">
+                <i class="las la-times"></i> {{translate('Limpiar filtros')}}
+            </button>
+            <small class="text-muted ms-2" id="filter-results">
+                @if(isset($orders))
+                    {{translate('Mostrando')}} <strong>{{ $orders->count() }}</strong> {{translate('de')}} <strong>{{ $orders->total() }}</strong> {{translate('registros')}}
+                @else
+                    {{translate('Mostrando todos los resultados')}}
+                @endif
+            </small>
+        </div>
+    </div>
+</div>
+
 <!-- Sales List Content -->
 <div class="table-responsive c-scrollbar-light" style="max-height: 600px; overflow-y: auto; overflow-x: auto;">
     <table class="table table-hover fs-14 pos-sales-table">
@@ -11,10 +49,10 @@
                 <th class="text-center sticky-col" style="width: 60px; position: sticky; right: 0; z-index: 10;">{{translate('Imprimir')}}</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="sales-table-body">
             @if(isset($orders) && $orders->count() > 0)
                 @forelse($orders as $order)
-                    <tr class="hover-row" style="cursor: pointer;">
+                    <tr class="hover-row sales-row" style="cursor: pointer;">
                         <td class="text-center">
                             <strong>{{ $order->code ?? 'N/A' }}</strong>
                         </td>
@@ -128,6 +166,16 @@
     padding: 5px 8px !important;
     font-size: 12px !important;
     white-space: nowrap;
+}
+
+/* Search Filters Styles */
+.sales-search-input {
+    transition: border-color 0.3s ease;
+}
+
+.sales-search-input:focus {
+    border-color: #f97316 !important;
+    box-shadow: 0 0 0 0.2rem rgba(249, 115, 22, 0.25) !important;
 }
 
 /* Responsive */

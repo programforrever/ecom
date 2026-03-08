@@ -231,12 +231,36 @@ class PosController extends Controller
         try {
             $limit = $request->get('limit', 10);
             $page = $request->get('page', 1);
+            $customerSearch = trim($request->get('customer', ''));
+            $dateSearch = trim($request->get('date', ''));
             
-            // Get recent POS orders
-            $orders = Order::where('order_from', 'pos')
+            // Get recent POS orders with filters
+            $query = Order::where('order_from', 'pos')
                 ->with('user', 'orderDetails.product')
-                ->orderBy('created_at', 'desc')
-                ->paginate($limit, ['*'], 'page', $page);
+                ->orderBy('created_at', 'desc');
+            
+            // Filter by customer name
+            if (!empty($customerSearch)) {
+                $query->where(function($q) use ($customerSearch) {
+                    // Search in users table (registered customers)
+                    $q->whereHas('user', function($user) use ($customerSearch) {
+                        $user->where('name', 'like', '%' . $customerSearch . '%');
+                    });
+                    // If search term looks like walk-in customer, include those too
+                    if (stripos('walk-in customer', $customerSearch) !== false || 
+                        stripos('walk in', $customerSearch) !== false ||
+                        stripos('cliente', $customerSearch) !== false) {
+                        $q->orWhereNull('user_id');
+                    }
+                });
+            }
+            
+            // Filter by date
+            if (!empty($dateSearch)) {
+                $query->whereDate('created_at', $dateSearch);
+            }
+            
+            $orders = $query->paginate($limit, ['*'], 'page', $page);
             
             return view('backend.pos.sales_list', compact('orders'));
         } catch (\Exception $e) {
