@@ -246,7 +246,7 @@
         padding: 5px 14px;
         font-size: 12px;
         font-weight: 700;
-        color: rgb(14, 134, 204);
+        color: #158cd1;
         display: inline-flex;
         align-items: center;
         gap: 6px;
@@ -255,7 +255,7 @@
     .neu-watching-badge .watch-dot {
         width: 7px;
         height: 7px;
-        background: #258bc7;
+        background: #118bd1;
         border-radius: 50%;
         display: inline-block;
         box-shadow: 0 0 5px #e05c5c88;
@@ -799,7 +799,7 @@
             <div>
                 <span class="neu-watching-badge">
                     <span class="watch-dot"></span>
-                    <span id="watching-count">27</span> {{ translate('personas estan viendo este producto') }}
+                    <span id="watching-count">27</span> personas están viendo este producto
                 </span>
             </div>
 
@@ -870,7 +870,7 @@
                     <button type="button"
                         class="neu-btn-cart add-to-cart"
                         @if (Auth::check()) onclick="addToCart()" @else onclick="showLoginModal()" @endif>
-                        <i class="las la-shopping-bag"></i> {{ translate('Añadir al carrito') }}
+                        <i class="las la-shopping-bag"></i> Añadir al carrito
                     </button>
                     <button type="button" class="neu-btn-buy buy-now add-to-cart"
                         @if (Auth::check()) onclick="buyNow()" @else onclick="showLoginModal()" @endif>
@@ -884,7 +884,7 @@
                 <button type="button"
                     class="neu-btn-cart add-to-cart"
                     @if (Auth::check()) onclick="addToCart()" @else onclick="showLoginModal()" @endif>
-                    <i class="las la-shopping-bag"></i> {{ translate('Añadir al carrito') }}
+                    <i class="las la-shopping-bag"></i> Añadir al carrito
                 </button>
                 <button type="button" class="neu-btn-buy buy-now add-to-cart"
                     @if (Auth::check()) onclick="buyNow()" @else onclick="showLoginModal()" @endif>
@@ -979,5 +979,25 @@
     <div class="share-wrapper mt-4">
         <span class="share-label">{{ translate('Share') }}</span>
         <div class="aiz-share"></div>
+        {{-- TikTok — link desde Admin > System Settings > Social Media Links --}}
+        <a href="{{ get_setting('tiktok') }}" target="_blank"
+            style="
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 36px; height: 36px;
+                border-radius: 10px;
+                background: #010101;
+                box-shadow: 4px 4px 8px rgba(0,0,0,0.2), -4px -4px 8px #ffffff;
+                transition: transform 0.15s, box-shadow 0.15s;
+                text-decoration: none;
+                flex-shrink: 0;
+            "
+            onmouseover="this.style.transform='translateY(-2px)'"
+            onmouseout="this.style.transform='translateY(0)'">
+            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="white">
+                <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.17 8.17 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/>
+            </svg>
+        </a>
     </div>
 </div>
