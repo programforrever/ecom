@@ -119,28 +119,19 @@
                                     class="facebook"><i class="lab la-facebook-f"></i></a>
                             </li>
                         @endif
-                        @if (!empty(get_setting('twitter_link')))
-                            <li class="list-inline-item ml-2 mr-2">
-                                <a href="{{ get_setting('twitter_link') }}" target="_blank"
-                                    class="twitter"><i class="lab la-twitter"></i></a>
-                            </li>
-                        @endif
                         @if (!empty(get_setting('instagram_link')))
                             <li class="list-inline-item ml-2 mr-2">
                                 <a href="{{ get_setting('instagram_link') }}" target="_blank"
                                     class="instagram"><i class="lab la-instagram"></i></a>
                             </li>
                         @endif
-                        @if (!empty(get_setting('youtube_link')))
+                        @if (!empty(get_setting('tiktok')))
                             <li class="list-inline-item ml-2 mr-2">
-                                <a href="{{ get_setting('youtube_link') }}" target="_blank"
-                                    class="youtube"><i class="lab la-youtube"></i></a>
-                            </li>
-                        @endif
-                        @if (!empty(get_setting('linkedin_link')))
-                            <li class="list-inline-item ml-2 mr-2">
-                                <a href="{{ get_setting('linkedin_link') }}" target="_blank"
-                                    class="linkedin"><i class="lab la-linkedin-in"></i></a>
+                                <a href="{{ get_setting('tiktok') }}" target="_blank" class="tiktok">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="white" style="display: inline;">
+                                        <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.17 8.17 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/>
+                                    </svg>
+                                </a>
                             </li>
                         @endif
                     </ul>

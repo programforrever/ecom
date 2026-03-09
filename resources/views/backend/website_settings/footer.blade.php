@@ -284,14 +284,6 @@
                             <input type="hidden" name="types[]" value="facebook_link">
                             <input type="text" class="form-control" placeholder="http://" name="facebook_link" value="{{ get_setting('facebook_link')}}">
                         </div>
-						<!-- Twitter Link -->
-                        <div class="input-group form-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="lab la-twitter"></i></span>
-                            </div>
-                            <input type="hidden" name="types[]" value="twitter_link">
-                            <input type="text" class="form-control" placeholder="http://" name="twitter_link" value="{{ get_setting('twitter_link')}}">
-                        </div>
 						<!-- Instagram Link -->
                         <div class="input-group form-group">
                             <div class="input-group-prepend">
@@ -300,21 +292,17 @@
                             <input type="hidden" name="types[]" value="instagram_link">
                             <input type="text" class="form-control" placeholder="http://" name="instagram_link" value="{{ get_setting('instagram_link')}}">
                         </div>
-						<!-- Youtube Link -->
+						<!-- TikTok Link -->
                         <div class="input-group form-group">
                             <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="lab la-youtube"></i></span>
+                                <span class="input-group-text">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.1 1.82 2.89 2.89 0 0 1 2.31-4.64 2.86 2.86 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-.96-.1z"/>
+                                    </svg>
+                                </span>
                             </div>
-                            <input type="hidden" name="types[]" value="youtube_link">
-                            <input type="text" class="form-control" placeholder="http://" name="youtube_link" value="{{ get_setting('youtube_link')}}">
-                        </div>
-						<!-- Linkedin Link -->
-                        <div class="input-group form-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="lab la-linkedin-in"></i></span>
-                            </div>
-                            <input type="hidden" name="types[]" value="linkedin_link">
-                            <input type="text" class="form-control" placeholder="http://" name="linkedin_link" value="{{ get_setting('linkedin_link')}}">
+                            <input type="hidden" name="types[]" value="tiktok">
+                            <input type="text" class="form-control" placeholder="http://" name="tiktok" value="{{ get_setting('tiktok')}}"
                         </div>
                     </div>
                   </div>

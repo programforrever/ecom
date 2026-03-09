@@ -975,11 +975,52 @@
         @endif
     @endif
 
-    <!-- Share — solo FB y WA via CSS oculta el resto -->
+    <!-- Share — Solo Facebook, WhatsApp y TikTok -->
     <div class="share-wrapper mt-4">
         <span class="share-label">{{ translate('Share') }}</span>
-        <div class="aiz-share"></div>
-        {{-- TikTok — link desde Admin > System Settings > Social Media Links --}}
+        <!-- Facebook Link — desde Admin > Website Settings > Footer > Social Links -->
+        @if (!empty(get_setting('facebook_link')))
+            <a href="{{ get_setting('facebook_link') }}" target="_blank"
+                style="
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 36px; height: 36px;
+                    border-radius: 10px;
+                    background: #1877F2;
+                    box-shadow: 4px 4px 8px rgba(0,0,0,0.2), -4px -4px 8px #ffffff;
+                    transition: transform 0.15s, box-shadow 0.15s;
+                    text-decoration: none;
+                    flex-shrink: 0;
+                    margin-left: 8px;
+                "
+                onmouseover="this.style.transform='translateY(-2px)'"
+                onmouseout="this.style.transform='translateY(0)'">
+                <i class="lab la-facebook-f" style="color: white; font-size: 18px;"></i>
+            </a>
+        @endif
+        <!-- WhatsApp Link — desde Admin > Website Settings > Footer > Social Links (Instagram Link field reutilizado como WhatsApp) -->
+        @if (!empty(get_setting('instagram_link')))
+            <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', get_setting('instagram_link')) }}" target="_blank"
+                style="
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 36px; height: 36px;
+                    border-radius: 10px;
+                    background: #25D366;
+                    box-shadow: 4px 4px 8px rgba(0,0,0,0.2), -4px -4px 8px #ffffff;
+                    transition: transform 0.15s, box-shadow 0.15s;
+                    text-decoration: none;
+                    flex-shrink: 0;
+                    margin-left: 8px;
+                "
+                onmouseover="this.style.transform='translateY(-2px)'"
+                onmouseout="this.style.transform='translateY(0)'">
+                <i class="lab la-whatsapp" style="color: white; font-size: 18px;"></i>
+            </a>
+        @endif
+        {{-- TikTok — link desde Admin > Website Settings > Footer > Social Links --}}
         <a href="{{ get_setting('tiktok') }}" target="_blank"
             style="
                 display: inline-flex;

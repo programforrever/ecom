@@ -10304,6 +10304,17 @@ ul.social [class*="linkedin"]:hover,
 ul.social.colored [class*="linkedin"] {
     background-color: #0070ac;
 }
+ul.social [class*="tiktok"],
+ul.social [class*="tiktok"]:hover,
+ul.social.colored [class*="tiktok"] {
+    background-color: #010101;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 42px !important;
+    height: 42px !important;
+    line-height: normal !important;
+}
 
 ul.colored-light [class*="facebook"] {
     background-color: #c2d9fd;
