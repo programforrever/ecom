@@ -1,4 +1,5 @@
 <script src="{{ static_asset('assets/js/vendors.js') }}"></script>
+<script src="{{ static_asset('assets/js/dni-lookup.js') }}"></script>
 <script>
     $('.password-toggle').click(function(){
         var $this = $(this);

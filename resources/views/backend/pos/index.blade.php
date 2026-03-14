@@ -87,7 +87,10 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <button type="button" class="neu-icon-btn ml-3 mr-0" data-target="#new-customer" data-toggle="modal">
+                            <button type="button" class="neu-icon-btn ml-2 mr-0" data-target="#register-new-customer-modal" data-toggle="modal" title="{{ translate('Add New Customer') }}">
+                                <i class="las la-plus"></i>
+                            </button>
+                            <button type="button" class="neu-icon-btn ml-2 mr-0" data-target="#new-customer" data-toggle="modal" title="{{ translate('Shipping Address') }}">
                                 <i class="las la-truck"></i>
                             </button>
                         </div>
@@ -203,6 +206,25 @@
                     <div class="d-flex flex-column flex-md-row justify-content-between">
                         <div class="d-flex">
                             <div class="dropdown mr-3 ml-0 dropup">
+                                <button class="neu-footer-btn dropdown-toggle" type="button" data-toggle="dropdown">
+                                    {{ translate('Delivery Type') }}
+                                </button>
+                                <div class="dropdown-menu p-3 dropdown-menu-lg">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="delivery_type" id="delivery_shipping" value="shipping" checked onchange="handleDeliveryTypeChange()">
+                                        <label class="form-check-label" for="delivery_shipping">
+                                            {{ translate('Shipping to Address') }}
+                                        </label>
+                                    </div>
+                                    <div class="form-check mt-2">
+                                        <input class="form-check-input" type="radio" name="delivery_type" id="delivery_pickup" value="pickup" onchange="handleDeliveryTypeChange()">
+                                        <label class="form-check-label" for="delivery_pickup">
+                                            {{ translate('Pickup at Store') }}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="dropdown mr-3 ml-0 dropup" id="shipping-dropdown">
                                 <button class="neu-footer-btn dropdown-toggle" type="button" data-toggle="dropdown">
                                     {{ translate('Shipping') }}
                                 </button>
@@ -1881,10 +1903,70 @@ body.dark-mode, .dark {
         </div>
     </div>
 
+    <!-- Register New Customer Modal for POS -->
+    <div id="register-new-customer-modal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-zoom" role="document">
+            <div class="modal-content">
+                <div class="modal-header bord-btm">
+                    <h4 class="modal-title h6">{{ translate('Register New Customer') }}</h4>
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <form id="pos-register-customer-form">
+                    @csrf
+                    <div class="modal-body">
+                        <!-- DNI Lookup -->
+                        <div class="form-group">
+                            <label for="pos_dni" class="form-label">{{ translate('DNI') }} ({{ translate('Optional') }})</label>
+                            <div class="input-group">
+                                <input type="text" id="pos_dni" class="form-control" placeholder="{{ translate('Enter DNI') }}" name="pos_dni" maxlength="8" pattern="[0-9]{8}">
+                                <button class="btn btn-outline-primary" type="button" onclick="lookupDNIFromElement(document.getElementById('pos_dni'), document.getElementById('pos_name_lookup'))">{{ translate('Lookup') }}</button>
+                            </div>
+                        </div>
+
+                        <!-- Full Name -->
+                        <div class="form-group">
+                            <label for="pos_name_lookup" class="form-label">{{ translate('Full Name') }} *</label>
+                            <input type="text" id="pos_name_lookup" class="form-control" placeholder="{{ translate('Full Name') }}" name="name" required>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="form-group">
+                            <label for="pos_email" class="form-label">{{ translate('Email') }} *</label>
+                            <input type="email" id="pos_email" class="form-control" placeholder="{{ translate('Email') }}" name="email" required>
+                        </div>
+
+                        <!-- Phone -->
+                        <div class="form-group">
+                            <label for="pos_phone" class="form-label">{{ translate('Phone Number') }}</label>
+                            <input type="text" id="pos_phone" class="form-control" placeholder="{{ translate('Phone Number') }}" name="phone">
+                        </div>
+
+                        <!-- Password -->
+                        <div class="form-group">
+                            <label for="pos_password" class="form-label">{{ translate('Password') }} *</label>
+                            <input type="password" id="pos_password" class="form-control" placeholder="{{ translate('Password') }}" name="password" minlength="6" required>
+                        </div>
+
+                        <!-- Confirm Password -->
+                        <div class="form-group">
+                            <label for="pos_password_confirm" class="form-label">{{ translate('Confirm Password') }} *</label>
+                            <input type="password" id="pos_password_confirm" class="form-control" placeholder="{{ translate('Confirm Password') }}" name="password_confirmation" minlength="6" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-base-3" data-dismiss="modal">{{ translate('Cancel') }}</button>
+                        <button type="submit" class="btn btn-primary btn-base-1">{{ translate('Register & Select') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 
 @section('script')
+    <script src="{{ static_asset('assets/js/dni-lookup.js') }}"></script>
     <script type="text/javascript">
 
         var products = null;
@@ -2111,11 +2193,42 @@ if(products.links.next == null){
         }
 
         function orderConfirmation(){
+            var deliveryType = $('input[name=delivery_type]:checked').val() || 'shipping';
+            
+            // Si es envío, validar que tenga dirección
+            if (deliveryType === 'shipping') {
+                var shippingAddress = $('input[name=address_id]:checked').val();
+                if (!shippingAddress) {
+                    AIZ.plugins.notify('danger', '{{ translate("Please add a shipping address") }}');
+                    return;
+                }
+            }
+            
+            console.log('orderConfirmation - deliveryType:', deliveryType);
+            
             $('#order-confirmation').html(`<div class="p-4 text-center"><i class="las la-spinner la-spin la-3x"></i></div>`);
             $('#order-confirm').modal('show');
-            $.post('{{ route('pos.getOrderSummary') }}',{_token:AIZ.data.csrf}, function(data){
+            $.post('{{ route('pos.getOrderSummary') }}',{_token:AIZ.data.csrf, delivery_type: deliveryType}, function(data){
                 $('#order-confirmation').html(data);
             });
+        }
+
+        // Handle delivery type change
+        function handleDeliveryTypeChange() {
+            var deliveryType = $('input[name=delivery_type]:checked').val();
+            
+            if (deliveryType === 'pickup') {
+                // Hide shipping dropdown for pickup
+                $('#shipping-dropdown').hide();
+                // Set shipping to 0
+                $('input[name=shipping]').val(0);
+                setShipping();
+                AIZ.plugins.notify('info', '{{ translate("Pickup at store - No shipping cost") }}');
+            } else {
+                // Show shipping dropdown for delivery
+                $('#shipping-dropdown').show();
+                AIZ.plugins.notify('info', '{{ translate("Shipping to address - Please set shipping cost") }}');
+            }
         }
 
         function oflinePayment(){
@@ -2126,44 +2239,68 @@ if(products.links.next == null){
 
         function submitOrder(payment_type){
             var user_id = $('select[name=user_id]').val();
-            var shipping = $('input[name=shipping]:checked').val();
+            var shipping = $('input[name=shipping]').val();
             var discount = $('input[name=discount]').val();
             var shipping_address = $('input[name=address_id]:checked').val();
+            var delivery_type = $('input[name=delivery_type]:checked').val() || 'shipping';
             var offline_payment_method = $('input[name=offline_payment_method]').val();
             var offline_payment_amount = $('input[name=offline_payment_amount]').val();
             var offline_trx_id = $('input[name=trx_id]').val();
             var offline_payment_proof = $('input[name=payment_proof]').val();
             
-            $.post('{{ route('pos.order_place') }}',{
-                _token                  : AIZ.data.csrf, 
-                user_id                 : user_id,
-                shipping_address        : shipping_address, 
-                payment_type            : payment_type, 
-                shipping                : shipping, 
-                discount                : discount,
-                offline_payment_method  : offline_payment_method,
-                offline_payment_amount  : offline_payment_amount,
-                offline_trx_id          : offline_trx_id,
-                offline_payment_proof   : offline_payment_proof
-                
-            }, function(data){
-                if(data.success == 1){
-                    AIZ.plugins.notify('success', data.message );
-                    
-                    // Auto-open print dialog and reload page after a short delay
-                    if(data.order_id) {
-                        setTimeout(function() {
-                            window.open('{{ route('admin.invoice.thermal_printer', '') }}/' + data.order_id, '_blank');
+            // Debug log
+            console.log('submitOrder data:', {user_id, shipping, delivery_type, payment_type});
+            
+            $.ajax({
+                url: '{{ route('pos.order_place') }}',
+                type: 'POST',
+                data: {
+                    _token                  : AIZ.data.csrf, 
+                    user_id                 : user_id,
+                    shipping_address        : shipping_address, 
+                    payment_type            : payment_type, 
+                    shipping                : shipping, 
+                    discount                : discount,
+                    delivery_type           : delivery_type,
+                    offline_payment_method  : offline_payment_method,
+                    offline_payment_amount  : offline_payment_amount,
+                    offline_trx_id          : offline_trx_id,
+                    offline_payment_proof   : offline_payment_proof
+                },
+                dataType: 'json',
+                success: function(data){
+                    console.log('submitOrder success response:', data);
+                    if(data.success == 1){
+                        AIZ.plugins.notify('success', data.message );
+                        
+                        // Auto-open print dialog and reload page after a short delay
+                        if(data.order_id) {
                             setTimeout(function() {
-                                location.reload();
+                                window.open('{{ route('admin.invoice.thermal_printer', '') }}/' + data.order_id, '_blank');
+                                setTimeout(function() {
+                                    location.reload();
+                                }, 500);
                             }, 500);
-                        }, 500);
-                    } else {
-                        location.reload();
+                        } else {
+                            location.reload();
+                        }
                     }
-                }
-                else{
-                    AIZ.plugins.notify('danger', data.message );
+                    else{
+                        AIZ.plugins.notify('danger', data.message );
+                    }
+                },
+                error: function(xhr, status, error){
+                    console.error('submitOrder error:', {status: xhr.status, statusText: xhr.statusText, error: error, response: xhr.responseText});
+                    var errorMsg = 'Error procesando orden';
+                    try {
+                        var json = JSON.parse(xhr.responseText);
+                        if(json.message) {
+                            errorMsg = json.message;
+                        }
+                    } catch(e) {
+                        errorMsg = xhr.statusText + ': ' + error;
+                    }
+                    AIZ.plugins.notify('danger', errorMsg);
                 }
             });
         }
@@ -2332,5 +2469,107 @@ if(products.links.next == null){
                 setTimeout(toggleScrollButton, 650);
             }
         }
+
+        // Handle POS Register Customer Form Submission
+        $('#pos-register-customer-form').on('submit', function(e) {
+            e.preventDefault();
+            
+            // Reference to the form
+            var $form = $(this);
+            
+            // Validate passwords match
+            var password = $form.find('input[name=password]').val();
+            var passwordConfirm = $form.find('input[name=password_confirmation]').val();
+            
+            if (password !== passwordConfirm) {
+                AIZ.plugins.notify('danger', '{{ translate("Passwords do not match") }}');
+                return;
+            }
+            
+            // Get form values - using $form context to ensure we get from correct modal
+            var name = $form.find('input[name=name]').val();
+            var email = $form.find('input[name=email]').val();
+            var phone = $form.find('input[name=phone]').val();
+            
+            // Debug log
+            console.log('Form data:', {name: name, email: email, phone: phone});
+            
+            if (!name || !name.trim()) {
+                AIZ.plugins.notify('danger', '{{ translate("Name is required") }}');
+                return;
+            }
+            
+            if (!email || !email.trim()) {
+                AIZ.plugins.notify('danger', '{{ translate("Email is required") }}');
+                return;
+            }
+            
+            var formData = {
+                _token: AIZ.data.csrf,
+                name: name,
+                email: email,
+                phone: phone,
+                password: password,
+                password_confirmation: passwordConfirm
+            };
+            
+            // Disable submit button
+            var submitBtn = $form.find('button[type=submit]');
+            var originalText = submitBtn.html();
+            submitBtn.prop('disabled', true).html('<i class="las la-spinner la-spin"></i> {{ translate("Registering...") }}');
+            
+            $.ajax({
+                headers: {'X-CSRF-TOKEN': AIZ.data.csrf},
+                method: 'POST',
+                url: '{{ route("pos.registerCustomer") }}',
+                data: formData,
+                success: function(data) {
+                    if (data.success) {
+                        // Add new customer to dropdown
+                        $('select[name=user_id]').append(
+                            `<option value="${data.user_id}">${data.name}</option>`
+                        );
+                        // Select the new customer
+                        $('select[name=user_id]').val(data.user_id).change();
+                        // Refresh bootstrap select
+                        $('select[name=user_id]').selectpicker('refresh');
+                        
+                        // Close modal
+                        $('#register-new-customer-modal').modal('hide');
+                        
+                        // Reset form
+                        $form[0].reset();
+                        
+                        // Show success message
+                        AIZ.plugins.notify('success', data.message || '{{ translate("Customer registered successfully") }}');
+                    } else {
+                        AIZ.plugins.notify('danger', data.message || '{{ translate("Registration failed") }}');
+                    }
+                },
+                error: function(error) {
+                    console.error('Registration error:', error);
+                    var errorMsg = '{{ translate("Registration failed") }}';
+                    
+                    if (error.responseJSON && error.responseJSON.message) {
+                        errorMsg = error.responseJSON.message;
+                    }
+                    if (error.responseJSON && error.responseJSON.errors) {
+                        var errors = error.responseJSON.errors;
+                        for (var key in errors) {
+                            if (errors.hasOwnProperty(key)) {
+                                errorMsg = errors[key][0];
+                                break;
+                            }
+                        }
+                    }
+                    
+                    AIZ.plugins.notify('danger', errorMsg);
+                },
+                complete: function() {
+                    // Re-enable submit button
+                    submitBtn.prop('disabled', false).html(originalText);
+                }
+            });
+        });
     </script>
 @endsection

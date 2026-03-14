@@ -56,6 +56,43 @@
 			<div class="card mb-4">
 				<div class="card-header"><span class="fs-16">{{ translate('Customer Info') }}</span></div>
 				<div class="card-body">
+				@if(isset($deliveryType) && $deliveryType === 'pickup')
+					<!-- Para retiro en tienda -->
+					@php
+						$userId = Session::get('pos.user_id');
+						$user = null;
+						if($userId) {
+							try {
+								$user = \App\Models\User::find($userId);
+							} catch (\Exception $e) {
+								\Log::error('Error finding user: ' . $e->getMessage());
+							}
+						}
+					@endphp
+					@if($user)
+						<div class="d-flex justify-content-between  mb-2">
+							<span class="">{{translate('Name')}}:</span>
+							<span class="fw-600">{{ $user->name }}</span>
+						</div>
+						<div class="d-flex justify-content-between  mb-2">
+							<span class="">{{translate('Email')}}:</span>
+							<span class="fw-600">{{ $user->email }}</span>
+						</div>
+						<div class="d-flex justify-content-between  mb-2">
+							<span class="">{{translate('Phone')}}:</span>
+							<span class="fw-600">{{ $user->phone ?? translate('N/A') }}</span>
+						</div>
+						<div class="alert alert-info mt-3 mb-0">
+							<i class="las la-store"></i> {{ translate('Pickup at Store') }}
+						</div>
+					@else
+						<div class="alert alert-warning">
+							<strong>{{ translate('Warning') }}:</strong> {{ translate('No customer selected for pickup.') }}<br>
+							<small>{{ translate('Please close this modal and select a customer first.') }}</small>
+						</div>
+					@endif
+				@else
+					<!-- Para envío a domicilio -->
 					@if(Session::has('pos.shipping_info') && Session::get('pos.shipping_info')['name'] != null)
 						<div class="d-flex justify-content-between  mb-2">
 							<span class="">{{translate('Name')}}:</span>
@@ -81,14 +118,14 @@
 							<span class="">{{translate('City')}}:</span>
 							<span class="fw-600">{{ Session::get('pos.shipping_info')['city'] }}</span>
 						</div>
-					
 					@else
 						<div class="text-center p-4">
 							{{ translate('No customer information selected.') }}
 						</div>
 					@endif
-				</div>
+				@endif
 			</div>
+		</div>
 
 			<div class="d-flex justify-content-between fw-600 mb-2 opacity-70">
 		        <span>{{translate('Total')}}</span>

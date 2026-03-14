@@ -237,145 +237,223 @@ class PosUtility
 
     public static function orderStore($data)
     {
+        // Get delivery type (default to shipping for backward compatibility)
+        $deliveryType = isset($data['delivery_type']) ? $data['delivery_type'] : 'shipping';
+        
         $shippingInfo = $data['shippingInfo'];
-        if ($shippingInfo == null || $shippingInfo['name'] == null || $shippingInfo['phone'] == null || $shippingInfo['address'] == null) {
-            return array('success' => 0, 'message' => translate("Please Add Shipping Information."));
-        } else {
-            $carts = get_pos_user_cart($data['user_id'], $data['temp_usder_id']);
-            if (count($carts) > 0) {
-                $order = new Order();
-                $userId = $data['user_id'];
-                if ($userId == null) {
-                    $order->guest_id  = $carts[0]->temp_user_id;
-                } else {
-                    $order->user_id = $userId;
-                }
-                $order->shipping_address = json_encode($shippingInfo);
-
-                $order->payment_type    = $data['payment_type'];
-                $order->delivery_viewed = '0';
-                $order->payment_status_viewed = '0';
-                $order->code            = date('Ymd-His') . rand(10, 99);
-                $order->date            = strtotime('now');
-                $order->payment_status  = $data['payment_type'] != 'cash_on_delivery' ? 'paid' : 'unpaid';
-                $order->payment_details = $data['payment_type'];
-                $order->order_from      = 'pos';
-
-                if ($data['payment_type'] == 'offline_payment') {
-                    if ($data['offline_trx_id'] == null) {
-                        return array('success' => 0, 'message' => translate("Transaction ID cannot be null."));
-                    }
-                    $data['name']   = $data['offline_payment_method'];
-                    $data['amount'] = $data['offline_payment_amount'];
-                    $data['trx_id'] = $data['offline_trx_id'];
-                    $data['photo']  = $data['offline_payment_proof'];
-                    $order->manual_payment_data = json_encode($data);
-                    $order->manual_payment = 1;
-                }
-
-                if ($order->save()) {
-                    $subtotal = 0;
-                    $tax = 0;
-                    foreach ($carts as $key => $cartItem) {
-                        $product_stock      = $cartItem->product->stocks->where('variant', $cartItem['variation'])->first();
-                        $product            = $product_stock->product;
-                        $product_variation  = $product_stock->variant;
-
-                        $subtotal += $cartItem['price'] * $cartItem['quantity'];
-                        $tax += $cartItem['tax'] * $cartItem['quantity'];
-
-                        if ($product->digital == 0) {
-                            if ($cartItem['quantity'] > $product_stock->qty) {
-                                $order->delete();
-                                return array('success' => 0, 'message' => $product->name . ' (' . $product_variation . ') ' . translate(" just stock outs."));
-                            } else {
-                                $product_stock->qty -= $cartItem['quantity'];
-                                $product_stock->save();
-                            }
-                        }
-
-                        $order_detail                   = new OrderDetail;
-                        $order_detail->order_id         = $order->id;
-                        $order_detail->seller_id        = $product->user_id;
-                        $order_detail->product_id       = $product->id;
-                        $order_detail->payment_status   = $data['payment_type'] != 'cash_on_delivery' ? 'paid' : 'unpaid';
-                        $order_detail->variation        = $product_variation;
-                        $order_detail->price            = $cartItem['price'] * $cartItem['quantity'];
-                        $order_detail->tax              = $cartItem['tax'] * $cartItem['quantity'];
-                        $order_detail->quantity         = $cartItem['quantity'];
-                        $order_detail->shipping_type    = null;
-
-                        if ($data['shippingCost'] >= 0) {
-                            $order_detail->shipping_cost = $data['shippingCost'] / count($carts);
-                        } else {
-                            $order_detail->shipping_cost = 0;
-                        }
-
-                        $order_detail->save();
-
-                        $product->num_of_sale++;
-                        $product->save();
-                    }
-
-                    $order->grand_total = $subtotal + $tax + $data['shippingCost'];
-
-                    if ($data['discount']) {
-                        $order->grand_total -= $data['discount'];
-                        $order->coupon_discount = $data['discount'];
-                    }
-
-                    $order->seller_id = $product->user_id;
-                    $order->save();
-
-                    $array['view']      = 'emails.invoice';
-                    $array['subject']   = 'Your order has been placed - ' . $order->code;
-                    $array['from']      = env('MAIL_USERNAME');
-                    $array['order']     = $order;
-
-                    $admin_products = array();
-                    $seller_products = array();
-
-                    foreach ($order->orderDetails as $key => $orderDetail) {
-                        if ($orderDetail->product->added_by == 'admin') {
-                            array_push($admin_products, $orderDetail->product->id);
-                        } else {
-                            $product_ids = array();
-                            if (array_key_exists($orderDetail->product->user_id, $seller_products)) {
-                                $product_ids = $seller_products[$orderDetail->product->user_id];
-                            }
-                            array_push($product_ids, $orderDetail->product->id);
-                            $seller_products[$orderDetail->product->user_id] = $product_ids;
-                        }
-                    }
-
-                    foreach ($seller_products as $key => $seller_product) {
-                        try {
-                            Mail::to(User::find($key)->email)->queue(new InvoiceEmailManager($array));
-                        } catch (\Exception $e) {
-                        }
-                    }
-
-                    //sends email to customer with the invoice pdf attached
-                    if (env('MAIL_USERNAME') != null) {
-                        try {
-                            Mail::to($shippingInfo['email'])->queue(new InvoiceEmailManager($array));
-                            Mail::to(User::where('user_type', 'admin')->first()->email)->queue(new InvoiceEmailManager($array));
-                        } catch (\Exception $e) {
-                        }
-                    }
-
-                    if ($userId != NULL && $order->payment_status == 'paid') {
-                        calculateCommissionAffilationClubPoint($order);
-                    }
-
-                    Cart::where('user_id', $order->user_id)->orWhere('temp_user_id', $order->guest_id)->delete();
-
-                    return array('success' => 1, 'message' => translate('Order Completed Successfully.'), 'order_id' => $order->id);
-                } else {
-                    return array('success' => 0, 'message' => translate('Please input customer information.'));
-                }
+        
+        // Only require shipping info if delivery type is 'shipping'
+        if ($deliveryType === 'shipping') {
+            if ($shippingInfo == null || $shippingInfo['name'] == null || $shippingInfo['phone'] == null || $shippingInfo['address'] == null) {
+                return array('success' => 0, 'message' => translate("Please Add Shipping Information."));
             }
-            return array('success' => 0, 'message' => translate("Please select a product."));
+        } else if ($deliveryType === 'pickup') {
+            // For pickup, use customer information
+            $userId = $data['user_id'];
+            if ($userId) {
+                try {
+                    $user = \App\Models\User::find($userId);
+                    if ($user) {
+                        $shippingInfo = array(
+                            'name' => $user->name,
+                            'email' => $user->email,
+                            'phone' => $user->phone ?? get_setting('phone'),
+                            'address' => get_setting('address'),
+                            'city' => get_setting('city', 'Store'),
+                            'state' => get_setting('state', ''),
+                            'country' => get_setting('country', ''),
+                            'country_id' => null,
+                            'state_id' => null,
+                            'city_id' => null,
+                            'postal_code' => null
+                        );
+                    } else {
+                        // If user not found, use store info
+                        $shippingInfo = array(
+                            'name' => get_setting('shop_name', 'Store'),
+                            'email' => get_setting('store_email', env('MAIL_USERNAME')),
+                            'phone' => get_setting('phone'),
+                            'address' => get_setting('address'),
+                            'city' => get_setting('city', 'Store'),
+                            'state' => get_setting('state', ''),
+                            'country' => get_setting('country', ''),
+                            'country_id' => null,
+                            'state_id' => null,
+                            'city_id' => null,
+                            'postal_code' => null
+                        );
+                    }
+                } catch (\Exception $e) {
+                    // If error getting user, use store info
+                    $shippingInfo = array(
+                        'name' => get_setting('shop_name', 'Store'),
+                        'email' => get_setting('store_email', env('MAIL_USERNAME')),
+                        'phone' => get_setting('phone'),
+                        'address' => get_setting('address'),
+                        'city' => get_setting('city', 'Store'),
+                        'state' => get_setting('state', ''),
+                        'country' => get_setting('country', ''),
+                        'country_id' => null,
+                        'state_id' => null,
+                        'city_id' => null,
+                        'postal_code' => null
+                    );
+                }
+            } else {
+                // If no user selected, use store info
+                $shippingInfo = array(
+                    'name' => get_setting('shop_name', 'Store'),
+                    'email' => get_setting('store_email', env('MAIL_USERNAME')),
+                    'phone' => get_setting('phone'),
+                    'address' => get_setting('address'),
+                    'city' => get_setting('city', 'Store'),
+                    'state' => get_setting('state', ''),
+                    'country' => get_setting('country', ''),
+                    'country_id' => null,
+                    'state_id' => null,
+                    'city_id' => null,
+                    'postal_code' => null
+                );
+            }
         }
+        
+        $carts = get_pos_user_cart($data['user_id'], $data['temp_user_id'] ?? null);
+        if (count($carts) > 0) {
+            $order = new Order();
+            $userId = $data['user_id'];
+            if ($userId == null) {
+                $order->guest_id  = $carts[0]->temp_user_id;
+            } else {
+                $order->user_id = $userId;
+            }
+            $order->shipping_address = json_encode($shippingInfo);
+            
+            // Store delivery type
+            $order->delivery_type = $deliveryType;
+
+            $order->payment_type    = $data['payment_type'];
+            $order->delivery_viewed = '0';
+            $order->payment_status_viewed = '0';
+            $order->code            = date('Ymd-His') . rand(10, 99);
+            $order->date            = strtotime('now');
+            $order->payment_status  = $data['payment_type'] != 'cash_on_delivery' ? 'paid' : 'unpaid';
+            $order->payment_details = $data['payment_type'];
+            $order->order_from      = 'pos';
+
+            if ($data['payment_type'] == 'offline_payment') {
+                if ($data['offline_trx_id'] == null) {
+                    return array('success' => 0, 'message' => translate("Transaction ID cannot be null."));
+                }
+                $data['name']   = $data['offline_payment_method'];
+                $data['amount'] = $data['offline_payment_amount'];
+                $data['trx_id'] = $data['offline_trx_id'];
+                $data['photo']  = $data['offline_payment_proof'];
+                $order->manual_payment_data = json_encode($data);
+                $order->manual_payment = 1;
+            }
+
+            if ($order->save()) {
+                $subtotal = 0;
+                $tax = 0;
+                foreach ($carts as $key => $cartItem) {
+                    $product_stock      = $cartItem->product->stocks->where('variant', $cartItem['variation'])->first();
+                    $product            = $product_stock->product;
+                    $product_variation  = $product_stock->variant;
+
+                    $subtotal += $cartItem['price'] * $cartItem['quantity'];
+                    $tax += $cartItem['tax'] * $cartItem['quantity'];
+
+                    if ($product->digital == 0) {
+                        if ($cartItem['quantity'] > $product_stock->qty) {
+                            $order->delete();
+                            return array('success' => 0, 'message' => $product->name . ' (' . $product_variation . ') ' . translate(" just stock outs."));
+                        } else {
+                            $product_stock->qty -= $cartItem['quantity'];
+                            $product_stock->save();
+                        }
+                    }
+
+                    $order_detail                   = new OrderDetail;
+                    $order_detail->order_id         = $order->id;
+                    $order_detail->seller_id        = $product->user_id;
+                    $order_detail->product_id       = $product->id;
+                    $order_detail->payment_status   = $data['payment_type'] != 'cash_on_delivery' ? 'paid' : 'unpaid';
+                    $order_detail->variation        = $product_variation;
+                    $order_detail->price            = $cartItem['price'] * $cartItem['quantity'];
+                    $order_detail->tax              = $cartItem['tax'] * $cartItem['quantity'];
+                    $order_detail->quantity         = $cartItem['quantity'];
+                    $order_detail->shipping_type    = null;
+
+                    if ($data['shippingCost'] >= 0) {
+                        $order_detail->shipping_cost = $data['shippingCost'] / count($carts);
+                    } else {
+                        $order_detail->shipping_cost = 0;
+                    }
+
+                    $order_detail->save();
+
+                    $product->num_of_sale++;
+                    $product->save();
+                }
+
+                $order->grand_total = $subtotal + $tax + $data['shippingCost'];
+
+                if ($data['discount']) {
+                    $order->grand_total -= $data['discount'];
+                    $order->coupon_discount = $data['discount'];
+                }
+
+                $order->seller_id = $product->user_id;
+                $order->save();
+
+                $array['view']      = 'emails.invoice';
+                $array['subject']   = 'Your order has been placed - ' . $order->code;
+                $array['from']      = env('MAIL_USERNAME');
+                $array['order']     = $order;
+
+                $admin_products = array();
+                $seller_products = array();
+
+                foreach ($order->orderDetails as $key => $orderDetail) {
+                    if ($orderDetail->product->added_by == 'admin') {
+                        array_push($admin_products, $orderDetail->product->id);
+                    } else {
+                        $product_ids = array();
+                        if (array_key_exists($orderDetail->product->user_id, $seller_products)) {
+                            $product_ids = $seller_products[$orderDetail->product->user_id];
+                        }
+                        array_push($product_ids, $orderDetail->product->id);
+                        $seller_products[$orderDetail->product->user_id] = $product_ids;
+                    }
+                }
+
+                foreach ($seller_products as $key => $seller_product) {
+                    try {
+                        Mail::to(User::find($key)->email)->queue(new InvoiceEmailManager($array));
+                    } catch (\Exception $e) {
+                    }
+                }
+
+                //sends email to customer with the invoice pdf attached
+                if (env('MAIL_USERNAME') != null) {
+                    try {
+                        Mail::to($shippingInfo['email'])->queue(new InvoiceEmailManager($array));
+                        Mail::to(User::where('user_type', 'admin')->first()->email)->queue(new InvoiceEmailManager($array));
+                    } catch (\Exception $e) {
+                    }
+                }
+
+                if ($userId != NULL && $order->payment_status == 'paid') {
+                    calculateCommissionAffilationClubPoint($order);
+                }
+
+                Cart::where('user_id', $order->user_id)->orWhere('temp_user_id', $order->guest_id)->delete();
+
+                return array('success' => 1, 'message' => translate('Order Completed Successfully.'), 'order_id' => $order->id);
+            } else {
+                return array('success' => 0, 'message' => translate('Please input customer information.'));
+            }
+        }
+        return array('success' => 0, 'message' => translate("Please select a product."));
     }
 }

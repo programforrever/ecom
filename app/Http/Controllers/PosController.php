@@ -11,6 +11,7 @@ use App\Utility\FontUtility;
 use App\Utility\PosUtility;
 use Session;
 use Mpdf\Mpdf;
+use Illuminate\Support\Facades\Hash;
 
 class PosController extends Controller
 {
@@ -149,7 +150,9 @@ class PosController extends Controller
         try {
             \Log::info('get_order_summary called');
             $carts = get_pos_user_cart();
+            $deliveryType = $request->get('delivery_type', 'shipping');
             \Log::info('get_order_summary - carts found: ' . count($carts));
+            \Log::info('get_order_summary - delivery_type: ' . $deliveryType);
             
             foreach ($carts as $cart) {
                 \Log::info('Cart item:', [
@@ -159,7 +162,7 @@ class PosController extends Controller
                 ]);
             }
             
-            return view('backend.pos.order_summary');
+            return view('backend.pos.order_summary', compact('deliveryType'));
         } catch (\Exception $e) {
             \Log::error('get_order_summary error: ' . $e->getMessage(), [
                 'exception' => $e,
@@ -175,18 +178,43 @@ class PosController extends Controller
     //order place
     public function order_store(Request $request)
     {
-        $request->merge(['temp_usder_id' => Session::get('pos.temp_user_id'), 'shippingInfo' => Session::get('pos.shipping_info'), 'shippingCost' => Session::get('pos.shipping', 0), 'discount' => Session::get('pos.discount')]);
-        $response = PosUtility::orderStore($request->except(['_token']));
+        try {
+            \Log::info('order_store - Request received', $request->all());
+            
+            $request->merge([
+                'temp_user_id' => Session::get('pos.temp_user_id'), 
+                'shippingInfo' => Session::get('pos.shipping_info'), 
+                'shippingCost' => Session::get('pos.shipping', 0), 
+                'discount' => Session::get('pos.discount'),
+                'delivery_type' => $request->get('delivery_type', 'shipping')
+            ]);
+            
+            \Log::info('order_store - After merge', $request->all());
+            
+            $response = PosUtility::orderStore($request->except(['_token']));
+            
+            \Log::info('order_store - Response:', $response);
 
-        if ($response['success']) {
-            Session::forget('pos.shipping_info');
-            Session::forget('pos.shipping');
-            Session::forget('pos.discount');
-            Session::forget('pos.user_id');
-            Session::forget('pos.temp_user_id');
+            if ($response['success']) {
+                Session::forget('pos.shipping_info');
+                Session::forget('pos.shipping');
+                Session::forget('pos.discount');
+                Session::forget('pos.user_id');
+                Session::forget('pos.temp_user_id');
+            }
+
+            return $response;
+        } catch (\Exception $e) {
+            \Log::error('order_store - Exception: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return response()->json([
+                'success' => 0,
+                'message' => 'Error: ' . $e->getMessage()
+            ]);
         }
-
-        return $response;
     }
 
     public function configuration()
@@ -269,6 +297,52 @@ class PosController extends Controller
                 'success' => false,
                 'message' => 'Error: ' . $e->getMessage()
             ], 500);
+        }
+    }
+
+    /**
+     * Register a new customer from POS interface
+     */
+    public function registerCustomer(Request $request)
+    {
+        try {
+            // Validate input
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:users,email',
+                'phone' => 'nullable|string|max:20',
+                'password' => 'required|string|min:6|confirmed',
+            ]);
+
+            // Create new user
+            $user = new User();
+            $user->name = $validated['name'];
+            $user->email = $validated['email'];
+            $user->phone = $validated['phone'] ?? '';
+            $user->password = Hash::make($validated['password']);
+            $user->user_type = 'customer';
+            $user->email_verified_at = now(); // Auto-verify email for POS registration
+            $user->save();
+
+            return response()->json([
+                'success' => true,
+                'user_id' => $user->id,
+                'name' => $user->name,
+                'message' => translate('Customer registered successfully')
+            ]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->errors(),
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            \Log::error('registerCustomer error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 422);
         }
     }
 }

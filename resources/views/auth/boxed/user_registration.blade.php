@@ -29,6 +29,15 @@
                                     <div class="">
                                         <form id="reg-form" class="form-default" role="form" action="{{ route('register') }}" method="POST">
                                             @csrf
+                                            <!-- DNI Lookup -->
+                                            <div class="form-group">
+                                                <label for="dni" class="fs-12 fw-700 text-soft-dark">{{ translate('DNI') }} ({{ translate('Optional') }})</label>
+                                                <div class="input-group">
+                                                    <input type="text" id="dni" class="form-control rounded-0" placeholder="{{ translate('Enter DNI') }}" name="dni" maxlength="8" pattern="[0-9]{8}">
+                                                    <button class="btn btn-outline-primary" type="button" onclick="lookupDNIFromElement(document.getElementById('dni'), document.querySelector('input[name=name]'))">{{ translate('Lookup') }}</button>
+                                                </div>
+                                            </div>
+
                                             <!-- Name -->
                                             <div class="form-group">
                                                 <label for="name" class="fs-12 fw-700 text-soft-dark">{{  translate('Full Name') }}</label>

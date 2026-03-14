@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
+    protected $fillable = ['delivery_type'];
+
     public function orderDetails()
     {
         return $this->hasMany(OrderDetail::class);

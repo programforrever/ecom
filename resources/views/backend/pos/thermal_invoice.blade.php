@@ -107,10 +107,10 @@
     @php
         $shipping_address = json_decode($order->shipping_address);
     @endphp
-    <tr><td class="strong">{{ translate('Name') }}: {{ $shipping_address->name }}</small></td></tr>
-    <tr><td class="gry-color small">{{ translate('Address') }}: {{ $shipping_address->address }}, {{ $shipping_address->city }}, @if(isset(json_decode($order->shipping_address)->state)) {{ json_decode($order->shipping_address)->state }} - @endif {{ $shipping_address->country }}</small></td></tr>
-    <tr><td class="gry-color small">{{ translate('Email') }}: {{ $shipping_address->email }}</small></td></tr>
-    <tr><td class="gry-color small">{{ translate('Phone') }}: {{ $shipping_address->phone }}</small></td></tr>
+    <tr><td class="strong">{{ translate('Name') }}: {{ $shipping_address->name ?? 'N/A' }}</small></td></tr>
+    <tr><td class="gry-color small">{{ translate('Address') }}: {{ $shipping_address->address ?? 'N/A' }}{{ isset($shipping_address->city) ? (', ' . $shipping_address->city) : '' }}{{ isset($shipping_address->city_id) ? (', ' . $shipping_address->city_id) : '' }}@if(isset($shipping_address->state)) {{ ', ' . $shipping_address->state }} @endif{{ isset($shipping_address->country) ? (', ' . $shipping_address->country) : '' }}</small></td></tr>
+    <tr><td class="gry-color small">{{ translate('Email') }}: {{ $shipping_address->email ?? 'N/A' }}</small></td></tr>
+    <tr><td class="gry-color small">{{ translate('Phone') }}: {{ $shipping_address->phone ?? 'N/A' }}</small></td></tr>
 </table>
 			</div>
 		</div>

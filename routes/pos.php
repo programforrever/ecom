@@ -38,6 +38,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
         Route::get('/pos-activation', 'configuration')->name('poin-of-sales.activation');
         Route::get('/pos/thermal-printer/{order_id}', 'invoice')->name('admin.invoice.thermal_printer');
         Route::post('/pos-sales-list', 'getSalesList')->name('pos.getSalesList');
+        Route::post('/pos-register-customer', 'registerCustomer')->name('pos.registerCustomer');
     });
 });
 

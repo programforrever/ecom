@@ -14,6 +14,13 @@
                             @csrf
 
                             <div class="form-group">
+                                <label for="dni">{{ translate('DNI') }} ({{ translate('Optional') }})</label>
+                                <div class="input-group">
+                                    <input type="text" id="dni" class="form-control" placeholder="{{ translate('Enter DNI') }}" name="dni" maxlength="8" pattern="[0-9]{8}">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="lookupDNIFromElement(document.getElementById('dni'), document.getElementById('name'))">{{ translate('Lookup') }}</button>
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}" required autofocus placeholder="{{ translate('Full Name') }}">
 
                                 @if ($errors->has('name'))
