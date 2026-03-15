@@ -199,10 +199,10 @@
     .price-qty-block .pqb-label {
         min-width: 100px;
         font-size: 11px;
-        font-weight: 700;
+        font-weight: 900;
         text-transform: uppercase;
         letter-spacing: 0.6px;
-        color: #b0b8c4;
+        color: #000000;
     }
     .price-qty-block .pqb-value {
         display: flex;
@@ -349,12 +349,13 @@
         border: 1.5px solid #f0f0f0;
         width: fit-content;
     }
+    /* negrita estaba amtes en 700 */
     .share-wrapper .share-label {
         font-size: 11px;
-        font-weight: 700;
+        font-weight: 900; 
         text-transform: uppercase;
         letter-spacing: 0.6px;
-        color: #b0b8c4;
+        color: #000000;
         white-space: nowrap;
     }
     /* Íconos del aiz-share */

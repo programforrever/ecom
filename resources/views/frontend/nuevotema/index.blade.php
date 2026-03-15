@@ -1265,6 +1265,17 @@
                 font-size: 11px;
             }
         }
+
+        /* =============================================
+   CATEGORY MENU OVER BANNER - Toggle transition categorias
+============================================= */
+.category-menu-over-banner {
+    transition: width 0.3s ease, overflow 0.3s ease;
+}
+
+#category-menu-bar-icon {
+    transition: transform 0.3s ease;
+}
     </style>
 
     <!-- =============================================
@@ -1505,6 +1516,59 @@ slideContents.forEach(s => s.style.paddingLeft = window.innerWidth < 768 ? '55px
                 }
             }
         });
+
+
+// =============================================
+// Sincronizar botón Categorías del navbar con
+// el menú lateral del banner
+// =============================================
+document.addEventListener('DOMContentLoaded', function () {
+    const categoryMenuBar = document.getElementById('category-menu-bar');
+    const categoryMenuIcon = document.getElementById('category-menu-bar-icon');
+    const bannerMenu = document.getElementById('bannerCategoryMenu');
+    const clickCategoryMenu = document.getElementById('click-category-menu');
+
+    // *** CERRAR POR DEFECTO AL CARGAR ***
+    if (bannerMenu) {
+        bannerMenu.style.width = '0';
+        bannerMenu.style.overflow = 'hidden';
+        bannerMenu.style.minWidth = '0';
+        bannerMenu.classList.add('menu-hidden');
+        if (categoryMenuIcon) categoryMenuIcon.style.transform = 'rotate(-90deg)';
+        setTimeout(adjustAllLayouts, 50);
+    }
+
+    if (categoryMenuBar && bannerMenu) {
+        categoryMenuBar.addEventListener('click', function (e) {
+            e.stopPropagation();
+
+            // Siempre cerrar el dropdown del navbar
+            if (clickCategoryMenu) {
+                clickCategoryMenu.classList.add('d-none');
+            }
+
+            const isOpen = !bannerMenu.classList.contains('menu-hidden');
+
+            if (isOpen) {
+                // Cerrar
+                bannerMenu.style.width = '0';
+                bannerMenu.style.overflow = 'hidden';
+                bannerMenu.style.minWidth = '0';
+                bannerMenu.classList.add('menu-hidden');
+                categoryMenuIcon.style.transform = 'rotate(-90deg)';
+            } else {
+                // Abrir
+                bannerMenu.style.width = '270px';
+                bannerMenu.style.overflow = '';
+                bannerMenu.style.minWidth = '';
+                bannerMenu.classList.remove('menu-hidden');
+                categoryMenuIcon.style.transform = 'rotate(0deg)';
+            }
+
+            setTimeout(adjustAllLayouts, 320);
+        });
+    }
+});
     </script>
 
 
