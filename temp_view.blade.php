@@ -57,6 +57,13 @@
 							{{ translate('Banner Level 3') }}
 						</a>
 					</li>
+					<!-- Flash Deal Banner -->
+					<li class="nav-item">
+						<a class="nav-link" id="flash-deal-banner-tab" href="#flash_deal_banner"
+							data-toggle="tab" data-target="#flash_deal_banner" type="button" role="tab" aria-controls="flash_deal_banner" aria-selected="false">
+							{{ translate('Flash Deal Banner') }}
+						</a>
+					</li>
 					@if(addon_is_activated('auction'))
 					<!-- Auction Products -->
 					<li class="nav-item">
@@ -88,13 +95,6 @@
 						<a class="nav-link" id="brands-tab" href="#brands"
 							data-toggle="tab" data-target="#brands" type="button" role="tab" aria-controls="brands" aria-selected="false">
 							{{ translate('Top Brands') }}
-						</a>
-					</li>
-					<!-- Flash Deal Banner -->
-					<li class="nav-item">
-						<a class="nav-link" id="flash-deal-banner-tab" href="#flash_deal_banner"
-							data-toggle="tab" data-target="#flash_deal_banner" type="button" role="tab" aria-controls="flash_deal_banner" aria-selected="false">
-							{{ translate('Flash Deal Banner') }}
 						</a>
 					</li>
 				</ul>
@@ -931,10 +931,6 @@
 											<span class="ml-2">{{ translate('Add New') }}</span>
 										</button>
 									</div>
-											<i class="las la-2x text-success la-plus-circle"></i>
-											<span class="ml-2">{{ translate('Add New') }}</span>
-										</button>
-									</div>
 								</div>
 								<!-- Save Button -->
 								<div class="mt-4 text-right">
@@ -944,36 +940,72 @@
 						</form>
 					</div>
 
-					@if(addon_is_activated('auction'))
-					<!-- Auction Banner -->
-					<div class="tab-pane fade" id="auction" role="tabpanel" aria-labelledby="auction-tab">
+					<!-- Flash Deal Banner Section -->
+					<div class="tab-pane fade" id="flash_deal_banner" role="tabpanel" aria-labelledby="flash-deal-banner-tab">
 						<form action="{{ route('business_settings.update') }}" method="POST" enctype="multipart/form-data">
 							@csrf
-							<input type="hidden" name="tab" value="auction">
+							<input type="hidden" name="tab" value="flash_deal_banner">
 							<div class="bg-white p-3 p-sm-2rem">
 								<div class="w-100">
-									<label class="col-from-label fs-13 fw-500 mb-3">{{ translate('Auction Banner') }}</label>
-									<!-- Images -->
+									<label class="col-from-label fs-13 fw-500 mb-3">{{ translate('Flash Deal Banner') }}</label>
+									<p class="fs-12 text-secondary mb-4">{{ translate('This banner appears below the Flash Sale section') }}</p>
+									
+									<!-- Image -->
 									<div class="form-group">
+										<label class="fs-12 mb-2">{{ translate('Banner Image') }} <span class="text-danger">*</span></label>
+										<p class="fs-11 text-secondary mb-2">{{ translate('Recommended size: 1200 x 300 px') }}</p>
 										<div class="input-group" data-toggle="aizuploader" data-type="image">
 											<div class="input-group-prepend">
 												<div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse')}}</div>
 											</div>
 											<div class="form-control file-amount">{{ translate('Choose File') }}</div>
-											<input type="hidden" name="types[][{{ $lang }}]" value="auction_banner_image">
-											<input type="hidden" name="auction_banner_image" class="selected-files" value="{{ get_setting('auction_banner_image', null, $lang) }}">
+											<input type="hidden" name="types[][{{ $lang }}]" value="flash_deal_banner_image">
+											<input type="hidden" name="flash_deal_banner_image[]" class="selected-files" value="{{ get_setting('flash_deal_banner_image', null, $lang) }}">
 										</div>
-										<div class="file-preview box sm">
-										</div>
+										<div class="file-preview box sm"></div>
 									</div>
+
+								<!-- Title -->
+								<div class="form-group">
+									<label class="fs-12 mb-2">{{ translate('Title') }} <span class="text-danger">*</span></label>
+									<input type="hidden" name="types[]" value="flash_deal_banner_title">
+									<input type="text" class="form-control" placeholder="{{ translate('Ex: Special Promotion') }}" 
+										name="flash_deal_banner_title" value="{{ get_setting('flash_deal_banner_title', null, $lang) }}" required>
 								</div>
-								<!-- Save Button -->
-								<div class="mt-4 text-right">
-									<button type="submit" class="btn btn-success w-230px btn-md rounded-2 fs-14 fw-700 shadow-success">{{ translate('Save') }}</button>
+
+								<!-- Description -->
+								<div class="form-group">
+									<label class="fs-12 mb-2">{{ translate('Description') }} <span class="text-danger">*</span></label>
+									<input type="hidden" name="types[]" value="flash_deal_banner_description">
+									<input type="text" class="form-control" placeholder="{{ translate('Ex: Get exclusive offers on selected items') }}" 
+										name="flash_deal_banner_description" value="{{ get_setting('flash_deal_banner_description', null, $lang) }}" required>
+								</div>
+
+								<!-- WhatsApp Button Link -->
+								<div class="form-group">
+									<label class="fs-12 mb-2">{{ translate('WhatsApp Link') }} <span class="text-danger">*</span></label>
+									<p class="fs-11 text-secondary mb-2">{{ translate('Ex: https://wa.me/51XXXXXXXXX or https://api.whatsapp.com/send?phone=51XXXXXXXXX') }}</p>
+									<input type="hidden" name="types[]" value="flash_deal_banner_whatsapp_link">
+									<input type="url" class="form-control" placeholder="https://wa.me/..." 
+										name="flash_deal_banner_whatsapp_link" value="{{ get_setting('flash_deal_banner_whatsapp_link') }}" required>
+								</div>
+
+								<!-- Button Text -->
+								<div class="form-group">
+									<label class="fs-12 mb-2">{{ translate('Button Text') }} <span class="text-danger">*</span></label>
+									<input type="hidden" name="types[]" value="flash_deal_banner_button_text">
+									<input type="text" class="form-control" placeholder="{{ translate('Ex: Contact on WhatsApp') }}" 
+										name="flash_deal_banner_button_text" value="{{ get_setting('flash_deal_banner_button_text', null, $lang) }}" required>
 								</div>
 							</div>
-						</form>
-					</div>
+							
+							<!-- Save Button -->
+							<div class="mt-4 text-right">
+								<button type="submit" class="btn btn-success w-230px btn-md rounded-2 fs-14 fw-700 shadow-success">{{ translate('Save') }}</button>
+							</div>
+						</div>
+					</form>
+				</div>
 					@endif
 
 					<!-- Category Wise Products -->
@@ -1129,165 +1161,12 @@
 						</form>
 					</div>
 
-					<!-- Flash Deal Banner -->
-					<div class="tab-pane fade" id="flash_deal_banner" role="tabpanel" aria-labelledby="flash-deal-banner-tab">
-						<form action="{{ route('business_settings.update') }}" method="POST" enctype="multipart/form-data">
-							@csrf
-							<input type="hidden" name="tab" value="flash_deal_banner">
-							<div class="bg-white p-3 p-sm-2rem">
-								<div class="w-100">
-									<label class="col-from-label fs-13 fw-500 mb-3">{{ translate('Banner & Links (Max 3)') }}</label>
-									
-									<!-- Images & links -->
-									<div class="flash-deal-banner-target">
-									@php $flash_deal_banner_images = get_setting('flash_deal_banner_images', null, $lang); @endphp
-									@if ($flash_deal_banner_images != null)
-										@foreach (json_decode($flash_deal_banner_images, true) as $key => $value)
-											<div class="p-3 p-md-4 mb-3 mb-md-2rem remove-parent" style="border: 1px dashed #e4e5eb;">
-												<div class="row gutters-5">
-													<!-- Image -->
-													<div class="col-md-4">
-														<div class="form-group mb-md-0">
-															<label class="fs-12 mb-2">{{ translate('Image') }}</label>
-															<div class="input-group" data-toggle="aizuploader" data-type="image">
-																<div class="input-group-prepend">
-																	<div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse')}}</div>
-																</div>
-																<div class="form-control file-amount">{{ translate('Choose File') }}</div>
-																<input type="hidden" name="types[][{{ $lang }}]" value="flash_deal_banner_images">
-																<input type="hidden" name="flash_deal_banner_images[]" class="selected-files" value="{{ json_decode($flash_deal_banner_images, true)[$key] }}">
-															</div>
-															<div class="file-preview box sm">
-															</div>
-														</div>
-													</div>
-													<!-- Link -->
-													<div class="col-md-2">
-														<div class="form-group mb-md-0">
-															<label class="fs-12 mb-2">{{ translate('Link') }}</label>
-															<input type="hidden" name="types[]" value="flash_deal_banner_links">
-															<input type="text" class="form-control" placeholder="http://" name="flash_deal_banner_links[]" value="{{ json_decode(get_setting('flash_deal_banner_links'), true)[$key] ?? '' }}">
-														</div>
-													</div>
-													<!-- Title -->
-													<div class="col-md-2">
-														<div class="form-group mb-md-0">
-															<label class="fs-12 mb-2">{{ translate('Title') }}</label>
-															<input type="hidden" name="types[]" value="flash_deal_banner_titles">
-															<input type="text" class="form-control" placeholder="{{ translate('Ex: Latest Wireless') }}" name="flash_deal_banner_titles[]" value="{{ json_decode(get_setting('flash_deal_banner_titles', null, $lang), true)[$key] ?? '' }}">
-														</div>
-													</div>
-													<!-- Description -->
-													<div class="col-md-3">
-														<div class="form-group mb-md-0">
-															<label class="fs-12 mb-2">{{ translate('Description') }}</label>
-															<input type="hidden" name="types[]" value="flash_deal_banner_descriptions">
-															<input type="text" class="form-control" placeholder="{{ translate('Ex: UP TO 50% OFF') }}" name="flash_deal_banner_descriptions[]" value="{{ json_decode(get_setting('flash_deal_banner_descriptions', null, $lang), true)[$key] ?? '' }}">
-														</div>
-													</div>
-													<!-- Button Text -->
-													<div class="col-md-2">
-														<div class="form-group mb-md-0">
-															<label class="fs-12 mb-2">{{ translate('Button Text') }}</label>
-															<input type="hidden" name="types[]" value="flash_deal_banner_btn_texts">
-															<input type="text" class="form-control" placeholder="{{ translate('Ex: Shop Now') }}" name="flash_deal_banner_btn_texts[]" value="{{ json_decode(get_setting('flash_deal_banner_btn_texts', null, $lang), true)[$key] ?? '' }}">
-														</div>
-													</div>
-													<!-- remove parent button -->
-													<div class="col-md-auto">
-														<div class="form-group mb-md-0">
-															<label class="fs-12 mb-2">&nbsp;</label>
-															<button type="button" class="mt-1 btn btn-icon btn-circle btn-sm btn-soft-danger" data-toggle="remove-parent" data-parent=".remove-parent">
-																<i class="las la-times"></i>
-															</button>
-														</div>
-													</div>
-												</div>
-											</div>
-										@endforeach
-									@endif
-								</div>
-								
-								<!-- Add button -->
-								<div class="">
-									<button 
-										type="button" 
-										class="btn btn-block border hov-bg-soft-secondary fs-14 rounded-0 d-flex align-items-center justify-content-center" style="background: #fcfcfc;"
-										data-toggle="add-more"
-										data-content='
-										<div class="p-3 p-md-4 mb-3 mb-md-2rem remove-parent" style="border: 1px dashed #e4e5eb;">
-											<div class="row gutters-5">
-												<!-- Image -->
-												<div class="col-md-4">
-													<div class="form-group mb-md-0">
-														<label class="fs-12 mb-2">Image</label>
-														<div class="input-group" data-toggle="aizuploader" data-type="image">
-															<div class="input-group-prepend">
-																<div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate("Browse")}}</div>
-															</div>
-															<div class="form-control file-amount">{{ translate("Choose File") }}</div>
-															<input type="hidden" name="types[][{{ $lang }}]" value="flash_deal_banner_images">
-															<input type="hidden" name="flash_deal_banner_images[]" class="selected-files" value="">
-														</div>
-														<div class="file-preview box sm">
-														</div>
-													</div>
-												</div>
-												<!-- Link -->
-												<div class="col-md-2">
-													<div class="form-group mb-md-0">
-														<label class="fs-12 mb-2">Link</label>
-														<input type="hidden" name="types[]" value="flash_deal_banner_links">
-														<input type="text" class="form-control" placeholder="http://" name="flash_deal_banner_links[]" value="">
-													</div>
-												</div>
-												<!-- Title -->
-												<div class="col-md-2">
-													<div class="form-group mb-md-0">
-														<label class="fs-12 mb-2">Title</label>
-														<input type="hidden" name="types[]" value="flash_deal_banner_titles">
-														<input type="text" class="form-control" placeholder="Ex: Latest Wireless" name="flash_deal_banner_titles[]" value="">
-													</div>
-												</div>
-												<!-- Description -->
-												<div class="col-md-3">
-													<div class="form-group mb-md-0">
-														<label class="fs-12 mb-2">Description</label>
-														<input type="hidden" name="types[]" value="flash_deal_banner_descriptions">
-														<input type="text" class="form-control" placeholder="Ex: UP TO 50% OFF" name="flash_deal_banner_descriptions[]" value="">
-													</div>
-												</div>
-												<!-- Button Text -->
-												<div class="col-md-2">
-													<div class="form-group mb-md-0">
-														<label class="fs-12 mb-2">Button Text</label>
-														<input type="hidden" name="types[]" value="flash_deal_banner_btn_texts">
-														<input type="text" class="form-control" placeholder="Ex: Shop Now" name="flash_deal_banner_btn_texts[]" value="">
-													</div>
-												</div>
-												<!-- remove parent button -->
-												<div class="col-md-auto">
-													<div class="form-group mb-md-0">
-														<label class="fs-12 mb-2">&nbsp;</label>
-														<button type="button" class="mt-1 btn btn-icon btn-circle btn-sm btn-soft-danger" data-toggle="remove-parent" data-parent=".remove-parent">
-															<i class="las la-times"></i>
-														</button>
-													</div>
-												</div>
-											</div>
-										</div>'
-										data-target=".flash-deal-banner-target">
-										<i class="las la-2x text-success la-plus-circle"></i>
-										<span class="ml-2">{{ translate('Add New') }}</span>
-									</button>
-								</div>
-								<!-- Save Button -->
-								<div class="mt-4 text-right">
-									<button type="submit" class="btn btn-success w-230px btn-md rounded-2 fs-14 fw-700 shadow-success">{{ translate('Save') }}</button>
-								</div>
-							</div>
-						</form>
-					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+@endsection
 
 @section('script')
     <script type="text/javascript">

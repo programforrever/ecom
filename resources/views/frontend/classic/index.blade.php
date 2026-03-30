@@ -237,6 +237,40 @@
         </section>
     @endif
 
+    <!-- Flash Deal Banner Carousel -->
+    @php 
+        $flash_deal_banner_images = get_setting('flash_deal_banner_images', null, $lang);
+        $flash_deal_banner_links = get_setting('flash_deal_banner_links');
+        $banner_images = $flash_deal_banner_images ? json_decode($flash_deal_banner_images, true) : [];
+        $banner_links = $flash_deal_banner_links ? json_decode($flash_deal_banner_links, true) : [];
+    @endphp
+    @if(count($banner_images) > 0)
+        <div class="mb-2 mb-md-3 mt-2 mt-md-3">
+            <div class="container">
+                <div class="w-100">
+                    <div class="aiz-carousel gutters-16 overflow-hidden arrow-inactive-none arrow-dark arrow-x-15"
+                        data-items="{{ count($banner_images) }}" data-xxl-items="{{ count($banner_images) }}"
+                        data-xl-items="{{ count($banner_images) }}" data-lg-items="2"
+                        data-md-items="2" data-sm-items="1" data-xs-items="1" data-arrows="true"
+                        data-dots="false">
+                        @foreach ($banner_images as $key => $image)
+                            <div class="carousel-box overflow-hidden hov-scale-img">
+                                <a href="{{ $banner_links[$key] ?? '#' }}"
+                                    class="d-block text-reset overflow-hidden">
+                                    <img src="{{ static_asset('assets/img/placeholder-rect.jpg') }}"
+                                        data-src="{{ uploaded_asset($image) }}"
+                                        class="lazyload w-100 h-auto has-transition mw-100"
+                                        alt="Flash Deal Banner"
+                                        onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder-rect.jpg') }}';">
+                                </a>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
     <!-- Banner section 1 -->
     @php $homeBanner1Images = get_setting('home_banner1_images', null, $lang);   @endphp
     @if ($homeBanner1Images != null)
