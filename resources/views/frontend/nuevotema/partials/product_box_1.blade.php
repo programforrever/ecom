@@ -18,23 +18,25 @@
             @php
                 // Usar imagen hover (thumbnail_hover_img) si existe, sino usar primera imagen de galería
                 $secondary_image = null;
+                
+                // Primero intentar usar thumbnail_hover_img
                 if ($product->thumbnail_hover_img) {
-                    $secondary_image = $product->thumbnail_hover_img;
+                    $secondary_image = uploaded_asset($product->thumbnail_hover_img);
                 } else {
-                    $images = $product->product_images;
-                    $secondary_image = $images && count($images) > 0 ? $images[0]->file_name : null;
+                    // Si no hay thumbnail_hover_img, buscar en la galería
+                    if ($product->product_images && count($product->product_images) > 1) {
+                        // Usar la segunda imagen si existe
+                        $secondary_image = uploaded_asset($product->product_images[1]->file_name);
+                    } elseif ($product->product_images && count($product->product_images) > 0) {
+                        // Si solo hay una imagen, mostrar placeholder en hover
+                        $secondary_image = null;
+                    }
                 }
             @endphp
-            @if ($secondary_image)
+            @if ($secondary_image && $secondary_image !== static_asset('assets/img/placeholder.jpg'))
                 <img class="lazyload mx-auto img-fit has-transition product-img img-hover"
                     src="{{ static_asset('assets/img/placeholder.jpg') }}"
-                    data-src="
-                    @if ($product->thumbnail_hover_img)
-                        {{ uploaded_asset($product->thumbnail_hover_img) }}
-                    @else
-                        {{ uploaded_asset($secondary_image) }}
-                    @endif
-                    "
+                    data-src="{{ $secondary_image }}"
                     alt="{{ $product->getTranslation('name') }}" title="{{ $product->getTranslation('name') }}"
                     onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
             @endif

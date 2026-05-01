@@ -57,6 +57,23 @@ class ProductService
             $collection['meta_img'] = $collection['thumbnail_img'];
         }
 
+        // Ensure thumbnail fields are handled properly
+        // If empty string, convert to null for database
+        if (!$collection['thumbnail_img'] || $collection['thumbnail_img'] === '') {
+            $collection['thumbnail_img'] = null;
+        }
+        if (!isset($collection['thumbnail_hover_img']) || !$collection['thumbnail_hover_img'] || $collection['thumbnail_hover_img'] === '') {
+            $collection['thumbnail_hover_img'] = null;
+        }
+
+        // If no thumbnail but has photos, use first photo as thumbnail
+        if (($collection['thumbnail_img'] === null || $collection['thumbnail_img'] === '') && 
+            isset($collection['photos']) && !empty($collection['photos'])) {
+            $photos = is_string($collection['photos']) ? explode(',', $collection['photos']) : $collection['photos'];
+            if (!empty($photos) && !empty($photos[0])) {
+                $collection['thumbnail_img'] = $photos[0];
+            }
+        }
 
         $shipping_cost = 0;
         if (isset($collection['shipping_type'])) {
@@ -208,6 +225,23 @@ class ProductService
 
         if ($collection['meta_img'] == null) {
             $collection['meta_img'] = $collection['thumbnail_img'];
+        }
+
+        // Ensure thumbnail fields are handled properly in update
+        if (!$collection['thumbnail_img'] || $collection['thumbnail_img'] === '') {
+            $collection['thumbnail_img'] = $product->thumbnail_img; // Keep existing if not provided
+        }
+        if (!isset($collection['thumbnail_hover_img']) || !$collection['thumbnail_hover_img'] || $collection['thumbnail_hover_img'] === '') {
+            $collection['thumbnail_hover_img'] = $product->thumbnail_hover_img; // Keep existing if not provided
+        }
+
+        // If no thumbnail but has photos, use first photo
+        if (($collection['thumbnail_img'] === null || $collection['thumbnail_img'] === '') && 
+            isset($collection['photos']) && !empty($collection['photos'])) {
+            $photos = is_string($collection['photos']) ? explode(',', $collection['photos']) : $collection['photos'];
+            if (!empty($photos) && !empty($photos[0])) {
+                $collection['thumbnail_img'] = $photos[0];
+            }
         }
 
         if ($collection['lang'] != env("DEFAULT_LANGUAGE")) {

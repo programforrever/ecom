@@ -10,7 +10,7 @@ class Product extends Model
 
     protected $guarded = ['choice_attributes'];
 
-    protected $with = ['product_translations', 'taxes', 'thumbnail'];
+    protected $with = ['product_translations', 'taxes', 'thumbnail', 'thumbnail_hover'];
 
     public function getTranslation($field = '', $lang = false)
     {
@@ -87,6 +87,11 @@ class Product extends Model
     public function thumbnail()
     {
         return $this->belongsTo(Upload::class, 'thumbnail_img');
+    }
+
+    public function thumbnail_hover()
+    {
+        return $this->belongsTo(Upload::class, 'thumbnail_hover_img');
     }
 
     public function scopePhysical($query)

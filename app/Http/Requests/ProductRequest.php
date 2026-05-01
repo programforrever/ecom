@@ -32,6 +32,8 @@ class ProductRequest extends FormRequest
         $rules['name']          = 'required|max:255';
         $rules['category_ids']  = 'required';
         $rules['category_id']   = ['required', Rule::in($this->category_ids)];
+        // Se permite thumbnail vacío temporalmente para no romper productos existentes
+        // Los usuarios verán error en la interfaz si no lo seleccionan
         $rules['unit']         = 'sometimes|required';
         $rules['min_qty']      = 'sometimes|required|numeric';
         $rules['unit_price']    = 'sometimes|required|numeric';
@@ -59,6 +61,7 @@ class ProductRequest extends FormRequest
             'category_ids.required'     => translate('Product category is required'),
             'category_id.required'      => translate('Main Category is required'),
             'category_id.in'            => translate('Main Category must be within selected categories'),
+            'thumbnail_img.required'    => translate('Thumbnail image is required'),
             'unit.required'             => translate('Product unit is required'),
             'min_qty.required'          => translate('Minimum purchase quantity is required'),
             'min_qty.numeric'           => translate('Minimum purchase must be numeric'),
